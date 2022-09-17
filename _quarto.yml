@@ -8,6 +8,7 @@ website:
   repo-url: https://github.com/aayushmnit/aayushmnit.github.io
   repo-actions: [edit, issue]
   open-graph: true
+  google-analytics: "G-7QN8N70N41"
   twitter-card:
     creator: "@aayushmnit"
     card-style: summary_large_image
