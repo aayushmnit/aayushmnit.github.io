@@ -4,13 +4,13 @@ project:
 website:
   title: "Aayush Agrawal"
   site-url: https://aayushmnit.github.io/
+  description: "Aayush's personal website"
   repo-url: https://github.com/aayushmnit/aayushmnit.github.io
   repo-actions: [edit, issue]
   open-graph: true
   twitter-card:
     creator: "@aayushmnit"
     card-style: summary_large_image
-  description: "Aayush's personal website"
   navbar:
     left:
       - href: about.qmd
@@ -30,7 +30,8 @@ website:
         href: https://twitter.com/aayushmnit
       - icon: envelope
         href: mailto:aayushmnit@gmail.com
-      
+      - icon: rss
+        href: blog.xml
 
 format:
   html:

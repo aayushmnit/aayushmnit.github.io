@@ -11,14 +11,14 @@
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\n\n\n\n\n\nMar 17, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\nVideo\n\n\n\n\n\n\n\nFeb 17, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\n\n\n\n\n\nJan 5, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nVision\n\n\n\n\n\n\n\nOct 28, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nMachine Learning\n\n\nDeep Learning\n\n\n\n\n\n\n\nSep 12, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n14 min\n\n\n\nMachine Learning\n\n\nDeep Learning\n\n\n\n\n\n\n\nJun 3, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n30 min\n\n\n\nRecommender System\n\n\nMachine learning\n\n\nBusiness\n\n\n\n\n\n\n\nApr 17, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nlaunch\n\n\nannouncement\n\n\n\n\n\n\n\nFeb 19, 2018\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nFinding similar images using Deep learning and Locality Sensitive Hashing\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\n\n\n\n\n\nMar 17, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nReal-time Multi-Facial attribute detection using computer vision and deep learning with FastAI and OpenCV\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\nVideo\n\n\n\n\n\n\n\nFeb 17, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMultiLayer Perceptron using Fastai and Pytorch\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\n\n\n\n\n\nJan 5, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLeaf Disease detection by Tranfer learning using FastAI V1 library\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nVision\n\n\n\n\n\n\n\nOct 28, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMulti-Layer perceptron using Tensorflow\n\n\n0 min\n\n\n\nMachine Learning\n\n\nDeep Learning\n\n\n\n\n\n\n\nSep 12, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding Neural Network from scratch\n\n\n14 min\n\n\n\nMachine Learning\n\n\nDeep Learning\n\n\n\n\n\n\n\nJun 3, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSolving business usecases by recommender system using lightFM\n\n\n30 min\n\n\n\nRecommender System\n\n\nMachine learning\n\n\nBusiness\n\n\n\n\n\n\n\nApr 17, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWebsite launch\n\n\n0 min\n\n\n\nlaunch\n\n\nannouncement\n\n\n\n\n\n\n\nFeb 19, 2018\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2018-02-19-launch/index.html",
     "href": "posts/2018-02-19-launch/index.html",
     "title": "Website launch",
     "section": "",
-    "text": "I am intending to use this website to publish blogs, workshop and any material which would be releveant in Data science field.\nWill see you guys in next post.\n-Aayush"
+    "text": "Finally got time to build my own website on Github. This is my first post and I would like to thank Academic Pages which provided with a wonderful repository to help me get started with building this website.\nI am intending to use this website to publish blogs, workshop and any material which would be releveant in Data science field.\nWill see you guys in next post.\n-Aayush"
   },
   {
     "objectID": "posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html",
@@ -137,48 +137,48 @@
     "href": "talks/2017-09-13-introduction-to-keras/index.html",
     "title": "Introduction to Keras",
     "section": "",
-    "text": "Link to the meetup group\nLink to Git repo\nPhoto of me presenting a real time object detection application using deep learning and openCV."
+    "text": "Presentation and codes on “Introduction of Keras”. This was material presented by me in Analyze This! meetup on 13th September, 2017\nLink to the meetup group\nLink to Git repo\nPhoto of me presenting a real time object detection application using deep learning and openCV."
   },
   {
     "objectID": "talks/2017-10-11-deep-dive-in-hierarchichal-clustering/index.html",
     "href": "talks/2017-10-11-deep-dive-in-hierarchichal-clustering/index.html",
     "title": "Deep dive in Hierarchical clustering",
     "section": "",
-    "text": "Link to the meetup group\nLink to Git repo\nPhoto of me presenting -"
+    "text": "Presentation and codes on “Deep dive in Hierarchical Clustering”. This was material presented by me in Analyze This! meetup on 11th October, 2017\nLink to the meetup group\nLink to Git repo\nPhoto of me presenting -"
   },
   {
     "objectID": "talks/2017-11-08-Transfer-Learning/index.html",
     "href": "talks/2017-11-08-Transfer-Learning/index.html",
     "title": "Transfer learning",
     "section": "",
-    "text": "Link to the meetup group\nLink to Git repo\nPhoto of me presenting -"
+    "text": "Presentation and codes on “Transfer learning”. This was material presented by me in Analyze This! meetup on 8th November, 2017\nLink to the meetup group\nLink to Git repo\nPhoto of me presenting -"
   },
   {
     "objectID": "talks/2018-10-18-msba_devops/index.html",
     "href": "talks/2018-10-18-msba_devops/index.html",
     "title": "DevOps for Data scientist",
     "section": "",
-    "text": "Link to workshop content\nWorkshop Content\n\nWhat is DevOps? Why is it needed?\nModel building using cookbooks in Python\nVersion control using GIT\nDeploying Model as an API using Flask and microservices framework\nPackaging applications using Docker\nScaling and Deploying applications in Google cloud using Docker and Kubernetes"
+    "text": "Conducted a DevOps for data scientist workshop for 2019 batch of Masters in Business Analytics student in Carlson school of management. The workshop was attended by 100+ students.\nLink to workshop content\nWorkshop Content\n\nWhat is DevOps? Why is it needed?\nModel building using cookbooks in Python\nVersion control using GIT\nDeploying Model as an API using Flask and microservices framework\nPackaging applications using Docker\nScaling and Deploying applications in Google cloud using Docker and Kubernetes"
   },
   {
     "objectID": "talks/2018-7-28-Model-Building-Explainability-Deployment/index.html",
     "href": "talks/2018-7-28-Model-Building-Explainability-Deployment/index.html",
     "title": "Model building, Explainability, and Deployment",
     "section": "",
-    "text": "Link to the meetup group\nLink to Git repo\nPhoto of me presenting -"
+    "text": "Presentation and codes on “Model building, Explainability, and Deployment”. This was material presented by me in Social Data science meetup on 28th July, 2018\nLink to the meetup group\nLink to Git repo\nPhoto of me presenting -"
   },
   {
     "objectID": "talks/2020-12-15-OrcaHello/index.html",
     "href": "talks/2020-12-15-OrcaHello/index.html",
     "title": "ML in the wild",
     "section": "",
-    "text": "Youtube Link - (1:10:00)\nAI For Orcas Webiste"
+    "text": "Sharing our insights from deploying OrcaHello - an open source, AI-assisted 24x7 hydrophone monitoring & Southern Resident Killer Whale alert system in Puget Sound.\n\nYoutube Link - (1:10:00)\nAI For Orcas Webiste"
   },
   {
     "objectID": "talks.html",
     "href": "talks.html",
     "title": "Talks",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nDeep Learning\n\n\nAudio\n\n\nVision\n\n\nFastAI\n\n\n\n\n\n\n\nDec 15, 2020\n\n\n\n\n\n\nLocation\n\n\nUS\n\n\n\n\nVenue\n\n\nMeridian Winter Webinar Series\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nMLOps\n\n\nExplainability\n\n\n\n\n\n\n\nOct 18, 2018\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nCarlson School of Management, University of Minnesota\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nMLOps\n\n\nExplainability\n\n\n\n\n\n\n\nJul 28, 2018\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nVeritas Technologies LLC, 2815 Cleveland Ave N Roseville, MN 55113\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nDeep Learning\n\n\n\n\n\n\n\nNov 8, 2017\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nKeller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nClustering\n\n\n\n\n\n\n\nOct 11, 2017\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nKeller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n0 min\n\n\n\nKeras\n\n\n\n\n\n\n\nSep 3, 2017\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nKeller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nML in the wild\n\n\n0 min\n\n\n\nDeep Learning\n\n\nAudio\n\n\nVision\n\n\nFastAI\n\n\n\n\n\n\n\nDec 15, 2020\n\n\n\n\n\n\nLocation\n\n\nUS\n\n\n\n\nVenue\n\n\nMeridian Winter Webinar Series\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDevOps for Data scientist\n\n\n0 min\n\n\n\nMLOps\n\n\nExplainability\n\n\n\n\n\n\n\nOct 18, 2018\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nCarlson School of Management, University of Minnesota\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModel building, Explainability, and Deployment\n\n\n0 min\n\n\n\nMLOps\n\n\nExplainability\n\n\n\n\n\n\n\nJul 28, 2018\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nVeritas Technologies LLC, 2815 Cleveland Ave N Roseville, MN 55113\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTransfer learning\n\n\n0 min\n\n\n\nDeep Learning\n\n\n\n\n\n\n\nNov 8, 2017\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nKeller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDeep dive in Hierarchical clustering\n\n\n0 min\n\n\n\nClustering\n\n\n\n\n\n\n\nOct 11, 2017\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nKeller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to Keras\n\n\n0 min\n\n\n\nKeras\n\n\n\n\n\n\n\nSep 3, 2017\n\n\n\n\n\n\nLocation\n\n\nMinneapolis, Minnesota, US\n\n\n\n\nVenue\n\n\nKeller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]

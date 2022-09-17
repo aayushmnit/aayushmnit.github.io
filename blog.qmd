@@ -8,7 +8,7 @@ listing:
   sort-ui: true
   filter-ui: true
   fields: [date, description, title, reading-time, categories, image]
-  feed: false
+  feed: true
 page-layout: full
 title-block-banner: false
 ---
