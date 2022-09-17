@@ -3,7 +3,7 @@ project:
   output-dir: docs
 website:
   title: "Aayush Agrawal"
-  site-url: https://aayushmnit.github.io/quarto-blog/
+  site-url: https://aayushmnit.github.io/
   repo-url: https://github.com/aayushmnit/quarto-blog
   repo-actions: [edit, issue]
   open-graph: true
