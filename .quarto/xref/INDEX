@@ -1,0 +1,68 @@
+{
+  "index.qmd": {
+    "index.html": "a9b0d792"
+  },
+  "about.qmd": {
+    "about.html": "17cbd63d"
+  },
+  "myblog/about.qmd": {
+    "about.html": "fb865747"
+  },
+  "myblog/index.qmd": {
+    "index.html": "fa098346"
+  },
+  "myblog/posts/post-with-code/index.qmd": {
+    "index.html": "4657255e"
+  },
+  "myblog/posts/welcome/index.qmd": {
+    "index.html": "af62fd56"
+  },
+  "blog.qmd": {
+    "blog.html": "6912e17e"
+  },
+  "posts/2018-02-19-launch/index.qmd": {
+    "index.html": "adfbee9e"
+  },
+  "posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.qmd": {
+    "index.html": "576bfec9"
+  },
+  "posts/2018-06-03-Building_neural_network_from_scratch/index.qmd": {
+    "index.html": "cdbd061b"
+  },
+  "posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.qmd": {
+    "index.html": "a0771ba9"
+  },
+  "posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.qmd": {
+    "index.html": "58049c75"
+  },
+  "posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.qmd": {
+    "index.html": "90dc6f4d"
+  },
+  "posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.qmd": {
+    "index.html": "5843db79"
+  },
+  "posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.qmd": {
+    "index.html": "860fe505"
+  },
+  "talks.qmd": {
+    "talks.html": "547d21fc"
+  },
+  "talks/2017-09-13-introduction-to-keras/index.qmd": {
+    "index.html": "612fe9b3"
+  },
+  "talks/2017-10-11-deep-dive-in-hierarchichal-clustering/index.qmd": {
+    "index.html": "d5772cc1"
+  },
+  "talks/2017-11-08-Transfer-Learning/index.qmd": {
+    "index.html": "0a7e2d53"
+  },
+  "talks/2018-7-28-Model-Building-Explainability-Deployment/index.qmd": {
+    "index.html": "5439f7e9"
+  },
+  "talks/2018-10-18-msba_devops/index.qmd": {
+    "index.html": "ec635313"
+  },
+  "talks/2020-12-15-OrcaHello/index.qmd": {
+    "index.html": "c4353cec"
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html",
+      "/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html",
+      "/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html",
+      "/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html",
+      "/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html",
+      "/posts/2018-06-03-Building_neural_network_from_scratch/index.html",
+      "/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html",
+      "/posts/2018-02-19-launch/index.html"
+    ]
+  },
+  {
+    "listing": "/talks.html",
+    "items": [
+      "/talks/2020-12-15-OrcaHello/index.html",
+      "/talks/2018-10-18-msba_devops/index.html",
+      "/talks/2018-7-28-Model-Building-Explainability-Deployment/index.html",
+      "/talks/2017-11-08-Transfer-Learning/index.html",
+      "/talks/2017-10-11-deep-dive-in-hierarchichal-clustering/index.html",
+      "/talks/2017-09-13-introduction-to-keras/index.html"
+    ]
+  }
+]

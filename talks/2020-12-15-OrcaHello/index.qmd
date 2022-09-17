@@ -1,0 +1,15 @@
+---
+title: "ML in the wild"
+author: "Aayush Agrawal, Akash Mahajan, Prajruti Gogia"
+date: "2020-12-15"
+categories: [Deep Learning, Audio, Vision, FastAI]
+image: "mlinwild.png"
+Venue: "Meridian Winter Webinar Series"
+Location: "US"
+---
+
+Sharing our insights from deploying OrcaHello - an open source, AI-assisted 24x7 hydrophone monitoring & Southern Resident Killer Whale alert system in Puget Sound.
+
+
+- [Youtube Link - (1:10:00)](https://www.youtube.com/watch?v=ruUES5ui5a8) 
+- [AI For Orcas Webiste](https://aifororcas.azurewebsites.net/)

@@ -1,0 +1,19 @@
+---
+title: 'Transfer learning'
+author: "Aayush Agrawal"
+date: "2017-11-08"
+categories: [Deep Learning]
+image: "https://github.com/aayushmnit/Data-science-presentation/blob/master/Transfer%20learning/5197d216-7627-4c9a-9421-81a9e0392364-original.jpeg?raw=true"
+Venue: "Keller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180"
+Location: "Minneapolis, Minnesota, US"
+---
+
+Presentation and codes on "Transfer learning". This was material presented by me in Analyze This! meetup on 8th November, 2017
+
+**[Link to the meetup group](https://www.meetup.com/AnalyzeThis/events/244177428/)**
+
+**[Link to Git repo](https://github.com/aayushmnit/Data-science-presentation/tree/master/Transfer%20learning)**
+
+Photo of me presenting -
+
+<img src="https://github.com/aayushmnit/Data-science-presentation/blob/master/Transfer%20learning/5197d216-7627-4c9a-9421-81a9e0392364-original.jpeg?raw=true">

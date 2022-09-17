@@ -1,0 +1,8 @@
+---
+title: 'MultiLayer Perceptron using Fastai and Pytorch'
+author: "Aayush Agrawal"
+date: "2019-01-05"
+categories: [Deep Learning, FastAI, Pytorch, Vision]
+image: "https://raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/single_layer_mlp.png"
+---
+Blog Transferred to [Medium.com](https://medium.com/@aayushmnit/multi-layer-perceptron-usingfastai-and-pytorch-9e401dd288b8).

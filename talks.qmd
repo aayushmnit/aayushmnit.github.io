@@ -1,0 +1,14 @@
+---
+title: "Talks"
+listing:
+  contents: talks
+  sort: "date desc"
+  type: grid
+  categories: true
+  sort-ui: true
+  filter-ui: true
+  fields: [date, description, title, reading-time, categories, image, Location, Venue]
+  feed: false
+page-layout: full
+title-block-banner: false
+---

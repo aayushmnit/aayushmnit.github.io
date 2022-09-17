@@ -1,0 +1,19 @@
+---
+title: "Model building, Explainability, and Deployment"
+author: "Aayush Agrawal"
+date: "2018-07-28"
+categories: [MLOps, Explainability]
+image: "https://raw.githubusercontent.com/aayushmnit/Data-science-presentation/master/Model_building_interpretability_deployment/photo.jpeg"
+Venue: "Veritas Technologies LLC, 2815 Cleveland Ave N Roseville, MN 55113"
+Location: "Minneapolis, Minnesota, US"
+---
+
+Presentation and codes on "Model building, Explainability, and Deployment". This was material presented by me in Social Data science meetup on 28th July, 2018
+
+**[Link to the meetup group](https://www.meetup.com/socialdatascience/events/252548938)**
+
+**[Link to Git repo](https://github.com/aayushmnit/Data-science-presentation/tree/master/Model_building_interpretability_deployment)**
+
+Photo of me presenting -
+
+<img src="https://raw.githubusercontent.com/aayushmnit/Data-science-presentation/master/Model_building_interpretability_deployment/photo.jpeg">

@@ -1,0 +1,19 @@
+---
+title: 'Introduction to Keras'
+author: "Aayush Agrawal"
+date: "2017-09-03"
+categories: [Keras]
+image: "https://github.com/aayushmnit/Data-science-presentation/blob/master/Introduction%20to%20Keras/600_464528068.jpeg?raw=true"
+Venue: "Keller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180"
+Location: "Minneapolis, Minnesota, US"
+---
+
+Presentation and codes on "Introduction of Keras". This was material presented by me in Analyze This! meetup on 13th September, 2017
+
+**[Link to the meetup group](https://www.meetup.com/AnalyzeThis/events/242440234/?rv=cr1&_af=event&_af_eid=242440234&https=on)**
+
+**[Link to Git repo](https://github.com/aayushmnit/Data-science-presentation/tree/master/Introduction%20to%20Keras)**
+
+Photo of me presenting a real time object detection application using deep learning and openCV.
+
+<img src="https://github.com/aayushmnit/Data-science-presentation/blob/master/Introduction%20to%20Keras/600_464528068.jpeg?raw=true">

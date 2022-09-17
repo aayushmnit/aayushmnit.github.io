@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Aayush Agrawal</title>
+<link>https://aayushmnit.github.io/quarto-blog/blog.html</link>
+<atom:link href="https://aayushmnit.github.io/quarto-blog/blog.xml" rel="self" type="application/rss+xml"/>
+<description>Aayush's personal website</description>
+<generator>quarto-1.1.251</generator>
+<lastBuildDate>Mon, 19 Feb 2018 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>Website launch</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.github.io/quarto-blog/posts/2018-02-19-launch/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<p>Finally got time to build my own website on <a href="https://github.com/">Github</a>. This is my first post and I would like to thank <a href="https://github.com/academicpages/academicpages.github.io">Academic Pages</a> which provided with a wonderful repository to help me get started with building this website.</p>
+<p>I am intending to use this website to publish blogs, workshop and any material which would be releveant in Data science field.</p>
+<p>Will see you guys in next post.</p>
+<p>-Aayush</p>
+
+
+
+ ]]></description>
+  <category>launch</category>
+  <category>announcement</category>
+  <guid>https://aayushmnit.github.io/quarto-blog/posts/2018-02-19-launch/index.html</guid>
+  <pubDate>Mon, 19 Feb 2018 08:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.github.io/quarto-blog/posts/2018-02-19-launch/headshot.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
+</channel>
+</rss>

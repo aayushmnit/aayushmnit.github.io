@@ -1,0 +1,8 @@
+---
+title: 'Real-time Multi-Facial attribute detection using computer vision and deep learning with FastAI and OpenCV'
+author: "Aayush Agrawal"
+date: "2019-02-17"
+categories: [Deep Learning, FastAI, Pytorch, Vision, Video]
+image: "face.gif"
+---
+Blog Transferred to [Medium.com](https://medium.com/@aayushmnit/real-time-multi-facial-attribute-detection-using-transfer-learning-and-haar-cascades-with-fastai-47ff59e36df0).

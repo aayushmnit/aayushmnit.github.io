@@ -1,0 +1,19 @@
+---
+title: 'Deep dive in Hierarchical clustering'
+author: "Aayush Agrawal"
+date: "2017-10-11"
+categories: [Clustering]
+image: "https://github.com/aayushmnit/Data-science-presentation/blob/master/Deep_dive_in_hierarchical_clustering/20171011_201451.jpg?raw=true"
+Venue: "Keller Hall, 200 Union Street SE Minneapolis, MN, Room 3-180"
+Location: "Minneapolis, Minnesota, US"
+---
+
+Presentation and codes on "Deep dive in Hierarchical Clustering". This was material presented by me in Analyze This! meetup on 11th October, 2017
+
+**[Link to the meetup group](https://www.meetup.com/AnalyzeThis/events/243463503/)**
+
+**[Link to Git repo](https://github.com/aayushmnit/Data-science-presentation/tree/master/Deep_dive_in_hierarchical_clustering)**
+
+Photo of me presenting -
+
+<img src="https://github.com/aayushmnit/Data-science-presentation/blob/master/Deep_dive_in_hierarchical_clustering/20171011_201451.jpg?raw=true">

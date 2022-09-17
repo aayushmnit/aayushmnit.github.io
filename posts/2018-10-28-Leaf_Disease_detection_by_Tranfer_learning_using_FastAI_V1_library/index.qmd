@@ -1,0 +1,8 @@
+---
+title: 'Leaf Disease detection by Tranfer learning using FastAI V1 library'
+author: "Aayush Agrawal"
+date: "2018-10-28"
+categories: [Deep Learning, FastAI, Vision]
+image: "leaf_classification.png"
+---
+Blog Transferred to [Medium.com](https://towardsdatascience.com/transfer-learning-using-the-fastai-library-d686b238213e).

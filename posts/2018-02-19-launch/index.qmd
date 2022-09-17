@@ -1,0 +1,15 @@
+---
+title: 'Website launch'
+author: "Aayush Agrawal"
+date: "2018-02-19"
+categories: [launch, announcement]
+image: "launch.jpg"
+---
+
+Finally got time to build my own website on [Github](https://github.com/). This is my first post and I would like to thank [Academic Pages](https://github.com/academicpages/academicpages.github.io) which provided with a wonderful repository to help me get started with building this website.
+
+I am intending to use this website to publish blogs, workshop and any material which would be releveant in Data science field.
+
+Will see you guys in next post.
+
+-Aayush

@@ -1,0 +1,45 @@
+project:
+  type: website
+  output-dir: docs
+website:
+  title: "Aayush Agrawal"
+  site-url: https://aayushmnit.github.io/quarto-blog/
+  repo-url: https://github.com/aayushmnit/quarto-blog
+  repo-actions: [edit, issue]
+  open-graph: true
+  twitter-card:
+    creator: "@aayushmnit"
+    card-style: summary_large_image
+  description: "Aayush's personal website"
+  navbar:
+    left:
+      - href: about.qmd
+        text: About
+      - href: blog.qmd
+        text: Blog
+      - href: talks.qmd
+        text: Talks
+    right:
+      - icon: github
+        href: https://github.com/aayushmnit/
+      - icon: linkedin
+        href: https://www.linkedin.com/in/aayushmnit/
+      - icon: medium
+        href: https://medium.com/@aayushmnit
+      - icon: twitter
+        href: https://twitter.com/aayushmnit
+      - icon: envelope
+        href: mailto:aayushmnit@gmail.com
+      
+
+format:
+  html:
+    theme: 
+      light: sandstone
+      dark: darkly
+    mainfont: Roboto
+    css: styles.css
+    toc: true
+
+
+

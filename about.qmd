@@ -1,0 +1,28 @@
+---
+title: "About Me"
+image: headshot.png
+about:
+  template: solana
+  image-width: 10em
+  image-shape: round
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/aayushmnit
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/aayushmnit/
+    - icon: medium
+      text: Medium
+      href: https://medium.com/@aayushmnit
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/aayushmnit
+    - icon: envelope
+      text: Email
+      href: mailto:aayushmnit@gmail.com
+
+---
+
+I'm an experienced Data Scientist with specialized skills in machine learning-based solutions. I enjoy staying on top of cutting-edge data technologies, including big data platforms, deep learning, optimization methods, and business analytics. My current work involves building data-driven products to enable smarter recommendations for Microsoft Partners, M365 service administrators and end-users to ensure the best usage of M365 services. Before that, I have experience working in various verticals like agricultural technology, pharmaceuticals, retail, e-commerce, and ride-sharing business model.
+
