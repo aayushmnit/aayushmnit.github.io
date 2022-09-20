@@ -10,7 +10,764 @@
 <atom:link href="https://aayushmnit.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush's personal website</description>
 <generator>quarto-1.2.124</generator>
-<lastBuildDate>Sun, 17 Mar 2019 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 19 Sep 2022 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>Fast Synthetic Control approximation using SparseSC</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.github.io/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</link>
+  <description><![CDATA[ 
+
+
+
+<blockquote class="blockquote">
+<p>Understanding Synthetic Control and using <a href="https://github.com/microsoft/SparseSC">Microsoft’s SparceSC</a> package to run synthetic control on larger datasets.</p>
+</blockquote>
+<section id="what-is-synthetic-control-method" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-synthetic-control-method">What is Synthetic Control Method?</h2>
+<p>I will try to keep this part short and focus more on why Data scientists should care about such methods and how to use them on larger datasets based on practical experience using <a href="https://github.com/microsoft/SparseSC">SparseSC package</a>.</p>
+<p>The Synthetic Control (SC) method is a statistical method used to estimate causal effects from binary treatments on observational panel (longitudinal) data. The method got quite a coverage by being described as <a href="https://www.aeaweb.org/articles?id=10.1257/jep.31.2.3">“the most important innovation in the policy evaluation literature in the last few years”</a> and got an article published in <a href="https://www.washingtonpost.com/news/wonk/wp/2015/10/30/how-to-measure-things-in-a-world-of-competing-claims/">Washington Post - Seriously, here’s one amazing math trick to learn what can’t be known</a>. “SC is a technique to create an artificial control group by taking a weighted average of untreated units in such a way that it reproduces the characteristics of the treated units before the intervention(treatment). The SC acts as the counterfactual for a treatment unit, and the estimate of a treatment effect is the difference between the observed outcome in the post-treatment period and the SC’s outcome.”<sup>1</sup></p>
+<p>“One way to think of SC is as an improvement upon <a href="https://en.wikipedia.org/wiki/Difference_in_differences">difference-in-difference (DiD) estimation</a>. Typical DiD will compare a treated unit to the average of the control units. But often the treated unit does not look like a typical control (e.g., it might have a different growth rate), in which case the ‘parallel trend’ assumption of DiD is not valid. SC remedies this by choosing a smarter linear combination, rather than the simple average, to weigh more heavily the more similar units. SC’s assumption is if there are endogenous factors that affect treatment and future outcomes then you should be able to control them by matching past outcomes. The matching that SC provides can therefore deal with some problems in estimation that DiD cannot handle.”<sup>2</sup></p>
+<p>Here is the link to the Causal inference book which I found most useful to understand the math behind SC- <a href="https://matheusfacure.github.io/python-causality-handbook/15-Synthetic-Control.html">Causal Inference for The Brave and True by Matheus Facure - Chapter 15</a>.</p>
+</section>
+<section id="why-should-any-data-scientist-care-about-this-method" class="level2">
+<h2 class="anchored" data-anchor-id="why-should-any-data-scientist-care-about-this-method">Why should any Data scientist care about this method?</h2>
+<p>Often as a Data Scientist, you will encounter situations as follows where running A/B testing is not feasible because of -</p>
+<ol type="1">
+<li>Lack of infrastructure</li>
+<li>Lack of similar groups for running A/B testing (in case of evaluation of state policies, as there is no state equivalent of other)</li>
+<li>Providing unwanted advantage to one group over others. Sometimes running an A/B test can give an unfair advantage and lead you into anti-trust territory. For example, what if Amazon tries to charge differential pricing for different customers or apply different margins for their sellers for the same product?</li>
+</ol>
+<p>As a data scientist, stakeholders may still ask you to estimate the impact of certain changes/treatments, and Synthetic controls can come to the rescue in this situation. For this reason, it is a valuable tool to keep in your algorithmic toolkit.</p>
+</section>
+<section id="problem-overview" class="level2">
+<h2 class="anchored" data-anchor-id="problem-overview">Problem Overview</h2>
+<p>We will use the Proposition 99 data to explain the use case for this approach and also how to use the SparceSC library and its key features. “In 1988, California passed a famous Tobacco Tax and Health Protection Act, which became known as Proposition 99. Its primary effect is to impose a 25-cent per pack state excise tax on the sale of tobacco cigarettes within California, with approximately equivalent excise taxes similarly imposed on the retail sale of other commercial tobacco products, such as cigars and chewing tobacco. Additional restrictions placed on the sale of tobacco include a ban on cigarette vending machines in public areas accessible by juveniles, and a ban on the individual sale of single cigarettes. Revenue generated by the act was earmarked for various environmental and health care programs, and anti-tobacco advertisements. To evaluate its effect, we can gather data on cigarette sales from multiple states and across a number of years. In our case, we got data from the year 1970 to 2000 from 39 states.”<sup>3</sup></p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-19T22:37:01.489638Z&quot;,&quot;start_time&quot;:&quot;2022-09-19T22:37:01.486061Z&quot;}" data-execution_count="21">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;"># Importing required libraries</span></span>
+<span id="cb1-2"><span class="im" style="color: #00769E;">import</span> pandas <span class="im" style="color: #00769E;">as</span> pd</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;">import</span> numpy <span class="im" style="color: #00769E;">as</span> np</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;">import</span> SparseSC</span>
+<span id="cb1-5"><span class="im" style="color: #00769E;">from</span> datetime <span class="im" style="color: #00769E;">import</span> datetime</span>
+<span id="cb1-6"><span class="im" style="color: #00769E;">import</span> warnings</span>
+<span id="cb1-7"><span class="im" style="color: #00769E;">import</span> plotly.express <span class="im" style="color: #00769E;">as</span> px</span>
+<span id="cb1-8"><span class="im" style="color: #00769E;">import</span> plotly.graph_objects <span class="im" style="color: #00769E;">as</span> pgo</span>
+<span id="cb1-9">pd.set_option(<span class="st" style="color: #20794D;">"display.max_columns"</span>, <span class="va" style="color: #111111;">None</span>)</span>
+<span id="cb1-10">warnings.filterwarnings(<span class="st" style="color: #20794D;">'ignore'</span>)</span></code></pre></div>
+</details>
+</div>
+<p>Let’s look at the data</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-19T22:48:59.129571Z&quot;,&quot;start_time&quot;:&quot;2022-09-19T22:48:58.978970Z&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="co" style="color: #5E5E5E;">#Import data</span></span>
+<span id="cb2-2">data_dir <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"https://raw.githubusercontent.com/OscarEngelbrektson/SyntheticControlMethods/master/examples/datasets/"</span></span>
+<span id="cb2-3">df <span class="op" style="color: #5E5E5E;">=</span> pd.read_csv(data_dir <span class="op" style="color: #5E5E5E;">+</span> <span class="st" style="color: #20794D;">"smoking_data"</span> <span class="op" style="color: #5E5E5E;">+</span> <span class="st" style="color: #20794D;">".csv"</span>).drop(columns<span class="op" style="color: #5E5E5E;">=</span>[<span class="st" style="color: #20794D;">"lnincome"</span>,<span class="st" style="color: #20794D;">"beer"</span>, <span class="st" style="color: #20794D;">"age15to24"</span>])</span>
+<span id="cb2-4">df.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>state</th>
+      <th>year</th>
+      <th>cigsale</th>
+      <th>retprice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Alabama</td>
+      <td>1970.0</td>
+      <td>89.8</td>
+      <td>39.6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Alabama</td>
+      <td>1971.0</td>
+      <td>95.4</td>
+      <td>42.7</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Alabama</td>
+      <td>1972.0</td>
+      <td>101.1</td>
+      <td>42.3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Alabama</td>
+      <td>1973.0</td>
+      <td>102.9</td>
+      <td>42.1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Alabama</td>
+      <td>1974.0</td>
+      <td>108.2</td>
+      <td>43.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We have data per <code>state</code> as treatment unit and yearly (<code>year</code> column) per-capita sales of cigarettes in packs (<code>cigsale</code> column) and the cigarette retail price (<code>retprice</code> column). We are going to pivot this data so that each row is one treatment unit(<code>state</code>), and columns represent the yearly <code>cigsale</code> value.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-19T22:49:00.460199Z&quot;,&quot;start_time&quot;:&quot;2022-09-19T22:49:00.428498Z&quot;}" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">df <span class="op" style="color: #5E5E5E;">=</span> df.pivot(index<span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'state'</span>, columns <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'year'</span>, values <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"cigsale"</span>)</span>
+<span id="cb3-2">df.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>year</th>
+      <th>1970.0</th>
+      <th>1971.0</th>
+      <th>1972.0</th>
+      <th>1973.0</th>
+      <th>1974.0</th>
+      <th>1975.0</th>
+      <th>1976.0</th>
+      <th>1977.0</th>
+      <th>1978.0</th>
+      <th>1979.0</th>
+      <th>1980.0</th>
+      <th>1981.0</th>
+      <th>1982.0</th>
+      <th>1983.0</th>
+      <th>1984.0</th>
+      <th>1985.0</th>
+      <th>1986.0</th>
+      <th>1987.0</th>
+      <th>1988.0</th>
+      <th>1989.0</th>
+      <th>1990.0</th>
+      <th>1991.0</th>
+      <th>1992.0</th>
+      <th>1993.0</th>
+      <th>1994.0</th>
+      <th>1995.0</th>
+      <th>1996.0</th>
+      <th>1997.0</th>
+      <th>1998.0</th>
+      <th>1999.0</th>
+      <th>2000.0</th>
+    </tr>
+    <tr>
+      <th>state</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Alabama</th>
+      <td>89.8</td>
+      <td>95.4</td>
+      <td>101.1</td>
+      <td>102.9</td>
+      <td>108.2</td>
+      <td>111.7</td>
+      <td>116.2</td>
+      <td>117.1</td>
+      <td>123.0</td>
+      <td>121.4</td>
+      <td>123.2</td>
+      <td>119.6</td>
+      <td>119.1</td>
+      <td>116.3</td>
+      <td>113.0</td>
+      <td>114.5</td>
+      <td>116.3</td>
+      <td>114.0</td>
+      <td>112.1</td>
+      <td>105.6</td>
+      <td>108.6</td>
+      <td>107.9</td>
+      <td>109.1</td>
+      <td>108.5</td>
+      <td>107.1</td>
+      <td>102.6</td>
+      <td>101.4</td>
+      <td>104.9</td>
+      <td>106.2</td>
+      <td>100.7</td>
+      <td>96.2</td>
+    </tr>
+    <tr>
+      <th>Arkansas</th>
+      <td>100.3</td>
+      <td>104.1</td>
+      <td>103.9</td>
+      <td>108.0</td>
+      <td>109.7</td>
+      <td>114.8</td>
+      <td>119.1</td>
+      <td>122.6</td>
+      <td>127.3</td>
+      <td>126.5</td>
+      <td>131.8</td>
+      <td>128.7</td>
+      <td>127.4</td>
+      <td>128.0</td>
+      <td>123.1</td>
+      <td>125.8</td>
+      <td>126.0</td>
+      <td>122.3</td>
+      <td>121.5</td>
+      <td>118.3</td>
+      <td>113.1</td>
+      <td>116.8</td>
+      <td>126.0</td>
+      <td>113.8</td>
+      <td>108.8</td>
+      <td>113.0</td>
+      <td>110.7</td>
+      <td>108.7</td>
+      <td>109.5</td>
+      <td>104.8</td>
+      <td>99.4</td>
+    </tr>
+    <tr>
+      <th>California</th>
+      <td>123.0</td>
+      <td>121.0</td>
+      <td>123.5</td>
+      <td>124.4</td>
+      <td>126.7</td>
+      <td>127.1</td>
+      <td>128.0</td>
+      <td>126.4</td>
+      <td>126.1</td>
+      <td>121.9</td>
+      <td>120.2</td>
+      <td>118.6</td>
+      <td>115.4</td>
+      <td>110.8</td>
+      <td>104.8</td>
+      <td>102.8</td>
+      <td>99.7</td>
+      <td>97.5</td>
+      <td>90.1</td>
+      <td>82.4</td>
+      <td>77.8</td>
+      <td>68.7</td>
+      <td>67.5</td>
+      <td>63.4</td>
+      <td>58.6</td>
+      <td>56.4</td>
+      <td>54.5</td>
+      <td>53.8</td>
+      <td>52.3</td>
+      <td>47.2</td>
+      <td>41.6</td>
+    </tr>
+    <tr>
+      <th>Colorado</th>
+      <td>124.8</td>
+      <td>125.5</td>
+      <td>134.3</td>
+      <td>137.9</td>
+      <td>132.8</td>
+      <td>131.0</td>
+      <td>134.2</td>
+      <td>132.0</td>
+      <td>129.2</td>
+      <td>131.5</td>
+      <td>131.0</td>
+      <td>133.8</td>
+      <td>130.5</td>
+      <td>125.3</td>
+      <td>119.7</td>
+      <td>112.4</td>
+      <td>109.9</td>
+      <td>102.4</td>
+      <td>94.6</td>
+      <td>88.8</td>
+      <td>87.4</td>
+      <td>90.2</td>
+      <td>88.3</td>
+      <td>88.6</td>
+      <td>89.1</td>
+      <td>85.4</td>
+      <td>83.1</td>
+      <td>81.3</td>
+      <td>81.2</td>
+      <td>79.6</td>
+      <td>73.0</td>
+    </tr>
+    <tr>
+      <th>Connecticut</th>
+      <td>120.0</td>
+      <td>117.6</td>
+      <td>110.8</td>
+      <td>109.3</td>
+      <td>112.4</td>
+      <td>110.2</td>
+      <td>113.4</td>
+      <td>117.3</td>
+      <td>117.5</td>
+      <td>117.4</td>
+      <td>118.0</td>
+      <td>116.4</td>
+      <td>114.7</td>
+      <td>114.1</td>
+      <td>112.5</td>
+      <td>111.0</td>
+      <td>108.5</td>
+      <td>109.0</td>
+      <td>104.8</td>
+      <td>100.6</td>
+      <td>91.5</td>
+      <td>86.7</td>
+      <td>83.5</td>
+      <td>79.1</td>
+      <td>76.6</td>
+      <td>79.3</td>
+      <td>76.0</td>
+      <td>75.9</td>
+      <td>75.5</td>
+      <td>73.4</td>
+      <td>71.4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Let’s observe how cigarettes sales per capita is trending over time w.r.t California and other states.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-19T23:02:32.089761Z&quot;,&quot;start_time&quot;:&quot;2022-09-19T23:02:32.007794Z&quot;}" data-code_folding="[]" data-execution_count="44">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">plot_df <span class="op" style="color: #5E5E5E;">=</span> df.loc[df.index <span class="op" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">"California"</span>].T.reset_index(drop<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>)</span>
+<span id="cb4-2">plot_df[<span class="st" style="color: #20794D;">"OtherStates"</span>] <span class="op" style="color: #5E5E5E;">=</span> df.loc[df.index <span class="op" style="color: #5E5E5E;">!=</span> <span class="st" style="color: #20794D;">"California"</span>].mean(axis<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">0</span>).values</span>
+<span id="cb4-3"></span>
+<span id="cb4-4"></span>
+<span id="cb4-5">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb4-6">        data_frame <span class="op" style="color: #5E5E5E;">=</span> plot_df, </span>
+<span id="cb4-7">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"year"</span>, </span>
+<span id="cb4-8">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"California"</span>,<span class="st" style="color: #20794D;">"OtherStates"</span>], </span>
+<span id="cb4-9">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb4-10"></span>
+<span id="cb4-11">fig.add_trace(</span>
+<span id="cb4-12">    pgo.Scatter(</span>
+<span id="cb4-13">        x<span class="op" style="color: #5E5E5E;">=</span>[<span class="dv" style="color: #AD0000;">1988</span>,<span class="dv" style="color: #AD0000;">1988</span>],</span>
+<span id="cb4-14">        y<span class="op" style="color: #5E5E5E;">=</span>[plot_df.California.<span class="bu" style="color: null;">min</span>()<span class="op" style="color: #5E5E5E;">*</span><span class="fl" style="color: #AD0000;">0.98</span>,plot_df.OtherStates.<span class="bu" style="color: null;">max</span>()<span class="op" style="color: #5E5E5E;">*</span><span class="fl" style="color: #AD0000;">1.02</span>], </span>
+<span id="cb4-15">        line<span class="op" style="color: #5E5E5E;">=</span>{</span>
+<span id="cb4-16">            <span class="st" style="color: #20794D;">'dash'</span>: <span class="st" style="color: #20794D;">'dash'</span>,</span>
+<span id="cb4-17">        }, name<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'Proposition 99'</span></span>
+<span id="cb4-18">    ))</span>
+<span id="cb4-19">fig.update_layout(</span>
+<span id="cb4-20">        title  <span class="op" style="color: #5E5E5E;">=</span> {</span>
+<span id="cb4-21">            <span class="st" style="color: #20794D;">'text'</span>:<span class="st" style="color: #20794D;">"Gap in per-capita cigarette sales(in packs)"</span>,</span>
+<span id="cb4-22">            <span class="st" style="color: #20794D;">'y'</span>:<span class="fl" style="color: #AD0000;">0.95</span>,</span>
+<span id="cb4-23">            <span class="st" style="color: #20794D;">'x'</span>:<span class="fl" style="color: #AD0000;">0.5</span>,</span>
+<span id="cb4-24">        },</span>
+<span id="cb4-25">        legend <span class="op" style="color: #5E5E5E;">=</span>  <span class="bu" style="color: null;">dict</span>(y<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">1</span>, x<span class="op" style="color: #5E5E5E;">=</span> <span class="fl" style="color: #AD0000;">0.8</span>, orientation<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'v'</span>),</span>
+<span id="cb4-26">        legend_title <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb4-27">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Year"</span>, </span>
+<span id="cb4-28">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Cigarette Sales Trend"</span>,</span>
+<span id="cb4-29">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb4-30">)</span>
+<span id="cb4-31">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="74277de2-7157-4a98-ad73-7f62def45491" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("74277de2-7157-4a98-ad73-7f62def45491")) {                    Plotly.newPlot(                        "74277de2-7157-4a98-ad73-7f62def45491",                        [{"hovertemplate":"variable=California<br>year=%{x}<br>value=%{y}<extra></extra>","legendgroup":"California","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"California","orientation":"v","showlegend":true,"x":[1970.0,1971.0,1972.0,1973.0,1974.0,1975.0,1976.0,1977.0,1978.0,1979.0,1980.0,1981.0,1982.0,1983.0,1984.0,1985.0,1986.0,1987.0,1988.0,1989.0,1990.0,1991.0,1992.0,1993.0,1994.0,1995.0,1996.0,1997.0,1998.0,1999.0,2000.0],"xaxis":"x","y":[123.0,121.0,123.5,124.4,126.7,127.1,128.0,126.4,126.1,121.9,120.2,118.6,115.4,110.8,104.8,102.8,99.7,97.5,90.1,82.4,77.8,68.7,67.5,63.4,58.6,56.4,54.5,53.8,52.3,47.2,41.6],"yaxis":"y","type":"scatter"},{"hovertemplate":"variable=OtherStates<br>year=%{x}<br>value=%{y}<extra></extra>","legendgroup":"OtherStates","line":{"color":"#EF553B","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"OtherStates","orientation":"v","showlegend":true,"x":[1970.0,1971.0,1972.0,1973.0,1974.0,1975.0,1976.0,1977.0,1978.0,1979.0,1980.0,1981.0,1982.0,1983.0,1984.0,1985.0,1986.0,1987.0,1988.0,1989.0,1990.0,1991.0,1992.0,1993.0,1994.0,1995.0,1996.0,1997.0,1998.0,1999.0,2000.0],"xaxis":"x","y":[120.08421052631579,123.86315789473683,129.17894736842106,131.53947368421052,134.6684210526316,136.9315789473684,141.26052631578943,141.0894736842105,140.47368421052633,138.08684210526317,138.08947368421053,137.98684210526318,136.2947368421053,131.25,124.90263157894735,123.11578947368423,120.59473684210529,117.58684210526314,113.82368421052634,109.66315789473686,105.66578947368424,104.34210526315789,103.39473684210526,102.69473684210524,102.11842105263159,103.15789473684208,101.1842105263158,101.78947368421052,100.95789473684208,97.59473684210526,92.13421052631578],"yaxis":"y","type":"scatter"},{"line":{"dash":"dash"},"name":"Proposition 99","x":[1988,1988],"y":[40.768,144.08573684210523],"type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Year"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Cigarette Sales Trend"}},"legend":{"title":{"text":""},"tracegroupgap":0,"y":1,"x":0.8,"orientation":"v"},"margin":{"t":60},"title":{"text":"Gap in per-capita cigarette sales(in packs)","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('74277de2-7157-4a98-ad73-7f62def45491');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig 1 - Cigarette sales comparison b/w California and other states</p>
+</div>
+</div>
+<p>As we can see from the chart above, we can see that there is a general decline in cigarette sales after the 1980s, and with the introduction of Proposition 99, the decreasing trend accelerated for the state of California. We cannot say for sure if this is happening with any statistical significance, it is just something we observed by examining the chart above.</p>
+<p>To answer the question of whether Proposition 99 influenced cigarette consumption, we will use the pre-intervention period (1970-1988) to build a synthetic control group that mimics California cigarette sales trend. Then, we will see how this synthetic control behaves after the intervention.</p>
+</section>
+<section id="fitting-synthetic-control-using-sparsesc-package" class="level2">
+<h2 class="anchored" data-anchor-id="fitting-synthetic-control-using-sparsesc-package">Fitting Synthetic Control using SparseSC package</h2>
+<p>On a high level <code>SparseSC</code> package provide two functions for fitting Synthetic controls i.e., <code>fit()</code> method and <code>fit_fast()</code> method. On a high level -</p>
+<ul>
+<li><code>fit()</code> - This method tries to compute the weight jointly and results in SCs which are ‘optimal’. This is the most common method used in most of the code/libraries I have found but it is computationally expensive and takes a long time to run. Hence, does not scale for larger datasets.</li>
+<li><code>fit_fast()</code>- This method tries to compute the weight separately by performing some non-matching analysis. This solution is much faster and often the only feasible method with larger datasets. The authors of this package recommend the <code>fit_fast</code> method to start with and only move towards the <code>fit</code> method if needed.</li>
+</ul>
+<p>The <a href="https://sparsesc.readthedocs.io/en/latest/api_ref.html#fit-a-synthetic-controls-model-fast-separate"><code>SparseSC.fit_fast()</code></a> method required at least three arguments -</p>
+<ol type="1">
+<li><strong>features</strong> - This is the NumPy matrix of I/p variables where each row represents a treatment/control unit (states in our case), each column is the period from pre-treatment (1970-1988), and the value in the matrix is the metric of interest (in this case it is the <code>cigsale</code> value)</li>
+<li><strong>targets</strong> - This is the NumPy matrix of I/p variables where each row represents a treatment/control unit (states in our case), each column is the period from post-treatment (1999-2000), and the value in the matrix is the metric of interest (in this case it is the <code>cigsale</code> value)</li>
+<li><strong>treatment_units</strong> - This is the list of integers containing the row index value of treated units</li>
+</ol>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that treatment units can be a list of multiple treatment indexes. Think of cases where the same treatment is applied to multiple groups, for example, what if proposition 99 was rolled in both California and Minnesota State, in this case, treatment_units will get [2, 15], which are the respective index of these states.</p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-19T23:38:19.485208Z&quot;,&quot;start_time&quot;:&quot;2022-09-19T23:38:17.125653Z&quot;}" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="co" style="color: #5E5E5E;">## creating required features</span></span>
+<span id="cb5-2">features <span class="op" style="color: #5E5E5E;">=</span> df.iloc[:,df.columns <span class="op" style="color: #5E5E5E;">&lt;=</span> <span class="dv" style="color: #AD0000;">1988</span>].values</span>
+<span id="cb5-3">targets <span class="op" style="color: #5E5E5E;">=</span> df.iloc[:,df.columns <span class="op" style="color: #5E5E5E;">&gt;</span> <span class="dv" style="color: #AD0000;">1988</span>].values</span>
+<span id="cb5-4">treated_units <span class="op" style="color: #5E5E5E;">=</span> [idx <span class="cf" style="color: #003B4F;">for</span> idx, val <span class="kw" style="color: #003B4F;">in</span> <span class="bu" style="color: null;">enumerate</span>(df.index.values) <span class="cf" style="color: #003B4F;">if</span> val <span class="op" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">'California'</span>] <span class="co" style="color: #5E5E5E;"># [2]</span></span>
+<span id="cb5-5"></span>
+<span id="cb5-6"><span class="co" style="color: #5E5E5E;">## Fit fast model for fitting Synthetic controls</span></span>
+<span id="cb5-7">sc_model <span class="op" style="color: #5E5E5E;">=</span> SparseSC.fit_fast( </span>
+<span id="cb5-8">    features<span class="op" style="color: #5E5E5E;">=</span>features,</span>
+<span id="cb5-9">    targets<span class="op" style="color: #5E5E5E;">=</span>targets,</span>
+<span id="cb5-10">    treated_units<span class="op" style="color: #5E5E5E;">=</span>treated_units</span>
+<span id="cb5-11">)</span></code></pre></div>
+</div>
+<p>Now that we have fitted the model, let’s get the Synthetic Control output by using <code>predict()</code> function.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-19T23:45:42.036259Z&quot;,&quot;start_time&quot;:&quot;2022-09-19T23:45:42.025415Z&quot;}" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">result <span class="op" style="color: #5E5E5E;">=</span> df.loc[new_df.index <span class="op" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">'California'</span>].T.reset_index(drop<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>)</span>
+<span id="cb6-2">result.columns <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"year"</span>, <span class="st" style="color: #20794D;">"Observed"</span>] </span>
+<span id="cb6-3">result[<span class="st" style="color: #20794D;">'Synthetic'</span>] <span class="op" style="color: #5E5E5E;">=</span> sc_model.predict(df.values)[treated_units,:][<span class="dv" style="color: #AD0000;">0</span>]</span>
+<span id="cb6-4">result.head(<span class="dv" style="color: #AD0000;">5</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="62">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>year</th>
+      <th>Observed</th>
+      <th>Synthetic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1970.0</td>
+      <td>123.0</td>
+      <td>122.394195</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1971.0</td>
+      <td>121.0</td>
+      <td>125.114849</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1972.0</td>
+      <td>123.5</td>
+      <td>129.704372</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1973.0</td>
+      <td>124.4</td>
+      <td>126.753988</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1974.0</td>
+      <td>126.7</td>
+      <td>126.276394</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Now that we have our synthetic control, we can plot it with the outcome variable of the State of California.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-19T23:44:58.831785Z&quot;,&quot;start_time&quot;:&quot;2022-09-19T23:44:58.751776Z&quot;}" data-code_folding="[]" data-execution_count="61">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb7-2">        data_frame <span class="op" style="color: #5E5E5E;">=</span> result, </span>
+<span id="cb7-3">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"year"</span>, </span>
+<span id="cb7-4">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"Observed"</span>,<span class="st" style="color: #20794D;">"Synthetic"</span>], </span>
+<span id="cb7-5">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>,)</span>
+<span id="cb7-6"></span>
+<span id="cb7-7">fig.add_trace(</span>
+<span id="cb7-8">    pgo.Scatter(</span>
+<span id="cb7-9">        x<span class="op" style="color: #5E5E5E;">=</span>[<span class="dv" style="color: #AD0000;">1988</span>,<span class="dv" style="color: #AD0000;">1988</span>],</span>
+<span id="cb7-10">        y<span class="op" style="color: #5E5E5E;">=</span>[result.Observed.<span class="bu" style="color: null;">min</span>()<span class="op" style="color: #5E5E5E;">*</span><span class="fl" style="color: #AD0000;">0.98</span>,result.Observed.<span class="bu" style="color: null;">max</span>()<span class="op" style="color: #5E5E5E;">*</span><span class="fl" style="color: #AD0000;">1.02</span>], </span>
+<span id="cb7-11">        line<span class="op" style="color: #5E5E5E;">=</span>{</span>
+<span id="cb7-12">            <span class="st" style="color: #20794D;">'dash'</span>: <span class="st" style="color: #20794D;">'dash'</span>,</span>
+<span id="cb7-13">        }, name<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'Proposition 99'</span></span>
+<span id="cb7-14">    ))</span>
+<span id="cb7-15">fig.update_layout(</span>
+<span id="cb7-16">        title  <span class="op" style="color: #5E5E5E;">=</span> {</span>
+<span id="cb7-17">            <span class="st" style="color: #20794D;">'text'</span>:<span class="st" style="color: #20794D;">"Synthetic Control Assessment"</span>,</span>
+<span id="cb7-18">            <span class="st" style="color: #20794D;">'y'</span>:<span class="fl" style="color: #AD0000;">0.95</span>,</span>
+<span id="cb7-19">            <span class="st" style="color: #20794D;">'x'</span>:<span class="fl" style="color: #AD0000;">0.5</span>,</span>
+<span id="cb7-20">        },</span>
+<span id="cb7-21">        legend <span class="op" style="color: #5E5E5E;">=</span>  <span class="bu" style="color: null;">dict</span>(y<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">1</span>, x<span class="op" style="color: #5E5E5E;">=</span> <span class="fl" style="color: #AD0000;">0.8</span>, orientation<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'v'</span>),</span>
+<span id="cb7-22">        legend_title <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb7-23">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Year"</span>, </span>
+<span id="cb7-24">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Per-capita cigarette sales (in packs)"</span>,</span>
+<span id="cb7-25">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb7-26">)</span>
+<span id="cb7-27">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="542e21e5-5eb6-40cc-ab32-af88ab237d66" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("542e21e5-5eb6-40cc-ab32-af88ab237d66")) {                    Plotly.newPlot(                        "542e21e5-5eb6-40cc-ab32-af88ab237d66",                        [{"hovertemplate":"variable=Observed<br>year=%{x}<br>value=%{y}<extra></extra>","legendgroup":"Observed","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"Observed","orientation":"v","showlegend":true,"x":[1970.0,1971.0,1972.0,1973.0,1974.0,1975.0,1976.0,1977.0,1978.0,1979.0,1980.0,1981.0,1982.0,1983.0,1984.0,1985.0,1986.0,1987.0,1988.0,1989.0,1990.0,1991.0,1992.0,1993.0,1994.0,1995.0,1996.0,1997.0,1998.0,1999.0,2000.0],"xaxis":"x","y":[123.0,121.0,123.5,124.4,126.7,127.1,128.0,126.4,126.1,121.9,120.2,118.6,115.4,110.8,104.8,102.8,99.7,97.5,90.1,82.4,77.8,68.7,67.5,63.4,58.6,56.4,54.5,53.8,52.3,47.2,41.6],"yaxis":"y","type":"scatter"},{"hovertemplate":"variable=Synthetic<br>year=%{x}<br>value=%{y}<extra></extra>","legendgroup":"Synthetic","line":{"color":"#EF553B","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"Synthetic","orientation":"v","showlegend":true,"x":[1970.0,1971.0,1972.0,1973.0,1974.0,1975.0,1976.0,1977.0,1978.0,1979.0,1980.0,1981.0,1982.0,1983.0,1984.0,1985.0,1986.0,1987.0,1988.0,1989.0,1990.0,1991.0,1992.0,1993.0,1994.0,1995.0,1996.0,1997.0,1998.0,1999.0,2000.0],"xaxis":"x","y":[122.39419543795634,125.11484907716071,129.70437153278635,126.75398805805592,126.27639360089289,125.86385415224272,129.67871364848983,126.76338485105019,124.82565047900707,121.53770717432565,119.07320698588394,118.94467812486528,116.03906494940466,112.00211743939204,104.84744039907635,101.9020730834,98.98909548538309,97.48915714644018,90.57919413391346,87.17813806953373,81.2825247021521,77.88963882286453,76.53169130078273,77.58881937062345,76.92113408610153,76.96745449890892,76.49989174501248,76.9078326174167,77.93215325057477,76.91902987423963,70.38613013210903],"yaxis":"y","type":"scatter"},{"line":{"dash":"dash"},"name":"Proposition 99","x":[1988,1988],"y":[40.768,130.56],"type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Year"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Per-capita cigarette sales (in packs)"}},"legend":{"title":{"text":""},"tracegroupgap":0,"y":1,"x":0.8,"orientation":"v"},"margin":{"t":60},"title":{"text":"Synthetic Control Assessment","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('542e21e5-5eb6-40cc-ab32-af88ab237d66');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig - Assessment of Proposition 99 on state of California using Synthetic Control</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the pre-intervention period, the synthetic control does not reproduce the treatment exactly but follows the curve closely. This is a good sign, as it indicates that we are not overfitting. Also, note that we do see divergence after the intervention (introduction of Proposition 99) after 1988.</p>
+</div>
+</div>
+<p>With the synthetic control groups in hand, we can estimate the treatment effect as the gap between the treated and the synthetic control outcomes.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-19T23:57:06.336779Z&quot;,&quot;start_time&quot;:&quot;2022-09-19T23:57:06.260290Z&quot;}" data-execution_count="70">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">result[<span class="st" style="color: #20794D;">'California Effect'</span>] <span class="op" style="color: #5E5E5E;">=</span> result.Observed <span class="op" style="color: #5E5E5E;">-</span> result.Synthetic</span>
+<span id="cb8-2">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb8-3">        data_frame <span class="op" style="color: #5E5E5E;">=</span> result, </span>
+<span id="cb8-4">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"year"</span>, </span>
+<span id="cb8-5">        y <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"California Effect"</span>, </span>
+<span id="cb8-6">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>,)</span>
+<span id="cb8-7">fig.add_hline(<span class="dv" style="color: #AD0000;">0</span>)</span>
+<span id="cb8-8">fig.add_trace(</span>
+<span id="cb8-9">    pgo.Scatter(</span>
+<span id="cb8-10">        x<span class="op" style="color: #5E5E5E;">=</span>[<span class="dv" style="color: #AD0000;">1988</span>,<span class="dv" style="color: #AD0000;">1988</span>],</span>
+<span id="cb8-11">        y<span class="op" style="color: #5E5E5E;">=</span>[result[<span class="st" style="color: #20794D;">"California Effect"</span>].<span class="bu" style="color: null;">min</span>()<span class="op" style="color: #5E5E5E;">*</span><span class="fl" style="color: #AD0000;">0.98</span>,result[<span class="st" style="color: #20794D;">"California Effect"</span>].<span class="bu" style="color: null;">max</span>()<span class="op" style="color: #5E5E5E;">*</span><span class="fl" style="color: #AD0000;">1.02</span>], </span>
+<span id="cb8-12">        line<span class="op" style="color: #5E5E5E;">=</span>{</span>
+<span id="cb8-13">            <span class="st" style="color: #20794D;">'dash'</span>: <span class="st" style="color: #20794D;">'dash'</span>,</span>
+<span id="cb8-14">        }, name<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'Proposition 99'</span></span>
+<span id="cb8-15">    ))</span>
+<span id="cb8-16"></span>
+<span id="cb8-17">fig.update_layout(</span>
+<span id="cb8-18">        title  <span class="op" style="color: #5E5E5E;">=</span> {</span>
+<span id="cb8-19">            <span class="st" style="color: #20794D;">'text'</span>:<span class="st" style="color: #20794D;">"Difference across time"</span>,</span>
+<span id="cb8-20">            <span class="st" style="color: #20794D;">'y'</span>:<span class="fl" style="color: #AD0000;">0.95</span>,</span>
+<span id="cb8-21">            <span class="st" style="color: #20794D;">'x'</span>:<span class="fl" style="color: #AD0000;">0.5</span>,</span>
+<span id="cb8-22">        },</span>
+<span id="cb8-23">        legend <span class="op" style="color: #5E5E5E;">=</span>  <span class="bu" style="color: null;">dict</span>(y<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">1</span>, x<span class="op" style="color: #5E5E5E;">=</span> <span class="fl" style="color: #AD0000;">0.8</span>, orientation<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'v'</span>),</span>
+<span id="cb8-24">        legend_title <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb8-25">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Year"</span>, </span>
+<span id="cb8-26">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Gap in Per-capita cigarette sales (in packs)"</span>,</span>
+<span id="cb8-27">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb8-28">)</span>
+<span id="cb8-29">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="01541824-9bf6-4108-8553-8b762c7e22e7" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("01541824-9bf6-4108-8553-8b762c7e22e7")) {                    Plotly.newPlot(                        "01541824-9bf6-4108-8553-8b762c7e22e7",                        [{"hovertemplate":"year=%{x}<br>California Effect=%{y}<extra></extra>","legendgroup":"","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"lines","name":"","orientation":"v","showlegend":false,"x":[1970.0,1971.0,1972.0,1973.0,1974.0,1975.0,1976.0,1977.0,1978.0,1979.0,1980.0,1981.0,1982.0,1983.0,1984.0,1985.0,1986.0,1987.0,1988.0,1989.0,1990.0,1991.0,1992.0,1993.0,1994.0,1995.0,1996.0,1997.0,1998.0,1999.0,2000.0],"xaxis":"x","y":[0.6058045620436587,-4.114849077160713,-6.204371532786354,-2.3539880580559185,0.42360639910711484,1.236145847757271,-1.6787136484898326,-0.3633848510501849,1.2743495209929279,0.36229282567435916,1.1267930141160605,-0.3446781248652826,-0.6390649494046556,-1.2021174393920404,-0.04744039907635056,0.8979269165999995,0.7109045146169137,0.010842853559822174,-0.47919413391346666,-4.778138069533725,-3.482524702152105,-9.189638822864524,-9.031691300782725,-14.188819370623456,-18.32113408610153,-20.567454498908923,-21.999891745012476,-23.107832617416705,-25.632153250574774,-29.719029874239624,-28.78613013210903],"yaxis":"y","type":"scatter"},{"line":{"dash":"dash"},"name":"Proposition 99","x":[1988,1988],"y":[-29.12464927675483,1.2998365114127866],"type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Year"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Gap in Per-capita cigarette sales (in packs)"}},"legend":{"tracegroupgap":0,"y":1,"x":0.8,"orientation":"v","title":{"text":""}},"margin":{"t":60},"shapes":[{"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0,"y1":0,"yref":"y"}],"title":{"text":"Difference across time","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('01541824-9bf6-4108-8553-8b762c7e22e7');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig - Gap in Per-capita cigarette sales in California w.r.t Synthetic Control</p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-20T00:43:29.011950Z&quot;,&quot;start_time&quot;:&quot;2022-09-20T00:43:29.007925Z&quot;}" data-execution_count="122">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Effect of Proposition 99 w.r.t Synthetic Control =&gt; </span><span class="sc" style="color: #5E5E5E;">{</span>np<span class="sc" style="color: #5E5E5E;">.</span><span class="bu" style="color: null;">round</span>(result.loc[result.year<span class="op" style="color: #5E5E5E;">==</span><span class="dv" style="color: #AD0000;">2000</span>,<span class="st" style="color: #20794D;">'California Effect'</span>].values[<span class="dv" style="color: #AD0000;">0</span>],<span class="dv" style="color: #AD0000;">1</span>)<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;"> packs"</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Effect of Proposition 99 w.r.t Synthetic Control =&gt; -28.8 packs</code></pre>
+</div>
+</div>
+<p>Looking at the chart above, we can observe that by the year 2000, Proposition 99 has reduced the sales of cigarettes by ~29 packs. Now we will figure out if this is statistically significant.</p>
+</section>
+<section id="making-inference" class="level2">
+<h2 class="anchored" data-anchor-id="making-inference">Making Inference</h2>
+<p>In Synthetic control, to find if the effect we observed is significant or not, we run a placebo test. A placebo test is taking a random untreated unit and pretending all other units are in control and fit the Synthetic control over this randomly selected untreated unit to estimate the effect. Once we have repeated this placebo test multiple times, we can estimate the distribution of this randomly observed effect and see if the effect observed is significantly different from the placebo observed effect. In the <code>SparceSC</code> package, we can use the <code>estimate_effects</code> method to do this automatically for us. The estimate effects method takes a minimum of two arguments -</p>
+<ol type="1">
+<li><strong>outcomes</strong> - This is the NumPy matrix of I/p variables where each row represents a treatment/control unit (states in our case), and each column is the period of both pre-treatment and post-treatment period and the value in the matrix is the metric of interest (in this case it is the <code>cigsale</code> value)</li>
+<li><strong>unit_treatment_periods</strong> - Vector of treatment periods for each unit, (if a unit is never treated then use np.NaN if vector refers to periods by numerical index)</li>
+</ol>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-20T00:58:45.880626Z&quot;,&quot;start_time&quot;:&quot;2022-09-20T00:58:21.110669Z&quot;}" data-execution_count="127">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;">## Creating unit treatment_periods</span></span>
+<span id="cb11-2">unit_treatment_periods <span class="op" style="color: #5E5E5E;">=</span> np.full((df.values.shape[<span class="dv" style="color: #AD0000;">0</span>]), np.nan)</span>
+<span id="cb11-3">unit_treatment_periods[treated_units] <span class="op" style="color: #5E5E5E;">=</span> [idx <span class="cf" style="color: #003B4F;">for</span> idx, colname <span class="kw" style="color: #003B4F;">in</span> <span class="bu" style="color: null;">enumerate</span>(df.columns) <span class="cf" style="color: #003B4F;">if</span> colname <span class="op" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">1988</span>][<span class="dv" style="color: #AD0000;">0</span>]</span>
+<span id="cb11-4"></span>
+<span id="cb11-5"><span class="co" style="color: #5E5E5E;">## fitting estimate effects method</span></span>
+<span id="cb11-6">sc <span class="op" style="color: #5E5E5E;">=</span> SparseSC.estimate_effects(</span>
+<span id="cb11-7">    outcomes <span class="op" style="color: #5E5E5E;">=</span> df.values,  </span>
+<span id="cb11-8">    unit_treatment_periods <span class="op" style="color: #5E5E5E;">=</span> unit_treatment_periods, </span>
+<span id="cb11-9">    max_n_pl<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">50</span>, <span class="co" style="color: #5E5E5E;"># Number of placebos</span></span>
+<span id="cb11-10">    level<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.9</span> <span class="co" style="color: #5E5E5E;"># Level for confidence intervals</span></span>
+<span id="cb11-11">)</span>
+<span id="cb11-12"><span class="bu" style="color: null;">print</span>(sc)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Pre-period fit diagnostic: Were the treated harder to match in the pre-period than the controls were.
+Average difference in outcome for pre-period between treated and SC unit (concerning if p-value close to 0 ): 
+1.8073663793403947 (p-value: 0.9743589743589743)
+
+(Investigate per-period match quality more using self.pl_res_pre.effect_vec)
+
+Average Effect Estimation: -16.965374734951705 (p-value: 0.07692307692307693)
+
+Effect Path Estimation:
+ -2.712194133284143 (p-value: 0.6923076923076923)
+-6.424223898557088 (p-value: 0.20512820512820512)
+-4.18303325159971 (p-value: 0.5128205128205128)
+-10.210104128966762 (p-value: 0.28205128205128205)
+-10.198518971790051 (p-value: 0.2564102564102564)
+-14.921163932323616 (p-value: 0.15384615384615385)
+-18.441946863077938 (p-value: 0.1282051282051282)
+-21.27793738802989 (p-value: 0.1794871794871795)
+-22.47075245885469 (p-value: 0.1794871794871795)
+-23.397467590595554 (p-value: 0.20512820512820512)
+-26.13637789807555 (p-value: 0.05128205128205128)
+-30.504443997992325 (p-value: 0.02564102564102564)
+-29.67170704122487 (p-value: 0.05128205128205128)
+
+ </code></pre>
+</div>
+</div>
+<p>The <code>estimate_effects</code> method returns an object which will print the treatment effect of each post-treatment year and estimate the significance of the observed difference. The information printed can also be found in the <code>pl_res_pre</code> function of the returned object.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-20T01:04:33.678070Z&quot;,&quot;start_time&quot;:&quot;2022-09-20T01:04:33.674222Z&quot;}" data-execution_count="134">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Estimated effect of sales in California state in year 2000 because of preposition 99 is </span><span class="sc" style="color: #5E5E5E;">{</span>np<span class="sc" style="color: #5E5E5E;">.</span><span class="bu" style="color: null;">round</span>(sc.pl_res_post.effect_vec.effect[<span class="op" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>])<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">, </span><span class="ch" style="color: #20794D;">\</span></span>
+<span id="cb13-2"><span class="ss" style="color: #20794D;">with a p-value of  </span><span class="sc" style="color: #5E5E5E;">{</span>np<span class="sc" style="color: #5E5E5E;">.</span><span class="bu" style="color: null;">round</span>(sc.pl_res_post.effect_vec.p[<span class="op" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>],<span class="dv" style="color: #AD0000;">2</span>)<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Estimated effect of sales in California state in year 2000 because of preposition 99 is -30.0, with a p-value of  0.05</code></pre>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Here are some key takeaways -</p>
+<ol type="1">
+<li>Synthetic control allows us to combine multiple control units to make them resemble the treated unit. With synthetic control, we can estimate what would have happened to our treated unit in the absence of treatment.</li>
+<li>Microsoft SparseSC library provides a fast and easy-to-use API to run synthetic control groups and allows us to run a placebo test to estimate the significance of the effects observed.</li>
+</ol>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><a href="https://sparsesc.readthedocs.io/en/latest/overview.html#">Sparce SC documentation</a>↩︎</p></li>
+<li id="fn2"><p><a href="https://sparsesc.readthedocs.io/en/latest/overview.html#">Sparce SC documentation</a>↩︎</p></li>
+<li id="fn3"><p><a href="https://matheusfacure.github.io/python-causality-handbook/15-Synthetic-Control.html">Causal Inference for The Brave and True by Matheus Facure - Chapter 15</a>↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <category>Causal Inference</category>
+  <category>Synthetic Control</category>
+  <guid>https://aayushmnit.github.io/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</guid>
+  <pubDate>Mon, 19 Sep 2022 07:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.github.io/posts/2022-09-19-SyntheticControl/california99.png" medium="image" type="image/png" height="90" width="144"/>
+</item>
 <item>
   <title>Finding similar images using Deep learning and Locality Sensitive Hashing</title>
   <dc:creator>Aayush Agrawal</dc:creator>

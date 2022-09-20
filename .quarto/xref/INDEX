@@ -64,5 +64,8 @@
   },
   "talks/2020-12-15-OrcaHello/index.qmd": {
     "index.html": "c4353cec"
+  },
+  "posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.ipynb": {
+    "2022-09-19_SyntheticControl.html": "5e70a28b"
   }
 }

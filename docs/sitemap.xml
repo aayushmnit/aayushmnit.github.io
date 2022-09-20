@@ -2,70 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://aayushmnit.github.io/about.html</loc>
-    <lastmod>2022-09-17T01:54:56.217Z</lastmod>
+    <lastmod>2022-09-20T02:04:39.360Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/blog.html</loc>
-    <lastmod>2022-09-17T01:54:58.890Z</lastmod>
+    <lastmod>2022-09-20T02:04:42.191Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/posts/2018-02-19-launch/index.html</loc>
-    <lastmod>2022-09-17T01:54:59.643Z</lastmod>
+    <lastmod>2022-09-20T02:04:42.994Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html</loc>
-    <lastmod>2022-09-17T01:55:01.038Z</lastmod>
+    <lastmod>2022-09-20T02:04:44.411Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/index.html</loc>
-    <lastmod>2022-09-17T01:55:02.721Z</lastmod>
+    <lastmod>2022-09-20T02:04:45.960Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html</loc>
-    <lastmod>2022-09-17T01:55:03.469Z</lastmod>
+    <lastmod>2022-09-20T02:04:46.762Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html</loc>
-    <lastmod>2022-09-17T01:55:04.295Z</lastmod>
+    <lastmod>2022-09-20T02:04:47.620Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html</loc>
-    <lastmod>2022-09-17T01:55:05.099Z</lastmod>
+    <lastmod>2022-09-20T02:04:48.407Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html</loc>
-    <lastmod>2022-09-17T01:55:05.847Z</lastmod>
+    <lastmod>2022-09-20T02:04:49.200Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html</loc>
-    <lastmod>2022-09-17T01:55:06.638Z</lastmod>
+    <lastmod>2022-09-20T02:04:50.063Z</lastmod>
+  </url>
+  <url>
+    <loc>https://aayushmnit.github.io/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</loc>
+    <lastmod>2022-09-20T02:04:52.460Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/talks/2017-09-13-introduction-to-keras/index.html</loc>
-    <lastmod>2022-09-17T01:55:07.410Z</lastmod>
+    <lastmod>2022-09-20T02:04:53.343Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/talks/2017-10-11-deep-dive-in-hierarchichal-clustering/index.html</loc>
-    <lastmod>2022-09-17T01:55:08.202Z</lastmod>
+    <lastmod>2022-09-20T02:04:54.251Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/talks/2017-11-08-Transfer-Learning/index.html</loc>
-    <lastmod>2022-09-17T01:55:08.961Z</lastmod>
+    <lastmod>2022-09-20T02:04:55.137Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/talks/2018-10-18-msba_devops/index.html</loc>
-    <lastmod>2022-09-17T01:55:09.728Z</lastmod>
+    <lastmod>2022-09-20T02:04:56.018Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/talks/2018-7-28-Model-Building-Explainability-Deployment/index.html</loc>
-    <lastmod>2022-09-17T01:55:10.481Z</lastmod>
+    <lastmod>2022-09-20T02:04:56.918Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/talks/2020-12-15-OrcaHello/index.html</loc>
-    <lastmod>2022-09-17T01:55:11.270Z</lastmod>
+    <lastmod>2022-09-20T02:04:57.807Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.github.io/talks.html</loc>
-    <lastmod>2022-09-17T01:55:12.846Z</lastmod>
+    <lastmod>2022-09-20T02:04:59.625Z</lastmod>
   </url>
 </urlset>
