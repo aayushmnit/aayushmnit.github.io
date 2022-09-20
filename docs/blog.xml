@@ -12,7 +12,7 @@
 <generator>quarto-1.2.124</generator>
 <lastBuildDate>Mon, 19 Sep 2022 07:00:00 GMT</lastBuildDate>
 <item>
-  <title>Fast Synthetic Control approximation using SparseSC</title>
+  <title>Causal inference with Synthetic Control using Python and SparseSC</title>
   <dc:creator>Aayush Agrawal</dc:creator>
   <link>https://aayushmnit.github.io/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</link>
   <description><![CDATA[ 
