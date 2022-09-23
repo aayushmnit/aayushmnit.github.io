@@ -12,7 +12,7 @@
 <generator>quarto-1.2.124</generator>
 <lastBuildDate>Fri, 23 Sep 2022 07:00:00 GMT</lastBuildDate>
 <item>
-  <title>Mixing art in science of model explainability</title>
+  <title>Mixing art into the science of model explainability</title>
   <dc:creator>Aayush Agrawal</dc:creator>
   <link>https://aayushmnit.com/posts/2022-09-23-Explainability/2022-09-23-Explainability.html</link>
   <description><![CDATA[ 
@@ -36,7 +36,7 @@ Fig.1 - A lego figure on my desk
 <figure class="figure">
 <img src="https://aayushmnit.com/posts/2022-09-23-Explainability/interprebility.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig.2: Interpretibility/Intelligibility and Accuracy Tradeoff <br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
+Fig.2: Interpretability/Intelligibility and Accuracy Tradeoff <br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
 </figcaption>
 </figure>
 <p>As shown in the chart above, we can see that <strong>Glass-Box models</strong> like Logistic Regression, Naive Bayes, and Decision Trees are simple models to interpret, and predictions from these models are not highly accurate. On the other hand, <strong>Black-Box models</strong> like Boosted Trees, Random Forest, and Neural Nets are hard to interpret but lead to highly accurate predictions.</p>
