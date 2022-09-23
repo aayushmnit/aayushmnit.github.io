@@ -461,7 +461,7 @@ Fig. 5: EBMs vs XgBoost/LightGBM
 <li><code>HoursPerWeek</code>: <code>continuous</code> variable, amount of hours spent in a job per week</li>
 <li><code>Education</code>: <code>categorical</code> variable, Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool.</li>
 </ul>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:11.476333Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:10.188600Z&quot;}" data-cell_style="center" data-execution_count="1">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:58:53.242668Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:58:52.633422Z&quot;}" data-cell_style="center" data-execution_count="2">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Importing required libraries</span></span>
@@ -478,7 +478,7 @@ Fig. 5: EBMs vs XgBoost/LightGBM
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>pio.renderers.default <span class="op">=</span> <span class="st">"plotly_mimetype+notebook_connected"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:11.985854Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:11.477920Z&quot;}" data-execution_count="2">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:58:53.765541Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:58:53.244152Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Loading the data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv( <span class="st">"https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"</span>, header<span class="op">=</span><span class="va">None</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> [</span>
@@ -494,7 +494,7 @@ Fig. 5: EBMs vs XgBoost/LightGBM
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.loc[:,[<span class="st">"Education"</span>, <span class="st">"Age"</span>,<span class="st">"Occupation"</span>, <span class="st">"HoursPerWeek"</span>, <span class="st">"Income"</span>]]</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="3">
 
 <div>
 
@@ -556,7 +556,7 @@ Fig. 5: EBMs vs XgBoost/LightGBM
 </div>
 </div>
 <p>Let’s look at target variable distribution.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:12.563586Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:11.987560Z&quot;}" data-execution_count="3">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:58:54.004812Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:58:53.767161Z&quot;}" data-execution_count="4">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plot_df <span class="op">=</span> df.Income.value_counts().reset_index().rename(columns <span class="op">=</span> {<span class="st">"index"</span>:<span class="st">"Income"</span>, <span class="st">"Income"</span>:<span class="st">"Count"</span>})</span>
@@ -577,9 +577,9 @@ Fig. 5: EBMs vs XgBoost/LightGBM
 </details>
 <div class="cell-output cell-output-display">
 
-<div>                            <div id="c761c3b2-ccc6-49fb-a103-d4c4935a8d20" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("c761c3b2-ccc6-49fb-a103-d4c4935a8d20")) {                    Plotly.newPlot(                        "c761c3b2-ccc6-49fb-a103-d4c4935a8d20",                        [{"alignmentgroup":"True","hovertemplate":"Income=%{x}<br>Count=%{y}<extra></extra>","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":[" <=50K"," >50K"],"xaxis":"x","y":[21999,7171],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Income"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Count of obersvations"}},"legend":{"tracegroupgap":0,"y":1,"x":0.8,"orientation":"v","title":{"text":""}},"margin":{"t":60},"barmode":"relative","title":{"text":"Target variable distribution","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="b124d90b-7c48-45f9-bf48-d602ceb826fe" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("b124d90b-7c48-45f9-bf48-d602ceb826fe")) {                    Plotly.newPlot(                        "b124d90b-7c48-45f9-bf48-d602ceb826fe",                        [{"alignmentgroup":"True","hovertemplate":"Income=%{x}<br>Count=%{y}<extra></extra>","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":[" <=50K"," >50K"],"xaxis":"x","y":[21999,7171],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Income"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Count of obersvations"}},"legend":{"tracegroupgap":0,"y":1,"x":0.8,"orientation":"v","title":{"text":""}},"margin":{"t":60},"barmode":"relative","title":{"text":"Target variable distribution","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('c761c3b2-ccc6-49fb-a103-d4c4935a8d20');
+var gd = document.getElementById('b124d90b-7c48-45f9-bf48-d602ceb826fe');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -605,7 +605,7 @@ if (outputEl) {{
 <p>Fig 1 - Cigarette sales comparison b/w California and other states</p>
 </div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:12.571194Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:12.565313Z&quot;}" data-execution_count="4">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:58:54.012695Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:58:54.007043Z&quot;}" data-execution_count="5">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.Income.value_counts(normalize<span class="op">=</span><span class="va">True</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -617,7 +617,7 @@ Name: Income, dtype: float64</code></pre>
 </div>
 </div>
 <p>~24.6% of people in our dataset have income greater than $50K. The data looks good, we have the columns we need. We will use Education, Age, Occupation, and HoursPerWeek columns and predict Income. Before modeling, let us perform an 80-20 train-test split.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:12.589773Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:12.572717Z&quot;}" data-execution_count="5">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:58:54.027384Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:58:54.014179Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Train-Test Split</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df[df.columns[<span class="dv">0</span>:<span class="op">-</span><span class="dv">1</span>]]</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[df.columns[<span class="op">-</span><span class="dv">1</span>]]</span>
@@ -632,7 +632,7 @@ Name: Income, dtype: float64</code></pre>
 <section id="fitting-an-ebm-model" class="level2">
 <h2 class="anchored" data-anchor-id="fitting-an-ebm-model">2.2 Fitting an EBM Model</h2>
 <p>EBMs have a scikit-compatible API, so fitting the model and making predictions are the same as any scikit learn model.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:14.754928Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:12.591632Z&quot;}" data-execution_count="6">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:58:56.101717Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:58:54.028932Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ebm <span class="op">=</span> ExplainableBoostingClassifier(random_state<span class="op">=</span>seed, interactions<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ebm.fit(X_train, y_train)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -667,28 +667,32 @@ Tip
 <li><strong>Summary -</strong> Feature importance plot, this chart provides the importance of each predictor in predicting the target variable</li>
 <li><strong>Feature interaction with Prediction -</strong> This chart is the same look-up table EBM uses in making the actual prediction. This can help you in the inspection of how the feature value is contributing to prediction.</li>
 </ol>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:15.259476Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:14.757055Z&quot;}" data-execution_count="7">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ebm_global <span class="op">=</span> ebm.explain_global()</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>show(ebm_global)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<!-- http://127.0.0.1:7001/140463753787088/ -->
-<iframe src="http://127.0.0.1:7001/140463753787088/" width="100%" height="800" frameborder="0"></iframe>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>show(ebm_global, renderer<span class="op">=</span><span class="st">'notebook'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+<figure class="figure">
+<img src="./global_explaination.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 6: EBMs Global Explaination
+</figcaption>
+</figure>
 </section>
 <section id="local-explanations" class="level3">
 <h3 class="anchored" data-anchor-id="local-explanations">2.3.2 Local explanations</h3>
 <p>The local explanation is our per-observation level explanation. EBMs have a great in-built visualization for displaying this information.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:15.326622Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:15.265597Z&quot;}" data-execution_count="8">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ebm_local <span class="op">=</span> ebm.explain_local(X_test.iloc[<span class="dv">0</span>:<span class="dv">5</span>,:], y_test)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>show(ebm_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<!-- http://127.0.0.1:7001/140465372566528/ -->
-<iframe src="http://127.0.0.1:7001/140465372566528/" width="100%" height="800" frameborder="0"></iframe>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>show(ebm_local, renderer<span class="op">=</span><span class="st">'notebook'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
+<figure class="figure">
+<img src="./local_explainations.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 6: EBMs local Explaination
+</figcaption>
+</figure>
 <p>Let’s take one example of this explanation for observation at index 0 and look at it -</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:15.340188Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:15.329086Z&quot;}" data-execution_count="9">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:52:15.324194Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:52:15.316298Z&quot;}" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>explainDF <span class="op">=</span> pd.DataFrame.from_dict(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">'names'</span>: ebm_local.data(<span class="dv">0</span>)[<span class="st">'names'</span>], </span>
@@ -747,7 +751,7 @@ Tip
 <li>HoursPerWeek being 18 has a negative impact on &gt;50K income (Average work week hours in the US are around 40, so this makes sense)</li>
 </ol>
 <p>You can also do it for the entire dataset and collect the importance of each feature. Here is a sample code to do the same.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:15.361165Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:15.342591Z&quot;}" data-execution_count="10">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:52:15.336994Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:52:15.326031Z&quot;}" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> [x[<span class="st">'scores'</span>] <span class="cf">for</span> x <span class="kw">in</span> ebm_local._internal_obj[<span class="st">'specific'</span>]]</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> pd.DataFrame(scores)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>summary.columns <span class="op">=</span> ebm_local.data(<span class="dv">0</span>)[<span class="st">'names'</span>]</span>
@@ -852,11 +856,11 @@ Credit - <a href="https://www.flickr.com/photos/59632563@N04/6239670686">Flickr<
 <figure class="figure">
 <img src="./fidelitySnapshot.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig 6. Snapshots taken from my fidelity tool
+Fig 7. Snapshots taken from my fidelity tool
 </figcaption>
 </figure>
 <p>We can build a historical odds table from our training data. Let us try building one.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T01:19:13.208838Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T01:19:13.078675Z&quot;}" data-scrolled="true" data-execution_count="138">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:52:15.481577Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:52:15.338641Z&quot;}" data-scrolled="true" data-execution_count="11">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>odds_data <span class="op">=</span> X_train.copy()</span>
@@ -899,11 +903,11 @@ Fig 6. Snapshots taken from my fidelity tool
 <figure class="figure">
 <img src="./outputToText.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig 7. Output to human-readable text
+Fig 8. Output to human-readable text
 </figcaption>
 </figure>
 <p>With our <code>explainDF</code> data generated for row index 0 previously, we can use the above framework to convert it to text. Let us see what the output looks like -</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T01:21:35.419255Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T01:21:35.414622Z&quot;}" data-execution_count="141">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:52:15.486928Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:52:15.483041Z&quot;}" data-execution_count="12">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> explainPredictions(df, pred, odds_dict):</span>
@@ -927,17 +931,17 @@ Fig 7. Output to human-readable text
 <span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> reasons</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T01:21:38.957601Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T01:21:38.951508Z&quot;}" data-execution_count="142">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:52:15.499542Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:52:15.488580Z&quot;}" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>explainPredictions(explainDF, ebm_local.data(<span class="dv">0</span>)[<span class="st">'perf'</span>][<span class="st">'predicted'</span>], odds_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="142">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>["This individual have HoursPerWeek value '18'.Historically, people with this behavior have -5.2x likely to have income over $50k.",
  "This individual have Occupation value ' ?'.Historically, people with this behavior have -2.4x likely to have income over $50k."]</code></pre>
 </div>
 </div>
 <p>What if this was a &gt;50k prediction?</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T01:22:58.736003Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T01:22:58.730966Z&quot;}" data-execution_count="144">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T02:52:15.507834Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T02:52:15.501162Z&quot;}" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>explainPredictions(explainDF, <span class="dv">1</span>, odds_dict)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="144">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>["This individual have Education value ' Bachelors'.Historically, people with this behavior have 2.0x likely to have income over $50k.",
  "This individual have Age value '47'.Historically, people with this behavior have 1.8x likely to have income over $50k."]</code></pre>
 </div>
