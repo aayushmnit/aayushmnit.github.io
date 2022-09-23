@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/2022-09-21-Explainability/2022-09-21-Explainability.html",
       "/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html",
       "/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html",
       "/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html",

@@ -10,7 +10,620 @@
 <atom:link href="https://aayushmnit.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush's personal website</description>
 <generator>quarto-1.2.124</generator>
-<lastBuildDate>Mon, 19 Sep 2022 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 21 Sep 2022 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>Mixing art in science of model explainability</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.github.io/posts/2022-09-21-Explainability/2022-09-21-Explainability.html</link>
+  <description><![CDATA[ 
+
+
+
+<blockquote class="blockquote">
+<p>Overview on <a href="https://interpret.ml/docs/ebm.html">Explainable Boosting Machine</a> and an approach for converting explanation to more human-friendly explanation.</p>
+</blockquote>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/lego_scientist.jpg" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig.1 - A lego figure on my desk
+</figcaption>
+</figure>
+<section id="science-of-ml-explainability" class="level1">
+<h1>1. Science of ML explainability</h1>
+<section id="the-interpretability-vs-accuracy-trade-off" class="level2">
+<h2 class="anchored" data-anchor-id="the-interpretability-vs-accuracy-trade-off">1.1 The Interpretability vs Accuracy Trade-off</h2>
+<p>In traditional tabular machine learning approaches, Data scientists often deal with the trade-off b/w interpretability and accuracy.</p>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/interprebility.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig.2: Interpretibility and Accuracy Tradeoff <br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
+</figcaption>
+</figure>
+<p>As shown in the chart above, we can see that <strong>Glass-Box models</strong> like Linear Regression, Naive Bayes, and Decision Trees are simple models to interpret, and predictions from these models are not highly accurate. On the other hand, <strong>Black-Box models</strong> like Boosted Trees, Random Forest, and Neural Nets are hard to interpret but lead to highly accurate predictions.</p>
+</section>
+<section id="introducing-ebms" class="level2">
+<h2 class="anchored" data-anchor-id="introducing-ebms">1.2 Introducing EBM’s</h2>
+<p>To solve the problem just mentioned above EBMs(Explainable Boosted Machine) model was developed by Microsoft Research<sup>1</sup>. “Explainable Boosting Machine (EBM) is a tree-based, cyclic gradient boosting Generalized Additive Model with automatic interaction detection. EBMs are often as accurate as state-of-the-art BlackBox models while remaining completely interpretable. Although EBMs are often slower to train than other modern algorithms, EBMs are extremely compact and fast at prediction time.”<sup>2</sup></p>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/interprebility2.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig.3: EBMs breaking the Interpretability vs Accuracy paradox<br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
+</figcaption>
+</figure>
+<p>As we can see from the chart above, EBMs help us break out of this trade-off paradox and help us build models which are both highly interpretable and accurate. To further understand the math behind EBMs I highly encourage watching this 12-minute YouTube video -</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MREiHgHgl0k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
+</iframe>
+<figure class="figure">
+<figcaption class="figure-caption">
+Video - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
+</figcaption>
+</figure>
+</center>
+</section>
+<section id="glass-box-vs-black-box-models.-what-to-choose" class="level2">
+<h2 class="anchored" data-anchor-id="glass-box-vs-black-box-models.-what-to-choose">1.3 Glass box vs Black box models. What to choose?</h2>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The answer to every complex question in life is “It depends”.</p>
+</div>
+</div>
+<p>There are trade-offs b/w using Glassbox models as compared to Blackbox models. There is no clear winner in picking one model over the other but depending on the situation DS can make an educated guess on what model to pick.</p>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/glassboxVsblackbox.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig.4: Glassbox models vs BlackBox models
+</figcaption>
+</figure>
+<p>Two considerations to think about while picking glass box vs black box models are the following-</p>
+<p><strong>1) Explainability Requirements</strong> - In the domain where there is no need for explanation or it is needed for a data scientist or technical audience for intuition/inspection purposes, in these cases, DS are well off using black box models. In the domain where an explanation is needed because of business or regulatory requirements or where these explanations are served to a non-technical audience (humans), glass-box models have an upper hand. This is because explanations coming out of the glass box models are <code>exact</code> and <code>global</code>.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>Exact</code> and <code>global</code> just means that a value of a particular feature will always have the same effect on each prediction explanation. For example, in the case of the prediction of income of a particular individual being above $50k with age as one of the predictors, if the <code>age</code> is 40 and it will impact the target variable with the same proportion let us say <span style="color:green">5%</span> in each observation in the data where the age is 40. This is not the case when we build explanations through LIME and Shapely for black box models. In black-box models, <code>age</code> with the value 40 for example can have a <span style="color:green">10%</span> lift in an individual probability of their income being above 50k for one observation and <span style="color:red">-10%</span> lift in the other.</p>
+</div>
+</div>
+<p><strong>2) Compute Requirement</strong> - DS needs to pay attention to various compute requirements for testing and training a model depending on its use case. EBMs are particularly slow in the training phase but provide fast predictions with built-in explanations. So, in cases where you need to train your model every hour, EBMs might not suffice your need. But, in cases where the training of the model happens monthly/weekly, and scores are generated on a more frequent basis (hourly/daily) EBMs might fit the use case well. Also, in cases where you might be required to produce an explanation for each prediction EBMs can save a lot of computing and might be the only feasible technique to use for millions of observations. Look below to understand the operational difference b/w EBMs and other tree-based ensemble methods.</p>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/trade-off.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 5: EBMs vs XgBoost/LightGBM
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="hands-on-with-ebms" class="level1">
+<h1>2. Hands on with EBMs</h1>
+<section id="data-overview" class="level2">
+<h2 class="anchored" data-anchor-id="data-overview">2.1 Data Overview</h2>
+<p>For this example, we will use <a href="https://archive.ics.uci.edu/ml/datasets/Adult">Adult Income Dataset</a> from the <strong>UCI machine learning Repository</strong><sup>3</sup>. The problem in this dataset is set up as a binary classification problem to predict if a certain individual income based on various census information (education level, age, gender, occupation, etc.) exceeds $50K/year. For sake of simplicity, we are only going to use observations of individuals in the United States and the following predictors -</p>
+<ul>
+<li><code>Age</code>: <code>continuous</code> variable, individuals’ age</li>
+<li><code>Occupation</code>: <code>categorical</code> variable, Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces.</li>
+<li><code>HoursPerWeek</code>: <code>continuous</code> variable, amount of hours spent in a job per week</li>
+<li><code>Education</code>: <code>categorical</code> variable, Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool.</li>
+</ul>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:11.476333Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:10.188600Z&quot;}" data-cell_style="center" data-execution_count="1">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="co" style="color: #5E5E5E;">## Importing required libraries</span></span>
+<span id="cb1-2"><span class="im" style="color: #00769E;">import</span> pandas <span class="im" style="color: #00769E;">as</span> pd</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;">import</span> numpy <span class="im" style="color: #00769E;">as</span> np</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;">from</span> sklearn.model_selection <span class="im" style="color: #00769E;">import</span> train_test_split</span>
+<span id="cb1-5"><span class="im" style="color: #00769E;">from</span> sklearn <span class="im" style="color: #00769E;">import</span> metrics</span>
+<span id="cb1-6"><span class="im" style="color: #00769E;">from</span> interpret.glassbox <span class="im" style="color: #00769E;">import</span> ExplainableBoostingClassifier</span>
+<span id="cb1-7"><span class="im" style="color: #00769E;">from</span> interpret <span class="im" style="color: #00769E;">import</span> show</span>
+<span id="cb1-8"><span class="im" style="color: #00769E;">import</span> warnings</span>
+<span id="cb1-9"><span class="im" style="color: #00769E;">import</span> plotly.io <span class="im" style="color: #00769E;">as</span> pio</span>
+<span id="cb1-10"><span class="im" style="color: #00769E;">import</span> plotly.express <span class="im" style="color: #00769E;">as</span> px</span>
+<span id="cb1-11">warnings.filterwarnings(<span class="st" style="color: #20794D;">'ignore'</span>)</span>
+<span id="cb1-12">pio.renderers.default <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_mimetype+notebook_connected"</span></span></code></pre></div>
+</details>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:11.985854Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:11.477920Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="co" style="color: #5E5E5E;">## Loading the data</span></span>
+<span id="cb2-2">df <span class="op" style="color: #5E5E5E;">=</span> pd.read_csv( <span class="st" style="color: #20794D;">"https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"</span>, header<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>)</span>
+<span id="cb2-3">df.columns <span class="op" style="color: #5E5E5E;">=</span> [</span>
+<span id="cb2-4">    <span class="st" style="color: #20794D;">"Age"</span>, <span class="st" style="color: #20794D;">"WorkClass"</span>, <span class="st" style="color: #20794D;">"fnlwgt"</span>, <span class="st" style="color: #20794D;">"Education"</span>, <span class="st" style="color: #20794D;">"EducationNum"</span>,</span>
+<span id="cb2-5">    <span class="st" style="color: #20794D;">"MaritalStatus"</span>, <span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"Relationship"</span>, <span class="st" style="color: #20794D;">"Race"</span>, <span class="st" style="color: #20794D;">"Gender"</span>,</span>
+<span id="cb2-6">    <span class="st" style="color: #20794D;">"CapitalGain"</span>, <span class="st" style="color: #20794D;">"CapitalLoss"</span>, <span class="st" style="color: #20794D;">"HoursPerWeek"</span>, <span class="st" style="color: #20794D;">"NativeCountry"</span>, <span class="st" style="color: #20794D;">"Income"</span></span>
+<span id="cb2-7">]</span>
+<span id="cb2-8"></span>
+<span id="cb2-9"><span class="co" style="color: #5E5E5E;">## Filtering for Unites states</span></span>
+<span id="cb2-10">df <span class="op" style="color: #5E5E5E;">=</span> df.loc[df.NativeCountry <span class="op" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">' United-States'</span>,:]</span>
+<span id="cb2-11"></span>
+<span id="cb2-12"><span class="co" style="color: #5E5E5E;">## Only - Taking required columns</span></span>
+<span id="cb2-13">df <span class="op" style="color: #5E5E5E;">=</span> df.loc[:,[<span class="st" style="color: #20794D;">"Education"</span>, <span class="st" style="color: #20794D;">"Age"</span>,<span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"HoursPerWeek"</span>, <span class="st" style="color: #20794D;">"Income"</span>]]</span>
+<span id="cb2-14"></span>
+<span id="cb2-15">df.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Education</th>
+      <th>Age</th>
+      <th>Occupation</th>
+      <th>HoursPerWeek</th>
+      <th>Income</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Bachelors</td>
+      <td>39</td>
+      <td>Adm-clerical</td>
+      <td>40</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Bachelors</td>
+      <td>50</td>
+      <td>Exec-managerial</td>
+      <td>13</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>HS-grad</td>
+      <td>38</td>
+      <td>Handlers-cleaners</td>
+      <td>40</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11th</td>
+      <td>53</td>
+      <td>Handlers-cleaners</td>
+      <td>40</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Masters</td>
+      <td>37</td>
+      <td>Exec-managerial</td>
+      <td>40</td>
+      <td>&lt;=50K</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Let’s look at target variable distribution.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:12.563586Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:11.987560Z&quot;}" data-execution_count="3">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">plot_df <span class="op" style="color: #5E5E5E;">=</span> df.Income.value_counts().reset_index().rename(columns <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"index"</span>:<span class="st" style="color: #20794D;">"Income"</span>, <span class="st" style="color: #20794D;">"Income"</span>:<span class="st" style="color: #20794D;">"Count"</span>})</span>
+<span id="cb3-2">fig <span class="op" style="color: #5E5E5E;">=</span> px.bar(plot_df, x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Income"</span>, y <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'Count'</span>)</span>
+<span id="cb3-3">fig.update_layout(</span>
+<span id="cb3-4">        title  <span class="op" style="color: #5E5E5E;">=</span> {</span>
+<span id="cb3-5">            <span class="st" style="color: #20794D;">'text'</span>:<span class="st" style="color: #20794D;">"Target variable distribution"</span>,</span>
+<span id="cb3-6">            <span class="st" style="color: #20794D;">'y'</span>:<span class="fl" style="color: #AD0000;">0.95</span>,</span>
+<span id="cb3-7">            <span class="st" style="color: #20794D;">'x'</span>:<span class="fl" style="color: #AD0000;">0.5</span>,</span>
+<span id="cb3-8">        },</span>
+<span id="cb3-9">        legend <span class="op" style="color: #5E5E5E;">=</span>  <span class="bu" style="color: null;">dict</span>(y<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">1</span>, x<span class="op" style="color: #5E5E5E;">=</span> <span class="fl" style="color: #AD0000;">0.8</span>, orientation<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'v'</span>),</span>
+<span id="cb3-10">        legend_title <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">""</span>,</span>
+<span id="cb3-11">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Income"</span>, </span>
+<span id="cb3-12">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Count of obersvations"</span>,</span>
+<span id="cb3-13">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb3-14">)</span>
+<span id="cb3-15">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="c761c3b2-ccc6-49fb-a103-d4c4935a8d20" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("c761c3b2-ccc6-49fb-a103-d4c4935a8d20")) {                    Plotly.newPlot(                        "c761c3b2-ccc6-49fb-a103-d4c4935a8d20",                        [{"alignmentgroup":"True","hovertemplate":"Income=%{x}<br>Count=%{y}<extra></extra>","legendgroup":"","marker":{"color":"#636efa","pattern":{"shape":""}},"name":"","offsetgroup":"","orientation":"v","showlegend":false,"textposition":"auto","x":[" <=50K"," >50K"],"xaxis":"x","y":[21999,7171],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Income"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Count of obersvations"}},"legend":{"tracegroupgap":0,"y":1,"x":0.8,"orientation":"v","title":{"text":""}},"margin":{"t":60},"barmode":"relative","title":{"text":"Target variable distribution","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('c761c3b2-ccc6-49fb-a103-d4c4935a8d20');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig 1 - Cigarette sales comparison b/w California and other states</p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:12.571194Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:12.565313Z&quot;}" data-execution_count="4">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="bu" style="color: null;">print</span>(df.Income.value_counts(normalize<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> &lt;=50K    0.754165
+ &gt;50K     0.245835
+Name: Income, dtype: float64</code></pre>
+</div>
+</div>
+<p>~24.6% of people in our dataset have income greater than $50K. The data looks good, we have the columns we need. We will use Education, Age, Occupation, and HoursPerWeek columns and predict Income. Before modeling, let us perform an 80-20 train-test split.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:12.589773Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:12.572717Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="co" style="color: #5E5E5E;">## Train-Test Split</span></span>
+<span id="cb6-2">X <span class="op" style="color: #5E5E5E;">=</span> df[df.columns[<span class="dv" style="color: #AD0000;">0</span>:<span class="op" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>]]</span>
+<span id="cb6-3">y <span class="op" style="color: #5E5E5E;">=</span> df[df.columns[<span class="op" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span>]]</span>
+<span id="cb6-4">seed <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">1</span></span>
+<span id="cb6-5">X_train, X_test, y_train, y_test <span class="op" style="color: #5E5E5E;">=</span> train_test_split(X, y, test_size<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.20</span>, random_state<span class="op" style="color: #5E5E5E;">=</span>seed)</span>
+<span id="cb6-6"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Data in training </span><span class="sc" style="color: #5E5E5E;">{</span><span class="bu" style="color: null;">len</span>(y_train)<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">, Data in testing </span><span class="sc" style="color: #5E5E5E;">{</span><span class="bu" style="color: null;">len</span>(y_test)<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data in training 23336, Data in testing 5834</code></pre>
+</div>
+</div>
+</section>
+<section id="fitting-an-ebm-model" class="level2">
+<h2 class="anchored" data-anchor-id="fitting-an-ebm-model">2.2 Fitting an EBM Model</h2>
+<p>EBMs have a scikit-compatible API, so fitting the model and making predictions are the same as any scikit learn model.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:14.754928Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:12.591632Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">ebm <span class="op" style="color: #5E5E5E;">=</span> ExplainableBoostingClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed, interactions<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">0</span>)</span>
+<span id="cb8-2">ebm.fit(X_train, y_train)</span>
+<span id="cb8-3"></span>
+<span id="cb8-4">auc <span class="op" style="color: #5E5E5E;">=</span> np.<span class="bu" style="color: null;">round</span>(metrics.roc_auc_score((y_test <span class="op" style="color: #5E5E5E;">!=</span> <span class="st" style="color: #20794D;">' &lt;=50K'</span>).astype(<span class="bu" style="color: null;">int</span>).values, ebm.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>], ),<span class="dv" style="color: #AD0000;">3</span>)</span>
+<span id="cb8-5"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Accuracy: </span><span class="sc" style="color: #5E5E5E;">{</span>np<span class="sc" style="color: #5E5E5E;">.</span><span class="bu" style="color: null;">round</span>(np.mean(ebm.predict(X_test) <span class="op" style="color: #5E5E5E;">==</span> y_test)<span class="op" style="color: #5E5E5E;">*</span><span class="dv" style="color: #AD0000;">100</span>,<span class="dv" style="color: #AD0000;">2</span>)<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">%, AUC: </span><span class="sc" style="color: #5E5E5E;">{</span>auc<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Accuracy: 80.12%, AUC: 0.828</code></pre>
+</div>
+</div>
+<p>I hope the above code block shows how similar the interpret-ml API is to the scikit learn API. Based on AUC on the validation set we can say our model is better than random predictions.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In practice, if you are dealing with millions of observations, Try doing feature selection using LightGBM/XGboost and only train your final models using EBMs. This will save you time in feature exploration.</p>
+</div>
+</div>
+</section>
+<section id="explaination-from-ebms" class="level2">
+<h2 class="anchored" data-anchor-id="explaination-from-ebms">2.3 Explaination from EBMs</h2>
+<p>Interpret package comes with both global and local explanations and has a variety of visualization tools to inspect what the model is learning.</p>
+<section id="global-explanations" class="level3">
+<h3 class="anchored" data-anchor-id="global-explanations">2.3.1 Global explanations</h3>
+<p>Global explanations provide the following visualization -</p>
+<ol type="1">
+<li><strong>Summary -</strong> Feature importance plot, this chart provides the importance of each predictor in predicting the target variable</li>
+<li><strong>Feature interaction with Prediction -</strong> This chart is the same look-up table EBM uses in making the actual prediction. This can help you in the inspection of how the feature value is contributing to prediction.</li>
+</ol>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:15.259476Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:14.757055Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">ebm_global <span class="op" style="color: #5E5E5E;">=</span> ebm.explain_global()</span>
+<span id="cb10-2">show(ebm_global)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<!-- http://127.0.0.1:7001/140463753787088/ -->
+<iframe src="http://127.0.0.1:7001/140463753787088/" width="100%" height="800" frameborder="0"></iframe>
+</div>
+</div>
+</section>
+<section id="local-explanations" class="level3">
+<h3 class="anchored" data-anchor-id="local-explanations">2.3.2 Local explanations</h3>
+<p>The local explanation is our per-observation level explanation. EBMs have a great in-built visualization for displaying this information.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:15.326622Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:15.265597Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1">ebm_local <span class="op" style="color: #5E5E5E;">=</span> ebm.explain_local(X_test.iloc[<span class="dv" style="color: #AD0000;">0</span>:<span class="dv" style="color: #AD0000;">5</span>,:], y_test)</span>
+<span id="cb11-2">show(ebm_local)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<!-- http://127.0.0.1:7001/140465372566528/ -->
+<iframe src="http://127.0.0.1:7001/140465372566528/" width="100%" height="800" frameborder="0"></iframe>
+</div>
+</div>
+<p>Let’s take one example of this explanation for observation at index 0 and look at it -</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:15.340188Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:15.329086Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">explainDF <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame.from_dict(</span>
+<span id="cb12-2">    {</span>
+<span id="cb12-3">        <span class="st" style="color: #20794D;">'names'</span>: ebm_local.data(<span class="dv" style="color: #AD0000;">0</span>)[<span class="st" style="color: #20794D;">'names'</span>], </span>
+<span id="cb12-4">        <span class="st" style="color: #20794D;">'data'</span>:ebm_local.data(<span class="dv" style="color: #AD0000;">0</span>)[<span class="st" style="color: #20794D;">'values'</span>], </span>
+<span id="cb12-5">        <span class="st" style="color: #20794D;">'contribution'</span>:ebm_local.data(<span class="dv" style="color: #AD0000;">0</span>)[<span class="st" style="color: #20794D;">'scores'</span>]</span>
+<span id="cb12-6">    })</span>
+<span id="cb12-7">explainDF</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>names</th>
+      <th>data</th>
+      <th>contribution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Education</td>
+      <td>Bachelors</td>
+      <td>0.733420</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Age</td>
+      <td>47</td>
+      <td>1.048227</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Occupation</td>
+      <td>?</td>
+      <td>-0.318846</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>HoursPerWeek</td>
+      <td>18</td>
+      <td>-0.854202</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>As we can see from the data, we can see we have the Name of the columns, the actual values, and the contribution of that value to the actual prediction score. For this observation let us see what the model is learning -</p>
+<ol type="1">
+<li>Education as Bachelors is working in favor of &gt;50K income</li>
+<li>Age value 47 is also in favor of &gt;50K</li>
+<li>Occupation being “?” has a negative impact on &gt;50K income</li>
+<li>HoursPerWeek being 18 has a negative impact on &gt;50K income (Average work week hours in the US are around 40, so this makes sense)</li>
+</ol>
+<p>You can also do it for the entire dataset and collect the importance of each feature. Here is a sample code to do the same.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T00:17:15.361165Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T00:17:15.342591Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1">scores <span class="op" style="color: #5E5E5E;">=</span> [x[<span class="st" style="color: #20794D;">'scores'</span>] <span class="cf" style="color: #003B4F;">for</span> x <span class="kw" style="color: #003B4F;">in</span> ebm_local._internal_obj[<span class="st" style="color: #20794D;">'specific'</span>]]</span>
+<span id="cb13-2">summary <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame(scores)</span>
+<span id="cb13-3">summary.columns <span class="op" style="color: #5E5E5E;">=</span> ebm_local.data(<span class="dv" style="color: #AD0000;">0</span>)[<span class="st" style="color: #20794D;">'names'</span>]</span>
+<span id="cb13-4">summary.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Education</th>
+      <th>Age</th>
+      <th>Occupation</th>
+      <th>HoursPerWeek</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.733420</td>
+      <td>1.048227</td>
+      <td>-0.318846</td>
+      <td>-0.854202</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.990661</td>
+      <td>0.309251</td>
+      <td>0.171131</td>
+      <td>0.002109</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-0.257254</td>
+      <td>0.735232</td>
+      <td>0.171131</td>
+      <td>0.002109</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.193118</td>
+      <td>0.682721</td>
+      <td>-0.417499</td>
+      <td>0.279677</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.733420</td>
+      <td>0.085672</td>
+      <td>0.389171</td>
+      <td>0.002109</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Now we can extract the importance of all data rows in our test set.</p>
+</section>
+</section>
+<section id="draw-back-and-concerns" class="level2">
+<h2 class="anchored" data-anchor-id="draw-back-and-concerns">2.4 Draw back and concerns</h2>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/xkcd.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Credit - <a href="https://www.facebook.com/TheXKCD/photos/a.10157101743316691/10157786457411691/?type=3">XKCD</a>
+</figcaption>
+</figure>
+<p>These kinds of explanations are still very abstract, even at the observational level reasoning is not human(non-technical) friendly. When the feature count grows this becomes even non-human friendly. Typical business consumers of your model might not be well versed in reading such charts and shy away from trying the insights/predictions the model is giving them. After all, if I don’t understand something, I don’t trust it. That is where art comes in, let’s see how we can build on the above-derived observations and make it easier to understand.</p>
+</section>
+</section>
+<section id="the-art-of-ml-explainability" class="level1">
+<h1>3. The art of ML explainability</h1>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The ideas I am going to share now are more marketing than real science.</p>
+</div>
+</div>
+<p>To make people act on your model’s recommendation you must <strong>build trust</strong>. One idea is to build trust to support your explanations with data anecdotes.</p>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/building_trust.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Credit - <a href="https://www.flickr.com/photos/59632563@N04/6239670686">Flickr</a>
+</figcaption>
+</figure>
+<p>Data anecdotes exist everywhere, this idea came to my mind by looking at a stock market tool (image below). Notice two things they are highlighting -</p>
+<ol type="1">
+<li><p><strong>What is it? -</strong> The tool does an excellent job showing an event that has just happened. Example - <em>“Microsoft Corp due to dividend announcement</em> or <em>“DELTA AIR LINES 14 Day RSI broke below the 70 level”</em>.</p></li>
+<li><p><strong>Why it matters? -</strong> Then the tool points to historical data and tells the significance of this event. In Microsoft’s example, when the event happens “Historically, the price of MSFT has risen an average of 11.9%”.</p></li>
+</ol>
+<p>What if we can do the same with our models?</p>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/fidelitySnapshot.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig 6. Snapshots taken from my fidelity tool
+</figcaption>
+</figure>
+<p>We can build a historical odds table from our training data. Let us try building one.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T01:19:13.208838Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T01:19:13.078675Z&quot;}" data-scrolled="true" data-execution_count="138">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1">odds_data <span class="op" style="color: #5E5E5E;">=</span> X_train.copy()</span>
+<span id="cb14-2">odds_data[<span class="st" style="color: #20794D;">'income'</span>] <span class="op" style="color: #5E5E5E;">=</span> (y_train <span class="op" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">" &gt;50K"</span>).astype(<span class="bu" style="color: null;">int</span>) </span>
+<span id="cb14-3"><span class="co" style="color: #5E5E5E;">## Converting continous variables in buckets</span></span>
+<span id="cb14-4">odds_data[<span class="st" style="color: #20794D;">'AgeBucket'</span>] <span class="op" style="color: #5E5E5E;">=</span>  (odds_data.Age <span class="op" style="color: #5E5E5E;">//</span> <span class="dv" style="color: #AD0000;">5</span>)</span>
+<span id="cb14-5">odds_data[<span class="st" style="color: #20794D;">'HoursPerWeekBucket'</span>] <span class="op" style="color: #5E5E5E;">=</span> (odds_data.HoursPerWeek <span class="op" style="color: #5E5E5E;">//</span> <span class="dv" style="color: #AD0000;">5</span>)</span>
+<span id="cb14-6"></span>
+<span id="cb14-7"><span class="co" style="color: #5E5E5E;"># Creating placeholder for odds dictionary</span></span>
+<span id="cb14-8">odds_dict <span class="op" style="color: #5E5E5E;">=</span> {} </span>
+<span id="cb14-9"></span>
+<span id="cb14-10"><span class="co" style="color: #5E5E5E;"># Columns for which we need odds</span></span>
+<span id="cb14-11">columns <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">'Education'</span>, <span class="st" style="color: #20794D;">'AgeBucket'</span>, <span class="st" style="color: #20794D;">'HoursPerWeekBucket'</span>, <span class="st" style="color: #20794D;">'Occupation'</span>]</span>
+<span id="cb14-12"><span class="cf" style="color: #003B4F;">for</span> colname <span class="kw" style="color: #003B4F;">in</span> columns: <span class="co" style="color: #5E5E5E;">#iterating through each column</span></span>
+<span id="cb14-13">    unique_val <span class="op" style="color: #5E5E5E;">=</span> odds_data[colname].unique() <span class="co" style="color: #5E5E5E;"># Finding unique values in column</span></span>
+<span id="cb14-14">    ddict <span class="op" style="color: #5E5E5E;">=</span> {}</span>
+<span id="cb14-15">    <span class="cf" style="color: #003B4F;">for</span> val <span class="kw" style="color: #003B4F;">in</span> unique_val: <span class="co" style="color: #5E5E5E;"># iterating each unique value in the column</span></span>
+<span id="cb14-16">        <span class="co" style="color: #5E5E5E;">## Odds that income is above &gt; 50 in presence of the val</span></span>
+<span id="cb14-17">        val_p <span class="op" style="color: #5E5E5E;">=</span> odds_data.loc[odds_data[colname] <span class="op" style="color: #5E5E5E;">==</span> val, <span class="st" style="color: #20794D;">'income'</span>].mean() </span>
+<span id="cb14-18">        <span class="co" style="color: #5E5E5E;">## Odds that income is above &gt; 50 in absence of the val</span></span>
+<span id="cb14-19">        val_np <span class="op" style="color: #5E5E5E;">=</span> odds_data.loc[odds_data[colname] <span class="op" style="color: #5E5E5E;">!=</span> val, <span class="st" style="color: #20794D;">'income'</span>].mean()</span>
+<span id="cb14-20">        </span>
+<span id="cb14-21">        <span class="co" style="color: #5E5E5E;">## Calculate lift</span></span>
+<span id="cb14-22">        <span class="cf" style="color: #003B4F;">if</span> val_p <span class="op" style="color: #5E5E5E;">&gt;=</span> val_np:</span>
+<span id="cb14-23">            odds <span class="op" style="color: #5E5E5E;">=</span> val_p <span class="op" style="color: #5E5E5E;">/</span> val_np</span>
+<span id="cb14-24">        <span class="cf" style="color: #003B4F;">else</span>:</span>
+<span id="cb14-25">            odds <span class="op" style="color: #5E5E5E;">=</span> <span class="op" style="color: #5E5E5E;">-</span><span class="dv" style="color: #AD0000;">1</span><span class="op" style="color: #5E5E5E;">*</span>val_np<span class="op" style="color: #5E5E5E;">/</span>(val_p<span class="op" style="color: #5E5E5E;">+</span><span class="fl" style="color: #AD0000;">1e-3</span>)</span>
+<span id="cb14-26">        </span>
+<span id="cb14-27">        <span class="co" style="color: #5E5E5E;">## Add to the col dict</span></span>
+<span id="cb14-28">        ddict[val] <span class="op" style="color: #5E5E5E;">=</span> np.<span class="bu" style="color: null;">round</span>(odds,<span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb14-29">    <span class="co" style="color: #5E5E5E;">## Add to the sub dict to odds dict</span></span>
+<span id="cb14-30">    odds_dict[colname] <span class="op" style="color: #5E5E5E;">=</span> ddict</span>
+<span id="cb14-31"><span class="bu" style="color: null;">print</span>(odds_dict)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'Education': {' HS-grad': -1.8, ' Some-college': -1.4, ' 10th': -4.0, ' Masters': 2.5, ' Assoc-voc': 1.1, ' Bachelors': 2.0, ' Assoc-acdm': 1.0, ' 1st-4th': -9.0, ' 11th': -4.7, ' 9th': -4.1, ' Doctorate': 3.1, ' Prof-school': 3.2, ' 12th': -2.9, ' 7th-8th': -3.8, ' 5th-6th': -6.2, ' Preschool': -245.4}, 'AgeBucket': {9: 1.8, 11: 1.5, 7: 1.4, 12: 1.2, 6: -1.1, 10: 1.8, 5: -2.3, 14: -1.2, 8: 1.6, 4: -20.0, 3: -100.0, 15: -1.3, 13: -1.1, 16: -2.1, 18: -2.4, 17: -245.3}, 'HoursPerWeekBucket': {8: -1.2, 9: 1.5, 12: 1.8, 3: -5.2, 7: -1.5, 6: -3.1, 5: -4.7, 10: 2.0, 4: -3.7, 14: 1.6, 2: -3.9, 13: 1.7, 11: 1.9, 15: 1.4, 1: -2.1, 0: -2.4, 19: 1.2, 16: 1.7, 17: 1.1, 18: 1.1}, 'Occupation': {' Machine-op-inspct': -1.8, ' ?': -2.4, ' Other-service': -7.1, ' Craft-repair': -1.0, ' Prof-specialty': 2.1, ' Handlers-cleaners': -3.9, ' Exec-managerial': 2.3, ' Sales': 1.1, ' Adm-clerical': -2.0, ' Transport-moving': -1.2, ' Tech-support': 1.2, ' Protective-serv': 1.4, ' Farming-fishing': -2.0, ' Priv-house-serv': -15.2, ' Armed-Forces': -1.9}}</code></pre>
+</div>
+</div>
+<p>Now using this odds table, we can generate predictions with the pre-filled template. Refer to the image below.</p>
+<figure class="figure">
+<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/outputToText.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig 7. Output to human-readable text
+</figcaption>
+</figure>
+<p>With our <code>explainDF</code> data generated for row index 0 previously, we can use the above framework to convert it to text. Let us see what the output looks like -</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T01:21:35.419255Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T01:21:35.414622Z&quot;}" data-execution_count="141">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="kw" style="color: #003B4F;">def</span> explainPredictions(df, pred, odds_dict):</span>
+<span id="cb16-2">    reasons <span class="op" style="color: #5E5E5E;">=</span> []</span>
+<span id="cb16-3">    <span class="cf" style="color: #003B4F;">if</span> pred <span class="op" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">0</span>:</span>
+<span id="cb16-4">        sdf <span class="op" style="color: #5E5E5E;">=</span>  df.loc[df.contribution <span class="op" style="color: #5E5E5E;">&lt;</span> <span class="dv" style="color: #AD0000;">0</span>, :].sort_values([<span class="st" style="color: #20794D;">'contribution'</span>]).reset_index(drop<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>).copy()</span>
+<span id="cb16-5">    <span class="cf" style="color: #003B4F;">else</span>:</span>
+<span id="cb16-6">        sdf <span class="op" style="color: #5E5E5E;">=</span>  df.loc[df.contribution <span class="op" style="color: #5E5E5E;">&gt;</span> <span class="dv" style="color: #AD0000;">0</span>, :].reset_index(drop<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>).copy()</span>
+<span id="cb16-7">    </span>
+<span id="cb16-8">    <span class="cf" style="color: #003B4F;">for</span> idx <span class="kw" style="color: #003B4F;">in</span> <span class="bu" style="color: null;">range</span>(sdf.shape[<span class="dv" style="color: #AD0000;">0</span>]):</span>
+<span id="cb16-9">        col_name <span class="op" style="color: #5E5E5E;">=</span> sdf.names[idx]</span>
+<span id="cb16-10">        data <span class="op" style="color: #5E5E5E;">=</span> sdf.data[idx]</span>
+<span id="cb16-11">        <span class="cf" style="color: #003B4F;">if</span> col_name <span class="kw" style="color: #003B4F;">in</span> odds_dict:</span>
+<span id="cb16-12">            odd_value <span class="op" style="color: #5E5E5E;">=</span> odds_dict[col_name][data]</span>
+<span id="cb16-13">        <span class="cf" style="color: #003B4F;">else</span>:</span>
+<span id="cb16-14">            odd_value <span class="op" style="color: #5E5E5E;">=</span> odds_dict[col_name<span class="op" style="color: #5E5E5E;">+</span><span class="st" style="color: #20794D;">'Bucket'</span>][data<span class="op" style="color: #5E5E5E;">//</span><span class="dv" style="color: #AD0000;">5</span>]</span>
+<span id="cb16-15">            </span>
+<span id="cb16-16">        s1 <span class="op" style="color: #5E5E5E;">=</span> <span class="ss" style="color: #20794D;">f"This individual have </span><span class="sc" style="color: #5E5E5E;">{</span>col_name<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;"> value '</span><span class="sc" style="color: #5E5E5E;">{</span>data<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'."</span> </span>
+<span id="cb16-17">        s2 <span class="op" style="color: #5E5E5E;">=</span> <span class="ss" style="color: #20794D;">f"Historically, people with this behavior have </span><span class="sc" style="color: #5E5E5E;">{</span>odd_value<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">x likely to have income over $50k."</span></span>
+<span id="cb16-18">        reasons.append(s1<span class="op" style="color: #5E5E5E;">+</span>s2)</span>
+<span id="cb16-19">    <span class="cf" style="color: #003B4F;">return</span> reasons</span></code></pre></div>
+</details>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T01:21:38.957601Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T01:21:38.951508Z&quot;}" data-execution_count="142">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">explainPredictions(explainDF, ebm_local.data(<span class="dv" style="color: #AD0000;">0</span>)[<span class="st" style="color: #20794D;">'perf'</span>][<span class="st" style="color: #20794D;">'predicted'</span>], odds_dict)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="142">
+<pre><code>["This individual have HoursPerWeek value '18'.Historically, people with this behavior have -5.2x likely to have income over $50k.",
+ "This individual have Occupation value ' ?'.Historically, people with this behavior have -2.4x likely to have income over $50k."]</code></pre>
+</div>
+</div>
+<p>What if this was a &gt;50k prediction?</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-09-23T01:22:58.736003Z&quot;,&quot;start_time&quot;:&quot;2022-09-23T01:22:58.730966Z&quot;}" data-execution_count="144">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">explainPredictions(explainDF, <span class="dv" style="color: #AD0000;">1</span>, odds_dict)</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="144">
+<pre><code>["This individual have Education value ' Bachelors'.Historically, people with this behavior have 2.0x likely to have income over $50k.",
+ "This individual have Age value '47'.Historically, people with this behavior have 1.8x likely to have income over $50k."]</code></pre>
+</div>
+</div>
+<p>Looks great! We can generate human-readable recommendations for both &gt;50K and &lt;= 50K cases. Hope this provides you with some ideas on how to implement such human-readable explanations.</p>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<p>In the blog, we saw the interpretability-accuracy trade-off. How Explainable Boosting Machines (EBMs) work and how they help in building models which are highly interpretable and accurate. We saw how we can use EBMs through code to generate local and global explanations and how historical odd tables and some pre-generated text can help you convert these explanations into more human-friendly text.</p>
+<p>I hope you enjoyed reading it, and feel free to use my approach to try it out for your purposes. Also, if there is any feedback on the code or just the blog post, feel free to reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a> or email me at aayushmnit@gmail.com. You can also follow me on <a href="https://medium.com/@aayushmnit">Medium</a> and <a href="https://github.com/aayushmnit">Github</a> for future blog posts and exploration project codes I might share.</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>“InterpretML: A Unified Framework for Machine Learning Interpretability” (H. Nori, S. Jenkins, P. Koch, and R. Caruana 2019)↩︎</p></li>
+<li id="fn2"><p><a href="https://interpret.ml/docs/ebm.html">“Interpret ML - EBM documentation”</a>↩︎</p></li>
+<li id="fn3"><p>Dua, D. and Graff, C. (2019). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml]. Irvine, CA: University of California, School of Information and Computer Science. This dataset is licensed under a Creative Commons Attribution 4.0 International (CC BY 4.0) license.↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <category>Explainability</category>
+  <category>Machine Learning</category>
+  <guid>https://aayushmnit.github.io/posts/2022-09-21-Explainability/2022-09-21-Explainability.html</guid>
+  <pubDate>Wed, 21 Sep 2022 07:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.github.io/posts/2022-09-21-Explainability/lego_scientist.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Causal inference with Synthetic Control using Python and SparseSC</title>
   <dc:creator>Aayush Agrawal</dc:creator>
