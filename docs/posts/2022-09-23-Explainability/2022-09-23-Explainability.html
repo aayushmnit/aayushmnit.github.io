@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Aayush Agrawal">
-<meta name="dcterms.date" content="2022-09-21">
+<meta name="dcterms.date" content="2022-09-23">
 
 <title>Aayush Agrawal - Mixing art in science of model explainability</title>
 <style>
@@ -221,11 +221,11 @@ e.exports=function(t){return null!=t&&(n(t)||function(t){return"function"==typeo
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Aayush Agrawal - Mixing art in science of model explainability">
 <meta property="og:description" content="To make people act on your model’s recommendation you must build trust. One idea is to build trust to support your explanations with data anecdotes.">
-<meta property="og:image" content="https://aayushmnit.com/posts/2022-09-21-Explainability/lego_scientist.jpg">
+<meta property="og:image" content="https://aayushmnit.com/posts/2022-09-23-Explainability/lego_scientist.jpg">
 <meta property="og:site-name" content="Aayush Agrawal">
 <meta name="twitter:title" content="Aayush Agrawal - Mixing art in science of model explainability">
 <meta name="twitter:description" content="To make people act on your model’s recommendation you must build trust. One idea is to build trust to support your explanations with data anecdotes.">
-<meta name="twitter:image" content="https://aayushmnit.com/posts/2022-09-21-Explainability/lego_scientist.jpg">
+<meta name="twitter:image" content="https://aayushmnit.com/posts/2022-09-23-Explainability/lego_scientist.jpg">
 <meta name="twitter:creator" content="@aayushmnit">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -308,7 +308,7 @@ e.exports=function(t){return null!=t&&(n(t)||function(t){return"function"==typeo
   <li><a href="#science-of-ml-explainability" id="toc-science-of-ml-explainability" class="nav-link active" data-scroll-target="#science-of-ml-explainability">1. Science of ML explainability</a>
   <ul class="collapse">
   <li><a href="#the-interpretability-vs-accuracy-trade-off" id="toc-the-interpretability-vs-accuracy-trade-off" class="nav-link" data-scroll-target="#the-interpretability-vs-accuracy-trade-off">1.1 The Interpretability vs Accuracy Trade-off</a></li>
-  <li><a href="#introducing-ebms" id="toc-introducing-ebms" class="nav-link" data-scroll-target="#introducing-ebms">1.2 Introducing EBM’s</a></li>
+  <li><a href="#introducing-ebms" id="toc-introducing-ebms" class="nav-link" data-scroll-target="#introducing-ebms">1.2 Introducing EBMs</a></li>
   <li><a href="#glass-box-vs-black-box-models.-what-to-choose" id="toc-glass-box-vs-black-box-models.-what-to-choose" class="nav-link" data-scroll-target="#glass-box-vs-black-box-models.-what-to-choose">1.3 Glass box vs Black box models. What to choose?</a></li>
   </ul></li>
   <li><a href="#hands-on-with-ebms" id="toc-hands-on-with-ebms" class="nav-link" data-scroll-target="#hands-on-with-ebms">2. Hands on with EBMs</a>
@@ -325,7 +325,7 @@ e.exports=function(t){return null!=t&&(n(t)||function(t){return"function"==typeo
   <li><a href="#the-art-of-ml-explainability" id="toc-the-art-of-ml-explainability" class="nav-link" data-scroll-target="#the-art-of-ml-explainability">3. The art of ML explainability</a></li>
   <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/aayushmnit/aayushmnit.github.io/blob/main/posts/2022-09-21-Explainability/2022-09-21-Explainability.ipynb" class="toc-action">Edit this page</a></p><p><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/aayushmnit/aayushmnit.github.io/blob/main/posts/2022-09-23-Explainability/2022-09-23-Explainability.ipynb" class="toc-action">Edit this page</a></p><p><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -353,7 +353,7 @@ e.exports=function(t){return null!=t&&(n(t)||function(t){return"function"==typeo
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 21, 2022</p>
+      <p class="date">September 23, 2022</p>
     </div>
   </div>
     
@@ -363,7 +363,7 @@ e.exports=function(t){return null!=t&&(n(t)||function(t){return"function"==typeo
 </header>
 
 <blockquote class="blockquote">
-<p>Overview on <a href="https://interpret.ml/docs/ebm.html">Explainable Boosting Machine</a> and an approach for converting explanation to more human-friendly explanation.</p>
+<p>Overview on <a href="https://interpret.ml/docs/ebm.html">Explainable Boosting Machine</a> and an approach for converting ML explanation to more human-friendly explanation.</p>
 </blockquote>
 <figure class="figure">
 <img src="./lego_scientist.jpg" style="width:100%" class="figure-img">
@@ -379,13 +379,13 @@ Fig.1 - A lego figure on my desk
 <figure class="figure">
 <img src="./interprebility.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig.2: Interpretibility and Accuracy Tradeoff <br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
+Fig.2: Interpretibility/Intelligibility and Accuracy Tradeoff <br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
 </figcaption>
 </figure>
-<p>As shown in the chart above, we can see that <strong>Glass-Box models</strong> like Linear Regression, Naive Bayes, and Decision Trees are simple models to interpret, and predictions from these models are not highly accurate. On the other hand, <strong>Black-Box models</strong> like Boosted Trees, Random Forest, and Neural Nets are hard to interpret but lead to highly accurate predictions.</p>
+<p>As shown in the chart above, we can see that <strong>Glass-Box models</strong> like Logistic Regression, Naive Bayes, and Decision Trees are simple models to interpret, and predictions from these models are not highly accurate. On the other hand, <strong>Black-Box models</strong> like Boosted Trees, Random Forest, and Neural Nets are hard to interpret but lead to highly accurate predictions.</p>
 </section>
 <section id="introducing-ebms" class="level2">
-<h2 class="anchored" data-anchor-id="introducing-ebms">1.2 Introducing EBM’s</h2>
+<h2 class="anchored" data-anchor-id="introducing-ebms">1.2 Introducing EBMs</h2>
 <p>To solve the problem just mentioned above EBMs(Explainable Boosted Machine) model was developed by Microsoft Research<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. “Explainable Boosting Machine (EBM) is a tree-based, cyclic gradient boosting Generalized Additive Model with automatic interaction detection. EBMs are often as accurate as state-of-the-art BlackBox models while remaining completely interpretable. Although EBMs are often slower to train than other modern algorithms, EBMs are extremely compact and fast at prediction time.”<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <figure class="figure">
 <img src="./interprebility2.png" style="width:100%" class="figure-img">

@@ -10,20 +10,20 @@
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush's personal website</description>
 <generator>quarto-1.2.124</generator>
-<lastBuildDate>Wed, 21 Sep 2022 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 23 Sep 2022 07:00:00 GMT</lastBuildDate>
 <item>
   <title>Mixing art in science of model explainability</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.com/posts/2022-09-21-Explainability/2022-09-21-Explainability.html</link>
+  <link>https://aayushmnit.com/posts/2022-09-23-Explainability/2022-09-23-Explainability.html</link>
   <description><![CDATA[ 
 
 
 
 <blockquote class="blockquote">
-<p>Overview on <a href="https://interpret.ml/docs/ebm.html">Explainable Boosting Machine</a> and an approach for converting explanation to more human-friendly explanation.</p>
+<p>Overview on <a href="https://interpret.ml/docs/ebm.html">Explainable Boosting Machine</a> and an approach for converting ML explanation to more human-friendly explanation.</p>
 </blockquote>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/lego_scientist.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/lego_scientist.jpg" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig.1 - A lego figure on my desk
 </figcaption>
@@ -34,18 +34,18 @@ Fig.1 - A lego figure on my desk
 <h2 class="anchored" data-anchor-id="the-interpretability-vs-accuracy-trade-off">1.1 The Interpretability vs Accuracy Trade-off</h2>
 <p>In traditional tabular machine learning approaches, Data scientists often deal with the trade-off b/w interpretability and accuracy.</p>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/interprebility.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/interprebility.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig.2: Interpretibility and Accuracy Tradeoff <br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
+Fig.2: Interpretibility/Intelligibility and Accuracy Tradeoff <br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
 </figcaption>
 </figure>
-<p>As shown in the chart above, we can see that <strong>Glass-Box models</strong> like Linear Regression, Naive Bayes, and Decision Trees are simple models to interpret, and predictions from these models are not highly accurate. On the other hand, <strong>Black-Box models</strong> like Boosted Trees, Random Forest, and Neural Nets are hard to interpret but lead to highly accurate predictions.</p>
+<p>As shown in the chart above, we can see that <strong>Glass-Box models</strong> like Logistic Regression, Naive Bayes, and Decision Trees are simple models to interpret, and predictions from these models are not highly accurate. On the other hand, <strong>Black-Box models</strong> like Boosted Trees, Random Forest, and Neural Nets are hard to interpret but lead to highly accurate predictions.</p>
 </section>
 <section id="introducing-ebms" class="level2">
-<h2 class="anchored" data-anchor-id="introducing-ebms">1.2 Introducing EBM’s</h2>
+<h2 class="anchored" data-anchor-id="introducing-ebms">1.2 Introducing EBMs</h2>
 <p>To solve the problem just mentioned above EBMs(Explainable Boosted Machine) model was developed by Microsoft Research<sup>1</sup>. “Explainable Boosting Machine (EBM) is a tree-based, cyclic gradient boosting Generalized Additive Model with automatic interaction detection. EBMs are often as accurate as state-of-the-art BlackBox models while remaining completely interpretable. Although EBMs are often slower to train than other modern algorithms, EBMs are extremely compact and fast at prediction time.”<sup>2</sup></p>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/interprebility2.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/interprebility2.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig.3: EBMs breaking the Interpretability vs Accuracy paradox<br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
 </figcaption>
@@ -78,7 +78,7 @@ Tip
 </div>
 <p>There are trade-offs b/w using Glassbox models as compared to Blackbox models. There is no clear winner in picking one model over the other but depending on the situation DS can make an educated guess on what model to pick.</p>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/glassboxVsblackbox.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/glassboxVsblackbox.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig.4: Glassbox models vs BlackBox models
 </figcaption>
@@ -100,7 +100,7 @@ Note
 </div>
 <p><strong>2) Compute Requirement</strong> - DS needs to pay attention to various compute requirements for testing and training a model depending on its use case. EBMs are particularly slow in the training phase but provide fast predictions with built-in explanations. So, in cases where you need to train your model every hour, EBMs might not suffice your need. But, in cases where the training of the model happens monthly/weekly, and scores are generated on a more frequent basis (hourly/daily) EBMs might fit the use case well. Also, in cases where you might be required to produce an explanation for each prediction EBMs can save a lot of computing and might be the only feasible technique to use for millions of observations. Look below to understand the operational difference b/w EBMs and other tree-based ensemble methods.</p>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/trade-off.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/trade-off.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 5: EBMs vs XgBoost/LightGBM
 </figcaption>
@@ -329,7 +329,7 @@ Tip
 <span id="cb10-2">show(ebm_global, renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
 </div>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/global_explaination.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/global_explaination.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 6: EBMs Global Explaination
 </figcaption>
@@ -343,7 +343,7 @@ Fig. 6: EBMs Global Explaination
 <span id="cb11-2">show(ebm_local, renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
 </div>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/local_explainations.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/local_explainations.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 6: EBMs local Explaination
 </figcaption>
@@ -474,7 +474,7 @@ Fig. 6: EBMs local Explaination
 <section id="draw-back-and-concerns" class="level2">
 <h2 class="anchored" data-anchor-id="draw-back-and-concerns">2.4 Draw back and concerns</h2>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/xkcd.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/xkcd.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Credit - <a href="https://www.facebook.com/TheXKCD/photos/a.10157101743316691/10157786457411691/?type=3">XKCD</a>
 </figcaption>
@@ -499,7 +499,7 @@ Warning
 </div>
 <p>To make people act on your model’s recommendation you must <strong>build trust</strong>. One idea is to build trust to support your explanations with data anecdotes.</p>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/building_trust.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/building_trust.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Credit - <a href="https://www.flickr.com/photos/59632563@N04/6239670686">Flickr</a>
 </figcaption>
@@ -511,7 +511,7 @@ Credit - <a href="https://www.flickr.com/photos/59632563@N04/6239670686">Flickr<
 </ol>
 <p>What if we can do the same with our models?</p>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/fidelitySnapshot.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/fidelitySnapshot.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig 7. Snapshots taken from my fidelity tool
 </figcaption>
@@ -558,7 +558,7 @@ Fig 7. Snapshots taken from my fidelity tool
 </div>
 <p>Now using this odds table, we can generate predictions with the pre-filled template. Refer to the image below.</p>
 <figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/outputToText.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-23-Explainability/outputToText.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig 8. Output to human-readable text
 </figcaption>
@@ -624,9 +624,9 @@ Fig 8. Output to human-readable text
 </section></div> ]]></description>
   <category>Explainability</category>
   <category>Machine Learning</category>
-  <guid>https://aayushmnit.com/posts/2022-09-21-Explainability/2022-09-21-Explainability.html</guid>
-  <pubDate>Wed, 21 Sep 2022 07:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.com/posts/2022-09-21-Explainability/lego_scientist.jpg" medium="image" type="image/jpeg"/>
+  <guid>https://aayushmnit.com/posts/2022-09-23-Explainability/2022-09-23-Explainability.html</guid>
+  <pubDate>Fri, 23 Sep 2022 07:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.com/posts/2022-09-23-Explainability/lego_scientist.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Causal inference with Synthetic Control using Python and SparseSC</title>
