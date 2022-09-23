@@ -6,15 +6,15 @@
       version="2.0">
 <channel>
 <title>Aayush Agrawal</title>
-<link>https://aayushmnit.github.io/blog.html</link>
-<atom:link href="https://aayushmnit.github.io/blog.xml" rel="self" type="application/rss+xml"/>
+<link>https://aayushmnit.com/blog.html</link>
+<atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush's personal website</description>
 <generator>quarto-1.2.124</generator>
 <lastBuildDate>Wed, 21 Sep 2022 07:00:00 GMT</lastBuildDate>
 <item>
   <title>Mixing art in science of model explainability</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2022-09-21-Explainability/2022-09-21-Explainability.html</link>
+  <link>https://aayushmnit.com/posts/2022-09-21-Explainability/2022-09-21-Explainability.html</link>
   <description><![CDATA[ 
 
 
@@ -23,7 +23,7 @@
 <p>Overview on <a href="https://interpret.ml/docs/ebm.html">Explainable Boosting Machine</a> and an approach for converting explanation to more human-friendly explanation.</p>
 </blockquote>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/lego_scientist.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/lego_scientist.jpg" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig.1 - A lego figure on my desk
 </figcaption>
@@ -34,7 +34,7 @@ Fig.1 - A lego figure on my desk
 <h2 class="anchored" data-anchor-id="the-interpretability-vs-accuracy-trade-off">1.1 The Interpretability vs Accuracy Trade-off</h2>
 <p>In traditional tabular machine learning approaches, Data scientists often deal with the trade-off b/w interpretability and accuracy.</p>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/interprebility.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/interprebility.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig.2: Interpretibility and Accuracy Tradeoff <br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
 </figcaption>
@@ -45,7 +45,7 @@ Fig.2: Interpretibility and Accuracy Tradeoff <br> Image Credit - <a href="https
 <h2 class="anchored" data-anchor-id="introducing-ebms">1.2 Introducing EBM’s</h2>
 <p>To solve the problem just mentioned above EBMs(Explainable Boosted Machine) model was developed by Microsoft Research<sup>1</sup>. “Explainable Boosting Machine (EBM) is a tree-based, cyclic gradient boosting Generalized Additive Model with automatic interaction detection. EBMs are often as accurate as state-of-the-art BlackBox models while remaining completely interpretable. Although EBMs are often slower to train than other modern algorithms, EBMs are extremely compact and fast at prediction time.”<sup>2</sup></p>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/interprebility2.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/interprebility2.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig.3: EBMs breaking the Interpretability vs Accuracy paradox<br> Image Credit - <a href="https://www.youtube.com/watch?v=MREiHgHgl0k">The Science Behind InterpretML: Explainable Boosting Machine</a>
 </figcaption>
@@ -78,7 +78,7 @@ Tip
 </div>
 <p>There are trade-offs b/w using Glassbox models as compared to Blackbox models. There is no clear winner in picking one model over the other but depending on the situation DS can make an educated guess on what model to pick.</p>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/glassboxVsblackbox.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/glassboxVsblackbox.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig.4: Glassbox models vs BlackBox models
 </figcaption>
@@ -100,7 +100,7 @@ Note
 </div>
 <p><strong>2) Compute Requirement</strong> - DS needs to pay attention to various compute requirements for testing and training a model depending on its use case. EBMs are particularly slow in the training phase but provide fast predictions with built-in explanations. So, in cases where you need to train your model every hour, EBMs might not suffice your need. But, in cases where the training of the model happens monthly/weekly, and scores are generated on a more frequent basis (hourly/daily) EBMs might fit the use case well. Also, in cases where you might be required to produce an explanation for each prediction EBMs can save a lot of computing and might be the only feasible technique to use for millions of observations. Look below to understand the operational difference b/w EBMs and other tree-based ensemble methods.</p>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/trade-off.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/trade-off.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 5: EBMs vs XgBoost/LightGBM
 </figcaption>
@@ -329,7 +329,7 @@ Tip
 <span id="cb10-2">show(ebm_global, renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
 </div>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/global_explaination.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/global_explaination.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 6: EBMs Global Explaination
 </figcaption>
@@ -343,7 +343,7 @@ Fig. 6: EBMs Global Explaination
 <span id="cb11-2">show(ebm_local, renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
 </div>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/local_explainations.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/local_explainations.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 6: EBMs local Explaination
 </figcaption>
@@ -474,7 +474,7 @@ Fig. 6: EBMs local Explaination
 <section id="draw-back-and-concerns" class="level2">
 <h2 class="anchored" data-anchor-id="draw-back-and-concerns">2.4 Draw back and concerns</h2>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/xkcd.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/xkcd.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Credit - <a href="https://www.facebook.com/TheXKCD/photos/a.10157101743316691/10157786457411691/?type=3">XKCD</a>
 </figcaption>
@@ -499,7 +499,7 @@ Warning
 </div>
 <p>To make people act on your model’s recommendation you must <strong>build trust</strong>. One idea is to build trust to support your explanations with data anecdotes.</p>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/building_trust.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/building_trust.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Credit - <a href="https://www.flickr.com/photos/59632563@N04/6239670686">Flickr</a>
 </figcaption>
@@ -511,7 +511,7 @@ Credit - <a href="https://www.flickr.com/photos/59632563@N04/6239670686">Flickr<
 </ol>
 <p>What if we can do the same with our models?</p>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/fidelitySnapshot.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/fidelitySnapshot.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig 7. Snapshots taken from my fidelity tool
 </figcaption>
@@ -558,7 +558,7 @@ Fig 7. Snapshots taken from my fidelity tool
 </div>
 <p>Now using this odds table, we can generate predictions with the pre-filled template. Refer to the image below.</p>
 <figure class="figure">
-<img src="https://aayushmnit.github.io/posts/2022-09-21-Explainability/outputToText.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2022-09-21-Explainability/outputToText.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig 8. Output to human-readable text
 </figcaption>
@@ -624,14 +624,14 @@ Fig 8. Output to human-readable text
 </section></div> ]]></description>
   <category>Explainability</category>
   <category>Machine Learning</category>
-  <guid>https://aayushmnit.github.io/posts/2022-09-21-Explainability/2022-09-21-Explainability.html</guid>
+  <guid>https://aayushmnit.com/posts/2022-09-21-Explainability/2022-09-21-Explainability.html</guid>
   <pubDate>Wed, 21 Sep 2022 07:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.github.io/posts/2022-09-21-Explainability/lego_scientist.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://aayushmnit.com/posts/2022-09-21-Explainability/lego_scientist.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Causal inference with Synthetic Control using Python and SparseSC</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</link>
+  <link>https://aayushmnit.com/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</link>
   <description><![CDATA[ 
 
 
@@ -1381,14 +1381,14 @@ Effect Path Estimation:
 </section></div> ]]></description>
   <category>Causal Inference</category>
   <category>Synthetic Control</category>
-  <guid>https://aayushmnit.github.io/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</guid>
+  <guid>https://aayushmnit.com/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</guid>
   <pubDate>Mon, 19 Sep 2022 07:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.github.io/posts/2022-09-19-SyntheticControl/california99.png" medium="image" type="image/png" height="90" width="144"/>
+  <media:content url="https://aayushmnit.com/posts/2022-09-19-SyntheticControl/california99.png" medium="image" type="image/png" height="90" width="144"/>
 </item>
 <item>
   <title>Finding similar images using Deep learning and Locality Sensitive Hashing</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html</link>
+  <link>https://aayushmnit.com/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html</link>
   <description><![CDATA[ 
 
 
@@ -1402,14 +1402,14 @@ Effect Path Estimation:
   <category>FastAI</category>
   <category>Pytorch</category>
   <category>Vision</category>
-  <guid>https://aayushmnit.github.io/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html</guid>
+  <guid>https://aayushmnit.com/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html</guid>
   <pubDate>Sun, 17 Mar 2019 07:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.github.io/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/similar.png" medium="image" type="image/png" height="99" width="144"/>
+  <media:content url="https://aayushmnit.com/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/similar.png" medium="image" type="image/png" height="99" width="144"/>
 </item>
 <item>
   <title>Real-time Multi-Facial attribute detection using computer vision and deep learning with FastAI and OpenCV</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html</link>
+  <link>https://aayushmnit.com/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html</link>
   <description><![CDATA[ 
 
 
@@ -1424,14 +1424,14 @@ Effect Path Estimation:
   <category>Pytorch</category>
   <category>Vision</category>
   <category>Video</category>
-  <guid>https://aayushmnit.github.io/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html</guid>
+  <guid>https://aayushmnit.com/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html</guid>
   <pubDate>Sun, 17 Feb 2019 08:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.github.io/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/face.gif" medium="image" type="image/gif"/>
+  <media:content url="https://aayushmnit.com/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/face.gif" medium="image" type="image/gif"/>
 </item>
 <item>
   <title>MultiLayer Perceptron using Fastai and Pytorch</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html</link>
+  <link>https://aayushmnit.com/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html</link>
   <description><![CDATA[ 
 
 
@@ -1445,14 +1445,14 @@ Effect Path Estimation:
   <category>FastAI</category>
   <category>Pytorch</category>
   <category>Vision</category>
-  <guid>https://aayushmnit.github.io/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html</guid>
+  <guid>https://aayushmnit.com/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html</guid>
   <pubDate>Sat, 05 Jan 2019 08:00:00 GMT</pubDate>
   <media:content url="https://raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/single_layer_mlp.png" medium="image" type="image/png"/>
 </item>
 <item>
   <title>Leaf Disease detection by Tranfer learning using FastAI V1 library</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html</link>
+  <link>https://aayushmnit.com/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html</link>
   <description><![CDATA[ 
 
 
@@ -1465,14 +1465,14 @@ Effect Path Estimation:
   <category>Deep Learning</category>
   <category>FastAI</category>
   <category>Vision</category>
-  <guid>https://aayushmnit.github.io/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html</guid>
+  <guid>https://aayushmnit.com/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html</guid>
   <pubDate>Sun, 28 Oct 2018 07:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.github.io/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/leaf_classification.png" medium="image" type="image/png" height="99" width="144"/>
+  <media:content url="https://aayushmnit.com/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/leaf_classification.png" medium="image" type="image/png" height="99" width="144"/>
 </item>
 <item>
   <title>Multi-Layer perceptron using Tensorflow</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html</link>
+  <link>https://aayushmnit.com/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html</link>
   <description><![CDATA[ 
 
 
@@ -1484,14 +1484,14 @@ Effect Path Estimation:
  ]]></description>
   <category>Machine Learning</category>
   <category>Deep Learning</category>
-  <guid>https://aayushmnit.github.io/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html</guid>
+  <guid>https://aayushmnit.com/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html</guid>
   <pubDate>Wed, 12 Sep 2018 07:00:00 GMT</pubDate>
   <media:content url="https://raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/single_layer_mlp.png" medium="image" type="image/png"/>
 </item>
 <item>
   <title>Building Neural Network from scratch</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/index.html</link>
+  <link>https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/index.html</link>
   <description><![CDATA[ 
 
 
@@ -1503,7 +1503,7 @@ Effect Path Estimation:
 </section>
 <section id="what-is-a-multi-layer-perceptron" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-a-multi-layer-perceptron">What is a Multi layer perceptron?</h2>
-Multi-layer perceptron is a type of network where multiple layers of a group of perceptron are stacked together to make a model. Before we jump into the concept of a layer and multiple perceptrons, let’s start with the building block of this network which is a perceptron. Think of perceptron/neuron as a linear model which takes multiple inputs and produce an output. In our case perceptron is a linear model which takes a bunch of inputs multiply them with weights and add a bias term to generate an output.<br> <img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/eq_perceptron.png" align="center"> <br> <img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/https:/raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/perceptron.png" align="center">
+Multi-layer perceptron is a type of network where multiple layers of a group of perceptron are stacked together to make a model. Before we jump into the concept of a layer and multiple perceptrons, let’s start with the building block of this network which is a perceptron. Think of perceptron/neuron as a linear model which takes multiple inputs and produce an output. In our case perceptron is a linear model which takes a bunch of inputs multiply them with weights and add a bias term to generate an output.<br> <img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/eq_perceptron.png" align="center"> <br> <img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/https:/raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/perceptron.png" align="center">
 <center>
 Fig 1: Perceptron image
 </center>
@@ -1511,7 +1511,7 @@ Fig 1: Perceptron image
 <div data-align="right">
 Image credit=https://commons.wikimedia.org/wiki/File:Perceptron.png/
 </div>
-Now, if we stack a bunch of these perceptrons together, it becomes a hidden layer which is also known as a Dense layer in modern deep learning terminology. <br> <strong>Dense layer,</strong> <img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/eq_dense.png"> <br> <em>Note that bias term is now a vector and W is a weight matrix</em> <br> <img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/https:/raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/single_layer_mlp.png" align="center">
+Now, if we stack a bunch of these perceptrons together, it becomes a hidden layer which is also known as a Dense layer in modern deep learning terminology. <br> <strong>Dense layer,</strong> <img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/eq_dense.png"> <br> <em>Note that bias term is now a vector and W is a weight matrix</em> <br> <img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/https:/raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/single_layer_mlp.png" align="center">
 <center>
 Fig: Single dense layer perceptron network
 </center>
@@ -1520,7 +1520,7 @@ Fig: Single dense layer perceptron network
 Image credit=http://www.texample.net/tikz/examples/neural-network/
 </div>
 <p>Now we understand dense layer let’s add a bunch of them, and that network becomes a multi-layer perceptron network.</p>
-<img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/https:/raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/multi_layer_mlp.png" align="center">
+<img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/https:/raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/multi_layer_mlp.png" align="center">
 <center>
 Fig: Multi layer perceptron network
 </center>
@@ -1528,10 +1528,10 @@ Fig: Multi layer perceptron network
 <div data-align="right">
 Image credit=http://pubs.sciepub.com/ajmm/3/3/1/figure/2s
 </div>
-<p>If you have noticed our dense layer, only have linear functions, and any combination of linear function only results in the linear output. As we want our MLP to be flexible and learn non-linear decision boundaries, we also need to introduce non-linearity into the network. We achieve the task of introducing non-linearity by adding activation function. There are various kinds of activation function which can be used, but we will be implementing Rectified Linear Units(ReLu) which is one of the popular activation function. ReLU function is a simple function which is zero for any input value below zero and the same value for values greater than zero. <br> <strong>ReLU function</strong> <img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/eq_relu.png"> <br> Now, we understand dense layer and also understand the purpose of activation function, the only thing left is training the network. For training a neural network we need to have a loss function and every layer should have a <strong>feed-forward loop</strong> and <strong>backpropagation loop</strong>. Feedforward loop takes an input and generates output for making a prediction and backpropagation loop helps in training the model by adjusting weights in the layer to lower the output loss. In backpropagation, the weight update is done by using backpropagated gradients using the chain rule and optimized using an optimization algorithm. In our case, we will be using SGD(stochastic gradient descent). If you don’t understand the concept of gradient weight updates and SGD, I recommend you to watch <a href="https://www.coursera.org/ml">week 1 of Machine learning by Andrew NG lectures</a>.</p>
+<p>If you have noticed our dense layer, only have linear functions, and any combination of linear function only results in the linear output. As we want our MLP to be flexible and learn non-linear decision boundaries, we also need to introduce non-linearity into the network. We achieve the task of introducing non-linearity by adding activation function. There are various kinds of activation function which can be used, but we will be implementing Rectified Linear Units(ReLu) which is one of the popular activation function. ReLU function is a simple function which is zero for any input value below zero and the same value for values greater than zero. <br> <strong>ReLU function</strong> <img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/eq_relu.png"> <br> Now, we understand dense layer and also understand the purpose of activation function, the only thing left is training the network. For training a neural network we need to have a loss function and every layer should have a <strong>feed-forward loop</strong> and <strong>backpropagation loop</strong>. Feedforward loop takes an input and generates output for making a prediction and backpropagation loop helps in training the model by adjusting weights in the layer to lower the output loss. In backpropagation, the weight update is done by using backpropagated gradients using the chain rule and optimized using an optimization algorithm. In our case, we will be using SGD(stochastic gradient descent). If you don’t understand the concept of gradient weight updates and SGD, I recommend you to watch <a href="https://www.coursera.org/ml">week 1 of Machine learning by Andrew NG lectures</a>.</p>
 <p>So, to summarize a neural network needs few building blocks</p>
 <ul>
-<li><strong>Dense layer</strong> - a fully-connected layer, <img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/eq_dense.png"></li>
+<li><strong>Dense layer</strong> - a fully-connected layer, <img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/eq_dense.png"></li>
 <li><strong>ReLU layer</strong> (or any other activation function to introduce non-linearity)</li>
 <li><strong>Loss function</strong> - (crossentropy in case of multi-class classification problem)</li>
 <li><strong>Backprop algorithm</strong> - a stochastic gradient descent with backpropageted gradients</li>
@@ -1604,7 +1604,7 @@ Image credit=http://pubs.sciepub.com/ajmm/3/3/1/figure/2s
 <section id="dense-layer" class="level3">
 <h3 class="anchored" data-anchor-id="dense-layer">Dense layer</h3>
 <p>Now let’s build something more complicated. Unlike nonlinearity, a dense layer actually has something to learn.</p>
-<p>A dense layer applies affine transformation. In a vectorized form, it can be described as:<br> <img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/eq_dense.png"></p>
+<p>A dense layer applies affine transformation. In a vectorized form, it can be described as:<br> <img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/eq_dense.png"></p>
 <p>Where * X is an object-feature matrix of shape [batch_size, num_features], * W is a weight matrix [num_features, num_outputs] * and b is a vector of num_outputs biases.</p>
 <p>Both W and b are initialized during layer creation and updated each time backward is called. Note that we are using <strong>Xavier initialization</strong> which is a trick to train our model to converge faster <a href="http://andyljones.tumblr.com/post/110998971763/an-explanation-of-xavier-initialization">read more</a>. Instead of initializing our weights with small numbers which are distributed randomly we initialize our weights with mean zero and variance of 2/(number of inputs + number of outputs)</p>
 <div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="kw" style="color: #003B4F;">class</span> Dense(Layer):</span>
@@ -1648,8 +1648,8 @@ Image credit=http://pubs.sciepub.com/ajmm/3/3/1/figure/2s
 <h3 class="anchored" data-anchor-id="the-loss-function">The loss function</h3>
 <p>Since we want to predict probabilities, it would be logical for us to define softmax nonlinearity on top of our network and compute loss given predicted probabilities. However, there is a better way to do so.</p>
 <p>If we write down the expression for crossentropy as a function of softmax logits (a), you’ll see: <br></p>
-<p><img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/loss_1.png"> <br> If we take a closer look, we’ll see that it can be rewritten as: <br></p>
-<p><img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/loss_2.png"> <br> It’s called Log-softmax and it’s better than naive log(softmax(a)) in all aspects: * Better numerical stability * Easier to get derivative right * Marginally faster to compute</p>
+<p><img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/loss_1.png"> <br> If we take a closer look, we’ll see that it can be rewritten as: <br></p>
+<p><img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/loss_2.png"> <br> It’s called Log-softmax and it’s better than naive log(softmax(a)) in all aspects: * Better numerical stability * Easier to get derivative right * Marginally faster to compute</p>
 <p>So why not just use log-softmax throughout our computation and never actually bother to estimate probabilities.</p>
 <div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="kw" style="color: #003B4F;">def</span> softmax_crossentropy_with_logits(logits,reference_answers):</span>
 <span id="cb5-2">    <span class="co" style="color: #5E5E5E;"># Compute crossentropy from logits[batch,n_classes] and ids of correct answers</span></span>
@@ -1701,7 +1701,7 @@ Image credit=http://pubs.sciepub.com/ajmm/3/3/1/figure/2s
 <span id="cb6-28">    plt.subplot(<span class="dv" style="color: #AD0000;">2</span>,<span class="dv" style="color: #AD0000;">2</span>,i<span class="op" style="color: #5E5E5E;">+</span><span class="dv" style="color: #AD0000;">1</span>)</span>
 <span id="cb6-29">    plt.title(<span class="st" style="color: #20794D;">"Label: </span><span class="sc" style="color: #5E5E5E;">%i</span><span class="st" style="color: #20794D;">"</span><span class="op" style="color: #5E5E5E;">%</span>y_train[i])</span>
 <span id="cb6-30">    plt.imshow(X_train[i].reshape([<span class="dv" style="color: #AD0000;">28</span>,<span class="dv" style="color: #AD0000;">28</span>]),cmap<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'gray'</span>)<span class="op" style="color: #5E5E5E;">;</span></span></code></pre></div>
-<p><img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/output_20_1.png" align="center"></p>
+<p><img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/output_20_1.png" align="center"></p>
 <p>We’ll define network as a list of layers, each applied on top of previous one. In this setting, computing predictions and training becomes trivial.</p>
 <div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">network <span class="op" style="color: #5E5E5E;">=</span> []</span>
 <span id="cb7-2">network.append(Dense(X_train.shape[<span class="dv" style="color: #AD0000;">1</span>],<span class="dv" style="color: #AD0000;">100</span>))</span>
@@ -1794,7 +1794,7 @@ Image credit=http://pubs.sciepub.com/ajmm/3/3/1/figure/2s
 <pre><code>Epoch 24
 Train accuracy: 1.0
 Val accuracy: 0.9809</code></pre>
-<p><img src="https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/output_27_1.png" align="center"></p>
+<p><img src="https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/output_27_1.png" align="center"></p>
 <p>As we can see we have successfully trained a MLP which was purely written in numpy with high validation accuracy!</p>
 
 
@@ -1804,14 +1804,14 @@ Val accuracy: 0.9809</code></pre>
  ]]></description>
   <category>Machine Learning</category>
   <category>Deep Learning</category>
-  <guid>https://aayushmnit.github.io/posts/2018-06-03-Building_neural_network_from_scratch/index.html</guid>
+  <guid>https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/index.html</guid>
   <pubDate>Sun, 03 Jun 2018 07:00:00 GMT</pubDate>
   <media:content url="https://raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/single_layer_mlp.png" medium="image" type="image/png"/>
 </item>
 <item>
   <title>Solving business usecases by recommender system using lightFM</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html</link>
+  <link>https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html</link>
   <description><![CDATA[ 
 
 
@@ -1820,22 +1820,22 @@ Val accuracy: 0.9809</code></pre>
 <section id="motivation" class="level2">
 <h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
 <p>I am an avid reader and a believer in open source education and continuously expand my knowledge around data science &amp; computer science using online courses, blogs, Github repositories and participating in data science competitions. While searching for quality content on the internet, I have come across various learning links which either focus on the implementation of the algorithm using specific data/modeling technique in ABC language or focus on business impact/results using the broad concept of a family of algorithms(like classification, forecasting, recommender systems etc.) but don’t go into details of how to do it. So the idea is to write some blogs which can combine both business use cases with codes &amp; algorithmic intuition to provide a holistic view of how data science is used in business scenarios. <br></p>
-<p>As the world is becoming more digital, we are already getting used to a lot of personalized experience and the algorithm which help us achieve this falls in the family of recommender systems. Almost every web-based platform is using some recommender system to provide customized content. Following are the companies I admire the most. <img src="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/admired_companies.PNG"></p>
+<p>As the world is becoming more digital, we are already getting used to a lot of personalized experience and the algorithm which help us achieve this falls in the family of recommender systems. Almost every web-based platform is using some recommender system to provide customized content. Following are the companies I admire the most. <img src="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/admired_companies.PNG"></p>
 </section>
 <section id="what-is-personalization" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-personalization">What is personalization?</h2>
 <p>Personalization is a technique of dynamically tailoring your content based on needs of each user. Simple examples of personalization could be movie recommendation on Netflix, personalized email targeting/re-targeting by e-commerce platforms, item recommendation on Amazon, etc. Personalization helps us achieve these four Rs - - <strong>Recognize:</strong> Know customer’s and prospects’ profiles, including demographics, geography, and expressed and shared interests. - <strong>Remember:</strong> Recall customers’ history, primarily how they act as expressed by what they browse and buy - <strong>Reach:</strong> Deliver the right promotion, content, recommendation for a customer based on actions, preferences, and interests - <strong>Relevance:</strong> Deliver personalization within the context of the digital experience based on who customers are, where they are located and what time of year it is</p>
-<p><img src="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/4r_personalization.PNG"></p>
+<p><img src="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/4r_personalization.PNG"></p>
 </section>
 <section id="why-personalization" class="level2">
 <h2 class="anchored" data-anchor-id="why-personalization">Why personalization?</h2>
 <p>Personalization has a lot of benefits for both users and companies. For users, it makes their life easy as they only get to see more relevant stuff to them (unless it’s an advertisement, even they are personalized). For business benefits are countless but here are few which I would like to mention - - <strong>Enhance customer experience:</strong> Personalization reduces the clutter and enhances the customer experience by showing relevant content - <strong>Cross-sell/ Up-sell opportunities:</strong> Relevant product offerings based on customer preferences can lead to increasing products visibility and eventually selling more products - <strong>Increased basket size:</strong> Personalized experience and targeting ultimately leads to increased basket size and frequent purchases - <strong>Increased customer loyalty:</strong> In the digital world, customer retention/loyalty is the most prominent problem faced by many companies as finding a replacement for a particular service is quite easy. According to a <a href="https://www.forbes.com/sites/shephyken/2017/10/29/personalized-customer-experience-increases-revenue-and-loyalty/#36e9f054bd61">Forbes article</a>, Forty-four percent of consumers say they will likely repeat after a personalized experience</p>
-<p><img src="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/personalization_benefits.PNG"></p>
+<p><img src="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/personalization_benefits.PNG"></p>
 </section>
 <section id="introduction-to-matrix-factorization" class="level2">
 <h2 class="anchored" data-anchor-id="introduction-to-matrix-factorization">Introduction to Matrix factorization</h2>
-<p>Matrix factorization is one of the algorithms from recommender systems family and as the name suggests it factorize a matrix, i.e., decompose a matrix in two(or more) matrices such that once you multiply them you get your original matrix back. In case of the recommendation system, we will typically start with an interaction/rating matrix between users and items and matrix factorization algorithm will decompose this matrix in user and item feature matrix which is also known as embeddings. Example of interaction matrix would be user-movie ratings for movie recommender, user-product purchase flag for transaction data, etc. <br> <img src="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/matrix_decomposition.png"></p>
-<p><br> Typically user/item embeddings capture latent features about attributes of users and item respectively. Essentially, latent features are the representation of user/item in an arbitrary space which represents how a user rate a movie. In the example of a movie recommender, an example of user embedding might represent affinity of a user to watch serious kind of movie when the value of the latent feature is high and comedy type of movie when the value is low. Similarly, a movie latent feature may have a high value when the movie is more male driven and when it’s more female-driven the value is typically low. <br> <img src="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/latent_feature.gif"></p>
+<p>Matrix factorization is one of the algorithms from recommender systems family and as the name suggests it factorize a matrix, i.e., decompose a matrix in two(or more) matrices such that once you multiply them you get your original matrix back. In case of the recommendation system, we will typically start with an interaction/rating matrix between users and items and matrix factorization algorithm will decompose this matrix in user and item feature matrix which is also known as embeddings. Example of interaction matrix would be user-movie ratings for movie recommender, user-product purchase flag for transaction data, etc. <br> <img src="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/matrix_decomposition.png"></p>
+<p><br> Typically user/item embeddings capture latent features about attributes of users and item respectively. Essentially, latent features are the representation of user/item in an arbitrary space which represents how a user rate a movie. In the example of a movie recommender, an example of user embedding might represent affinity of a user to watch serious kind of movie when the value of the latent feature is high and comedy type of movie when the value is low. Similarly, a movie latent feature may have a high value when the movie is more male driven and when it’s more female-driven the value is typically low. <br> <img src="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/latent_feature.gif"></p>
 <p>For more information on matrix factorization and factorization machines you can read these articles - <br> <a href="http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/">Matrix Factorization: A Simple Tutorial and Implementation in Python</a> <br> <a href="https://www.analyticsvidhya.com/blog/2018/01/factorization-machines/">Introductory Guide – Factorization Machines &amp; their application on huge datasets (with codes in Python)</a></p>
 </section>
 <section id="handon-building-recommender-system-using-lightfm-package-in-python" class="level2">
@@ -2562,7 +2562,7 @@ userId
 </section>
 <section id="usecase-1-item-recommendation-to-a-user" class="level3">
 <h3 class="anchored" data-anchor-id="usecase-1-item-recommendation-to-a-user">Usecase 1: Item recommendation to a user</h3>
-<p>In this use case, we want to show a user, items he might be interested in buying/viewing based on his/her interactions done in the past. Typical industry examples for this are like “Deals recommended for you” on Amazon or “Top pics for a user” on Netflix or personalized email campaigns. <img src="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/user_item_recommendation.PNG"></p>
+<p>In this use case, we want to show a user, items he might be interested in buying/viewing based on his/her interactions done in the past. Typical industry examples for this are like “Deals recommended for you” on Amazon or “Top pics for a user” on Netflix or personalized email campaigns. <img src="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/user_item_recommendation.PNG"></p>
 <p>We can use the <strong>sample_recommendation_user</strong> function for this case. This functions take matrix factorization model, interaction matrix, user dictionary, item dictionary, user_id and the number of items as input and return the list of item id’s a user may be interested in interacting.</p>
 <div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;">## Calling 10 movie recommendation for user id 11</span></span>
 <span id="cb7-2">rec_list <span class="op" style="color: #5E5E5E;">=</span> sample_recommendation_user(model <span class="op" style="color: #5E5E5E;">=</span> mf_model, </span>
@@ -2612,7 +2612,7 @@ userId
 <section id="usecase-2-user-recommendation-to-a-item" class="level3">
 <h3 class="anchored" data-anchor-id="usecase-2-user-recommendation-to-a-item">Usecase 2: User recommendation to a item</h3>
 <p>In this use case, we will discuss how we can recommend a list of users specific to a particular item. Example of such cases is when you are running a promotion on an item and want to run an e-mail campaign around this promotional item to only 10,000 users who might be interested in this item.</p>
-<p><img src="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/item_user_recommendation.jpg"></p>
+<p><img src="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/item_user_recommendation.jpg"></p>
 <p>We can use the <strong>sample_recommendation_item</strong> function for this case. This functions take matrix factorization model, interaction matrix, user dictionary, item dictionary, item_id and the number of users as input and return the list of user id’s who are more likely be interested in the item.</p>
 <div class="sourceCode" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;">## Calling 15 user recommendation for item id 1</span></span>
 <span id="cb11-2">sample_recommendation_item(model <span class="op" style="color: #5E5E5E;">=</span> mf_model,</span>
@@ -2627,7 +2627,7 @@ userId
 <section id="usecase-3-item-recommendation-to-items" class="level3">
 <h3 class="anchored" data-anchor-id="usecase-3-item-recommendation-to-items">Usecase 3: Item recommendation to items</h3>
 <p>In this use case, we will discuss how we can recommend a list of items specific to a particular item. This kind of models will help you to find similar/related items or items which can be bundled together. Typical industry use case for such models are in cross-selling and up-selling opportunities on product page like “Products related to this item”, “Frequently bought together”, “Customers who bought this also bought this” and “Customers who viewed this item also viewed”. <br> <em>“Customers who bought this also bought this” and “Customers who viewed this item also viewed” can also be solved through market basket analysis.</em></p>
-<p><img src="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/crossell_bundling.PNG"></p>
+<p><img src="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/crossell_bundling.PNG"></p>
 <p>To achieve this use case, we will create a cosine distance matrix using item embeddings generated by matrix factorization model. This will help us calculate similarity b/w items, and then we can recommend top N similar item to an item of interest. First step is to create a item-item distance matrix using the <strong>create_item_emdedding_distance_matrix</strong> function. This function takes matrix factorization models and interaction matrix as input and returns an item_embedding_distance_matrix.</p>
 <div class="sourceCode" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="co" style="color: #5E5E5E;">## Creating item-item distance matrix</span></span>
 <span id="cb13-2">item_item_dist <span class="op" style="color: #5E5E5E;">=</span> create_item_emdedding_distance_matrix(model <span class="op" style="color: #5E5E5E;">=</span> mf_model,</span>
@@ -3136,14 +3136,14 @@ Item similar to the above item:
   <category>Recommender System</category>
   <category>Machine learning</category>
   <category>Business</category>
-  <guid>https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html</guid>
+  <guid>https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html</guid>
   <pubDate>Tue, 17 Apr 2018 07:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.github.io/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/personalization_benefits.PNG" medium="image"/>
+  <media:content url="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/personalization_benefits.PNG" medium="image"/>
 </item>
 <item>
   <title>Website launch</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.github.io/posts/2018-02-19-launch/index.html</link>
+  <link>https://aayushmnit.com/posts/2018-02-19-launch/index.html</link>
   <description><![CDATA[ 
 
 
@@ -3158,9 +3158,9 @@ Item similar to the above item:
  ]]></description>
   <category>launch</category>
   <category>announcement</category>
-  <guid>https://aayushmnit.github.io/posts/2018-02-19-launch/index.html</guid>
+  <guid>https://aayushmnit.com/posts/2018-02-19-launch/index.html</guid>
   <pubDate>Mon, 19 Feb 2018 08:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.github.io/posts/2018-02-19-launch/launch.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://aayushmnit.com/posts/2018-02-19-launch/launch.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
