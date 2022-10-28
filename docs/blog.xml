@@ -10,7 +10,527 @@
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush's personal website</description>
 <generator>quarto-1.2.124</generator>
-<lastBuildDate>Fri, 23 Sep 2022 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 12 Oct 2022 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>Model calibration for classification task using Python</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.com/posts/2022-10-26-Model_Calibration/Model Calibation.html</link>
+  <description><![CDATA[ 
+
+
+
+<blockquote class="blockquote">
+<p>A hands-on introduction to model calibration using Python.</p>
+</blockquote>
+<section id="what-is-model-calibration" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="what-is-model-calibration"><span class="header-section-number">1</span> What is Model Calibration?</h2>
+<p>When working with classification tasks, the machine learning models often produce a probabilistic outcome ranging between 0 to 1. This probabilistic output is then used by organizations/machine learning scientist to make decisions. Unfortunately, many machine learning models probabilistic output cannot be directly interpreted as probability of an event happening backed by data. In order to achieve this outcome, the ML model needs to be calibrated.</p>
+<blockquote class="blockquote">
+<p>Formally, a model is said to be perfectly caliberated if, for any probability value <code>p</code>, a prediction of a class with confidence <code>p</code> is correct 100*<code>p</code> percent of time.</p>
+</blockquote>
+<p>Let’s visualize a perfect calibration curve.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-27T23:57:16.674784Z&quot;,&quot;start_time&quot;:&quot;2022-10-27T23:57:16.224724Z&quot;}" data-code_folding="[]" data-execution_count="1">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;">import</span> numpy <span class="im" style="color: #00769E;">as</span> np</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;">import</span> pandas <span class="im" style="color: #00769E;">as</span> pd</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;">import</span> plotly.io <span class="im" style="color: #00769E;">as</span> pio</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;">import</span> plotly.graph_objects <span class="im" style="color: #00769E;">as</span> go</span>
+<span id="cb1-5"><span class="im" style="color: #00769E;">import</span> plotly.express <span class="im" style="color: #00769E;">as</span> px</span>
+<span id="cb1-6">pio.renderers.default <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_mimetype+notebook_connected"</span></span></code></pre></div>
+</details>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-27T23:57:16.888206Z&quot;,&quot;start_time&quot;:&quot;2022-10-27T23:57:16.676672Z&quot;}" data-code_folding="[]" data-execution_count="2">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb2-2">    <span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>: np.arange(<span class="dv" style="color: #AD0000;">0</span>,<span class="fl" style="color: #AD0000;">1.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>),</span>
+<span id="cb2-3">    <span class="st" style="color: #20794D;">"Predicted Probability"</span>: np.arange(<span class="dv" style="color: #AD0000;">0</span>,<span class="fl" style="color: #AD0000;">1.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>)</span>
+<span id="cb2-4">})</span>
+<span id="cb2-5">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb2-6">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb2-7">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb2-8">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Predicted Probability"</span>, </span>
+<span id="cb2-9">        y <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>,</span>
+<span id="cb2-10">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb2-11"></span>
+<span id="cb2-12">fig.update_layout(</span>
+<span id="cb2-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Perfect calibration"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb2-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb2-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>,</span>
+<span id="cb2-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb2-17">)</span>
+<span id="cb2-18">fig.update_traces(patch<span class="op" style="color: #5E5E5E;">=</span>{<span class="st" style="color: #20794D;">"line"</span>: {<span class="st" style="color: #20794D;">"dash"</span>: <span class="st" style="color: #20794D;">"dash"</span>}}) </span>
+<span id="cb2-19">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"notebook"</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="533d164e-13bc-4330-afd3-e39ea7e79a10" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("533d164e-13bc-4330-afd3-e39ea7e79a10")) {                    Plotly.newPlot(                        "533d164e-13bc-4330-afd3-e39ea7e79a10",                        [{"hovertemplate":"Predicted Probability=%{x}<br>Fraction of Positives Captured=%{y}<extra></extra>","legendgroup":"","line":{"color":"#636efa","dash":"dash"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"","orientation":"v","showlegend":false,"x":[0.0,0.1,0.2,0.30000000000000004,0.4,0.5,0.6000000000000001,0.7000000000000001,0.8,0.9,1.0],"xaxis":"x","y":[0.0,0.1,0.2,0.30000000000000004,0.4,0.5,0.6000000000000001,0.7000000000000001,0.8,0.9,1.0],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Predicted Probability"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Fraction of Positives Captured"}},"legend":{"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Perfect calibration","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('533d164e-13bc-4330-afd3-e39ea7e79a10');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig 1 - A perfectly calibrated classifier</p>
+</div>
+</div>
+<p>On x-axis we have model output <code>p</code> which is between 0 and 1 and on y-axis we have fractions of positive captured if we set cut-off below that <code>p</code> value. We expect a linear relationship with slope 1.</p>
+</section>
+<section id="why-do-we-need-model-calibration" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="why-do-we-need-model-calibration"><span class="header-section-number">2</span> Why do we need Model calibration?</h2>
+<p>There are many cases where calibrated models are not required like in the case of ranking or selecting top 20% for some targeting campaign. Let’s focus on cases where calibrated models can add a lot of value -</p>
+<section id="case-1-calibrated-models-provide-flexibility" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="case-1-calibrated-models-provide-flexibility"><span class="header-section-number">2.1</span> Case 1: Calibrated models provide flexibility</h3>
+<p>Consider the following example - <br> DS built a ML model to estimate probability of a customer churning. Let’s say if you want to prioritize b/w the following two customers-</p>
+<figure class="figure">
+<img src="https://aayushmnit.com/posts/2022-10-26-Model_Calibration/churn_example.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 2: Churn probability
+</figcaption>
+</figure>
+<p>In this case, Customer 1 have a 80% probability of churn but the revenue generated by them is \$100 and Customer 2 have 60% chance of churn and revenue generated is about $1000. As a business, you might want to save Customer 2. To make such probability to revenue impact conversion or any cost benefit analysis you need your models to be calibrated.</p>
+</section>
+<section id="case-2-model-modularity" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="case-2-model-modularity"><span class="header-section-number">2.2</span> Case 2: Model modularity</h3>
+<p>In complex machine learning decision engines, a ML model might be used in conjunction with other ML models.Consider the following example - <br> DS built two ML models to estimate probability of a customer upselling to two different products. Let’s say you want to prioritize which recommendation to act on looking at the following case -</p>
+<figure class="figure">
+<img src="https://aayushmnit.com/posts/2022-10-26-Model_Calibration/upsell_example.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 3: Upsell probability
+</figcaption>
+</figure>
+<p>In this case, Product 1 have a 80% probability of upsell but the revenue generated by this product is \$10 per SKU and Product 2 have 60% chance of upsell and revenue generated is about $100 per SKU. As a business, you might want to recommend Product 2 to the customer. To make such probability to revenue impact conversion b/w models, you need your models to be calibrated.</p>
+</section>
+</section>
+<section id="various-methods-for-calibration" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="various-methods-for-calibration"><span class="header-section-number">3</span> Various Methods for Calibration</h2>
+<section id="data-overview" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="data-overview"><span class="header-section-number">3.1</span> Data overview</h3>
+<p>We are just going to create a synthetic binary classification dataset for classification, using sklearn’s <code>datasets.make_classification</code> function.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:05:11.563811Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:05:11.554521Z&quot;}" data-execution_count="57">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;">## Importing required libraries</span></span>
+<span id="cb3-2"><span class="im" style="color: #00769E;">from</span> sklearn <span class="im" style="color: #00769E;">import</span> datasets</span>
+<span id="cb3-3"><span class="im" style="color: #00769E;">from</span> sklearn.model_selection <span class="im" style="color: #00769E;">import</span> train_test_split</span>
+<span id="cb3-4"><span class="im" style="color: #00769E;">from</span> sklearn <span class="im" style="color: #00769E;">import</span> metrics</span>
+<span id="cb3-5"><span class="im" style="color: #00769E;">from</span> sklearn.isotonic <span class="im" style="color: #00769E;">import</span> IsotonicRegression</span>
+<span id="cb3-6"><span class="im" style="color: #00769E;">from</span> sklearn.preprocessing <span class="im" style="color: #00769E;">import</span> LabelEncoder</span>
+<span id="cb3-7"><span class="im" style="color: #00769E;">from</span> sklearn.calibration <span class="im" style="color: #00769E;">import</span> CalibratedClassifierCV</span>
+<span id="cb3-8"><span class="im" style="color: #00769E;">from</span> sklearn.ensemble <span class="im" style="color: #00769E;">import</span> RandomForestClassifier, GradientBoostingClassifier</span>
+<span id="cb3-9"><span class="im" style="color: #00769E;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;">as</span> plt</span>
+<span id="cb3-10"><span class="op" style="color: #5E5E5E;">%</span>matplotlib inline</span>
+<span id="cb3-11">plt.style.use(<span class="st" style="color: #20794D;">'dark_background'</span>)</span>
+<span id="cb3-12"></span>
+<span id="cb3-13"><span class="kw" style="color: #003B4F;">def</span> calibration_data(y_true, y_pred):</span>
+<span id="cb3-14">    df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({<span class="st" style="color: #20794D;">'y_true'</span>:y_true, <span class="st" style="color: #20794D;">'y_pred_bucket'</span>: (y_pred<span class="op" style="color: #5E5E5E;">//</span><span class="fl" style="color: #AD0000;">0.05</span>)<span class="op" style="color: #5E5E5E;">*</span><span class="fl" style="color: #AD0000;">0.05</span> <span class="op" style="color: #5E5E5E;">+</span> <span class="fl" style="color: #AD0000;">0.025</span>})</span>
+<span id="cb3-15">    cdf <span class="op" style="color: #5E5E5E;">=</span> df.groupby([<span class="st" style="color: #20794D;">'y_pred_bucket'</span>], as_index<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>).agg({<span class="st" style="color: #20794D;">'y_true'</span>:[<span class="st" style="color: #20794D;">"mean"</span>,<span class="st" style="color: #20794D;">"count"</span>]})</span>
+<span id="cb3-16">    <span class="cf" style="color: #003B4F;">return</span> cdf.y_true.values[:,<span class="dv" style="color: #AD0000;">0</span>][cdf.y_true.values[:,<span class="dv" style="color: #AD0000;">1</span>]<span class="op" style="color: #5E5E5E;">&gt;</span><span class="dv" style="color: #AD0000;">10</span>], cdf.y_pred_bucket.values[cdf.y_true.values[:,<span class="dv" style="color: #AD0000;">1</span>]<span class="op" style="color: #5E5E5E;">&gt;</span><span class="dv" style="color: #AD0000;">10</span>]</span>
+<span id="cb3-17"></span>
+<span id="cb3-18"><span class="kw" style="color: #003B4F;">def</span> label_encoder(df,columns):</span>
+<span id="cb3-19">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb3-20"><span class="co" style="color: #5E5E5E;">    Function to label encode</span></span>
+<span id="cb3-21"><span class="co" style="color: #5E5E5E;">    Required Input - </span></span>
+<span id="cb3-22"><span class="co" style="color: #5E5E5E;">        - df = Pandas DataFrame</span></span>
+<span id="cb3-23"><span class="co" style="color: #5E5E5E;">        - columns = List input of all the columns which needs to be label encoded</span></span>
+<span id="cb3-24"><span class="co" style="color: #5E5E5E;">    Expected Output -</span></span>
+<span id="cb3-25"><span class="co" style="color: #5E5E5E;">        - df = Pandas DataFrame with lable encoded columns</span></span>
+<span id="cb3-26"><span class="co" style="color: #5E5E5E;">        - le_dict = Dictionary of all the column and their label encoders</span></span>
+<span id="cb3-27"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb3-28">    le_dict <span class="op" style="color: #5E5E5E;">=</span> {}</span>
+<span id="cb3-29">    <span class="cf" style="color: #003B4F;">for</span> c <span class="kw" style="color: #003B4F;">in</span> columns:</span>
+<span id="cb3-30">        <span class="bu" style="color: null;">print</span>(<span class="st" style="color: #20794D;">"Label encoding column - </span><span class="sc" style="color: #5E5E5E;">{0}</span><span class="st" style="color: #20794D;">"</span>.<span class="bu" style="color: null;">format</span>(c))</span>
+<span id="cb3-31">        lbl <span class="op" style="color: #5E5E5E;">=</span> LabelEncoder()</span>
+<span id="cb3-32">        lbl.fit(<span class="bu" style="color: null;">list</span>(df[c].values.astype(<span class="st" style="color: #20794D;">'str'</span>)))</span>
+<span id="cb3-33">        df[c] <span class="op" style="color: #5E5E5E;">=</span> lbl.transform(<span class="bu" style="color: null;">list</span>(df[c].values.astype(<span class="st" style="color: #20794D;">'str'</span>)))</span>
+<span id="cb3-34">        le_dict[c] <span class="op" style="color: #5E5E5E;">=</span> lbl</span>
+<span id="cb3-35">    <span class="cf" style="color: #003B4F;">return</span> df, le_dict</span></code></pre></div>
+</details>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-27T23:57:18.425202Z&quot;,&quot;start_time&quot;:&quot;2022-10-27T23:57:17.692672Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">df <span class="op" style="color: #5E5E5E;">=</span> pd.read_csv( <span class="st" style="color: #20794D;">"https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"</span>, header<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>)</span>
+<span id="cb4-2">df.columns <span class="op" style="color: #5E5E5E;">=</span> [</span>
+<span id="cb4-3">    <span class="st" style="color: #20794D;">"Age"</span>, <span class="st" style="color: #20794D;">"WorkClass"</span>, <span class="st" style="color: #20794D;">"fnlwgt"</span>, <span class="st" style="color: #20794D;">"Education"</span>, <span class="st" style="color: #20794D;">"EducationNum"</span>,</span>
+<span id="cb4-4">    <span class="st" style="color: #20794D;">"MaritalStatus"</span>, <span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"Relationship"</span>, <span class="st" style="color: #20794D;">"Race"</span>, <span class="st" style="color: #20794D;">"Gender"</span>,</span>
+<span id="cb4-5">    <span class="st" style="color: #20794D;">"CapitalGain"</span>, <span class="st" style="color: #20794D;">"CapitalLoss"</span>, <span class="st" style="color: #20794D;">"HoursPerWeek"</span>, <span class="st" style="color: #20794D;">"NativeCountry"</span>, <span class="st" style="color: #20794D;">"Income"</span></span>
+<span id="cb4-6">]</span>
+<span id="cb4-7"></span>
+<span id="cb4-8"><span class="co" style="color: #5E5E5E;">## Filtering for Unites states</span></span>
+<span id="cb4-9">df <span class="op" style="color: #5E5E5E;">=</span> df.loc[df.NativeCountry <span class="op" style="color: #5E5E5E;">==</span> <span class="st" style="color: #20794D;">' United-States'</span>,:]</span>
+<span id="cb4-10"></span>
+<span id="cb4-11"><span class="co" style="color: #5E5E5E;">## Only - Taking required columns</span></span>
+<span id="cb4-12">df <span class="op" style="color: #5E5E5E;">=</span> df.loc[:,[<span class="st" style="color: #20794D;">"Education"</span>, <span class="st" style="color: #20794D;">"Age"</span>,<span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"HoursPerWeek"</span>, <span class="st" style="color: #20794D;">"Income"</span>]]</span>
+<span id="cb4-13">df, _ <span class="op" style="color: #5E5E5E;">=</span> label_encoder(df, columns <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"Education"</span>, <span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"Income"</span>])</span>
+<span id="cb4-14">X <span class="op" style="color: #5E5E5E;">=</span> df.loc[:,[<span class="st" style="color: #20794D;">"Education"</span>,<span class="st" style="color: #20794D;">"Age"</span>, <span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"HoursPerWeek"</span>]]</span>
+<span id="cb4-15">y <span class="op" style="color: #5E5E5E;">=</span> df.Income</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Label encoding column - Education
+Label encoding column - Occupation
+Label encoding column - Income</code></pre>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-27T23:57:18.433660Z&quot;,&quot;start_time&quot;:&quot;2022-10-27T23:57:18.426823Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">seed <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">42</span></span>
+<span id="cb6-2"><span class="co" style="color: #5E5E5E;">"""</span></span>
+<span id="cb6-3"><span class="co" style="color: #5E5E5E;">X, y = datasets.make_classification(</span></span>
+<span id="cb6-4"><span class="co" style="color: #5E5E5E;">    n_samples=10000, </span></span>
+<span id="cb6-5"><span class="co" style="color: #5E5E5E;">    n_features=20,</span></span>
+<span id="cb6-6"><span class="co" style="color: #5E5E5E;">    n_informative=7, </span></span>
+<span id="cb6-7"><span class="co" style="color: #5E5E5E;">    n_redundant=10,</span></span>
+<span id="cb6-8"><span class="co" style="color: #5E5E5E;">    random_state=seed)</span></span>
+<span id="cb6-9"><span class="co" style="color: #5E5E5E;">"""</span></span>
+<span id="cb6-10">X_train, X_test, y_train, y_test <span class="op" style="color: #5E5E5E;">=</span> train_test_split(X, y, test_size<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.20</span>, random_state<span class="op" style="color: #5E5E5E;">=</span>seed)</span></code></pre></div>
+</div>
+</section>
+<section id="visualizing-the-calibration-issue" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="visualizing-the-calibration-issue"><span class="header-section-number">3.2</span> Visualizing the calibration issue</h3>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:18:22.891273Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:18:21.584184Z&quot;}" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;">## Fitting the model on training data</span></span>
+<span id="cb7-2">rf_model <span class="op" style="color: #5E5E5E;">=</span> RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed)</span>
+<span id="cb7-3">rf_model.fit(X_train, y_train)</span>
+<span id="cb7-4"></span>
+<span id="cb7-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
+<span id="cb7-6">prob_true, prob_pred  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_true <span class="op" style="color: #5E5E5E;">=</span> y_test, </span>
+<span id="cb7-7">                                          y_pred <span class="op" style="color: #5E5E5E;">=</span> rf_model.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:18:24.030309Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:18:23.953339Z&quot;}" data-execution_count="62">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb8-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true,</span>
+<span id="cb8-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred,</span>
+<span id="cb8-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred</span>
+<span id="cb8-5">})</span>
+<span id="cb8-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb8-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb8-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb8-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
+<span id="cb8-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
+<span id="cb8-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb8-12">fig.update_layout(</span>
+<span id="cb8-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Without calibration"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb8-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb8-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>,</span>
+<span id="cb8-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb8-17">)</span>
+<span id="cb8-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="c58aeb8b-75f6-4aae-a531-e0aa96825304" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("c58aeb8b-75f6-4aae-a531-e0aa96825304")) {                    Plotly.newPlot(                        "c58aeb8b-75f6-4aae-a531-e0aa96825304",                        [{"hovertemplate":"variable=actuals<br>predicted=%{x}<br>value=%{y}<extra></extra>","legendgroup":"actuals","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"actuals","orientation":"v","showlegend":true,"x":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001,0.8750000000000001,0.925,0.9750000000000001],"xaxis":"x","y":[0.06396989651928504,0.15767634854771784,0.2009685230024213,0.26426426426426425,0.26453488372093026,0.30701754385964913,0.32342007434944237,0.37435897435897436,0.3473053892215569,0.3878787878787879,0.39285714285714285,0.5135135135135135,0.43478260869565216,0.5785123966942148,0.5086206896551724,0.4177215189873418,0.6119402985074627,0.632183908045977,0.6153846153846154,0.7180851063829787],"yaxis":"y","type":"scatter"},{"hovertemplate":"variable=expected<br>predicted=%{x}<br>value=%{y}<extra></extra>","legendgroup":"expected","line":{"color":"#EF553B","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"expected","orientation":"v","showlegend":true,"x":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001,0.8750000000000001,0.925,0.9750000000000001],"xaxis":"x","y":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001,0.8750000000000001,0.925,0.9750000000000001],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Predicted Probability"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Fraction of Positives Captured"}},"legend":{"title":{"text":"variable"},"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Calibration Plot: Without calibration","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('c58aeb8b-75f6-4aae-a531-e0aa96825304');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig 4 - An example of non-calibrated classifier</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As we can see above, the model seems to be over predicting in lower decile and under predicting in higher decile.</p>
+</div>
+</div>
+</section>
+<section id="isotonic-regression" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="isotonic-regression"><span class="header-section-number">3.3</span> Isotonic Regression</h3>
+<p>We will be using <code>CalibratedClassifierCV</code> to calibrate our classifier. The ‘isotonic’ method fits a non-parametric isotonic regressor, which outputs a step-wise non-decreasing function. <sup>1</sup></p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:19:11.263959Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:19:04.967057Z&quot;}" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;">## training model using random forest and isotonic regression for calibration</span></span>
+<span id="cb9-2">calibrated_rf <span class="op" style="color: #5E5E5E;">=</span> CalibratedClassifierCV(RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed), method <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'isotonic'</span>)</span>
+<span id="cb9-3">calibrated_rf.fit(X_train, y_train)</span>
+<span id="cb9-4"></span>
+<span id="cb9-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
+<span id="cb9-6">prob_true_calib, prob_pred_calib  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_test, calibrated_rf.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:19:11.349730Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:19:11.265629Z&quot;}" data-execution_count="64">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb10-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true_calib,</span>
+<span id="cb10-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred_calib,</span>
+<span id="cb10-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred_calib</span>
+<span id="cb10-5">})</span>
+<span id="cb10-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb10-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb10-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb10-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
+<span id="cb10-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
+<span id="cb10-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb10-12">fig.update_layout(</span>
+<span id="cb10-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Isotonic"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb10-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb10-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>,</span>
+<span id="cb10-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb10-17">)</span>
+<span id="cb10-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="6eb4b019-67e5-425f-8436-acc18867fed9" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("6eb4b019-67e5-425f-8436-acc18867fed9")) {                    Plotly.newPlot(                        "6eb4b019-67e5-425f-8436-acc18867fed9",                        [{"hovertemplate":"variable=actuals<br>predicted=%{x}<br>value=%{y}<extra></extra>","legendgroup":"actuals","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"actuals","orientation":"v","showlegend":true,"x":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001],"xaxis":"x","y":[0.021778584392014518,0.0757238307349666,0.1128747795414462,0.1765601217656012,0.2206405693950178,0.29148936170212764,0.31272727272727274,0.3956043956043956,0.4406779661016949,0.5555555555555556,0.5314685314685315,0.5818181818181818,0.5797101449275363,0.7258064516129032,0.7254901960784313,0.8125,0.7272727272727273],"yaxis":"y","type":"scatter"},{"hovertemplate":"variable=expected<br>predicted=%{x}<br>value=%{y}<extra></extra>","legendgroup":"expected","line":{"color":"#EF553B","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"expected","orientation":"v","showlegend":true,"x":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001],"xaxis":"x","y":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Predicted Probability"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Fraction of Positives Captured"}},"legend":{"title":{"text":"variable"},"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Calibration Plot: Isotonic","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('6eb4b019-67e5-425f-8436-acc18867fed9');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig 5 - An example of calibration using Isotonic regression</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As we can see above, the model seems to be well calibrated once Isotonic regression is used.</p>
+</div>
+</div>
+</section>
+<section id="sigmoid" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="sigmoid"><span class="header-section-number">3.4</span> Sigmoid</h3>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:19:22.845546Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:19:16.643194Z&quot;}" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;">## training model using random forest and sigmoid method for calibration</span></span>
+<span id="cb11-2">calibrated_sigmoid <span class="op" style="color: #5E5E5E;">=</span> CalibratedClassifierCV(</span>
+<span id="cb11-3">     RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed), method <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'sigmoid'</span>)</span>
+<span id="cb11-4">calibrated_sigmoid.fit(X_train, y_train)</span>
+<span id="cb11-5"></span>
+<span id="cb11-6"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
+<span id="cb11-7">prob_true_calib, prob_pred_calib  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_test, calibrated_sigmoid.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:19:29.302889Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:19:29.212589Z&quot;}" data-execution_count="66">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb12-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true_calib,</span>
+<span id="cb12-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred_calib,</span>
+<span id="cb12-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred_calib</span>
+<span id="cb12-5">})</span>
+<span id="cb12-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb12-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb12-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb12-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
+<span id="cb12-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
+<span id="cb12-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb12-12">fig.update_layout(</span>
+<span id="cb12-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot : Sigmoid"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb12-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb12-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>,</span>
+<span id="cb12-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb12-17">)</span>
+<span id="cb12-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="ca12cdcf-6082-4d30-be97-b2515e0834f5" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("ca12cdcf-6082-4d30-be97-b2515e0834f5")) {                    Plotly.newPlot(                        "ca12cdcf-6082-4d30-be97-b2515e0834f5",                        [{"hovertemplate":"variable=actuals<br>predicted=%{x}<br>value=%{y}<extra></extra>","legendgroup":"actuals","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"actuals","orientation":"v","showlegend":true,"x":[0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775],"xaxis":"x","y":[0.07552285050348567,0.2246376811594203,0.28016359918200406,0.3433583959899749,0.37722419928825623,0.4298642533936652,0.40540540540540543,0.49537037037037035,0.5460526315789473,0.5463917525773195,0.5510204081632653,0.6304347826086957,0.7536231884057971,0.7321428571428571],"yaxis":"y","type":"scatter"},{"hovertemplate":"variable=expected<br>predicted=%{x}<br>value=%{y}<extra></extra>","legendgroup":"expected","line":{"color":"#EF553B","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"expected","orientation":"v","showlegend":true,"x":[0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775],"xaxis":"x","y":[0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Predicted Probability"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Fraction of Positives Captured"}},"legend":{"title":{"text":"variable"},"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Calibration Plot : Sigmoid","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('ca12cdcf-6082-4d30-be97-b2515e0834f5');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig 6 - An example of calibration using sigmoid method</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As we can see above, the model seems to be calibrated but not as well as <code>isotonic</code> method.</p>
+</div>
+</div>
+</section>
+<section id="train-with-metric-logloss" class="level3" data-number="3.5">
+<h3 data-number="3.5" class="anchored" data-anchor-id="train-with-metric-logloss"><span class="header-section-number">3.5</span> Train with metric = “Logloss”</h3>
+<p>Many modern classifier models like GradientBoostingClassifier, LightGBM and Xgboost use <code>log_loss</code> as their default loss function. Training with <code>log_loss</code> helps the output probabilities to be calibrated.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:20:15.154902Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:20:14.158964Z&quot;}" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="co" style="color: #5E5E5E;">## Fitting the model on training data</span></span>
+<span id="cb13-2">gb_model <span class="op" style="color: #5E5E5E;">=</span> GradientBoostingClassifier()</span>
+<span id="cb13-3">gb_model.fit(X_train, y_train)</span>
+<span id="cb13-4"></span>
+<span id="cb13-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
+<span id="cb13-6">prob_true, prob_pred  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_true <span class="op" style="color: #5E5E5E;">=</span> y_test, </span>
+<span id="cb13-7">                                          y_pred <span class="op" style="color: #5E5E5E;">=</span> gb_model.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T01:20:35.627432Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T01:20:35.547813Z&quot;}" data-execution_count="71">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb14-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true,</span>
+<span id="cb14-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred,</span>
+<span id="cb14-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred</span>
+<span id="cb14-5">})</span>
+<span id="cb14-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb14-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb14-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb14-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
+<span id="cb14-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
+<span id="cb14-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb14-12">fig.update_layout(</span>
+<span id="cb14-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Using boosting method"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb14-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb14-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>,</span>
+<span id="cb14-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb14-17">)</span>
+<span id="cb14-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>                            <div id="121a5b58-550e-4118-9324-0db96ebe64cd" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("121a5b58-550e-4118-9324-0db96ebe64cd")) {                    Plotly.newPlot(                        "121a5b58-550e-4118-9324-0db96ebe64cd",                        [{"hovertemplate":"variable=actuals<br>predicted=%{x}<br>value=%{y}<extra></extra>","legendgroup":"actuals","line":{"color":"#636efa","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"actuals","orientation":"v","showlegend":true,"x":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001],"xaxis":"x","y":[0.015467904098994586,0.057665260196905765,0.12131147540983607,0.20315581854043394,0.22305764411027568,0.29069767441860467,0.35714285714285715,0.36875,0.43231441048034935,0.5532994923857868,0.4975369458128079,0.4810126582278481,0.6031746031746031,0.632,0.6829268292682927,0.819047619047619,0.8983050847457628],"yaxis":"y","type":"scatter"},{"hovertemplate":"variable=expected<br>predicted=%{x}<br>value=%{y}<extra></extra>","legendgroup":"expected","line":{"color":"#EF553B","dash":"solid"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"expected","orientation":"v","showlegend":true,"x":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001],"xaxis":"x","y":[0.025,0.07500000000000001,0.125,0.17500000000000002,0.225,0.275,0.32500000000000007,0.37500000000000006,0.42500000000000004,0.47500000000000003,0.525,0.5750000000000001,0.6250000000000001,0.675,0.7250000000000001,0.775,0.8250000000000001],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Predicted Probability"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Fraction of Positives Captured"}},"legend":{"title":{"text":"variable"},"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Calibration Plot: Using boosting method","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('121a5b58-550e-4118-9324-0db96ebe64cd');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };                });            </script>        </div>
+<p>Fig 7 - An example of calibration using boosting method</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As we can see above, the model seems to be well calibrated this is usually the case with most of boosted methods.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="practical-guidance" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="practical-guidance"><span class="header-section-number">4</span> Practical Guidance</h2>
+<p>In practice, using boosting methods tends to be better calibrated and if you are using some other classifier try using isotonic regression with a cross validation to calibrate.</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><a href="https://scikit-learn.org/stable/modules/calibration.html#isotonic">Scikit learn calibration documentation</a>↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <category>Model Calibration</category>
+  <category>Machine Learning</category>
+  <guid>https://aayushmnit.com/posts/2022-10-26-Model_Calibration/Model Calibation.html</guid>
+  <pubDate>Wed, 12 Oct 2022 07:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.com/posts/2022-10-26-Model_Calibration/calibration.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Mixing art into the science of model explainability</title>
   <dc:creator>Aayush Agrawal</dc:creator>
