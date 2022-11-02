@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html",
       "/posts/2022-10-26-Model_Calibration/Model Calibration.html",
       "/posts/2022-09-23-Explainability/2022-09-23-Explainability.html",
       "/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html",
