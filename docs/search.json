@@ -11,7 +11,7 @@
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nIntroduction to Stable diffusion using 🤗 Hugging Face\n\n\n2 min\n\n\n\nStable Diffusion\n\n\n\n\n\n\n\n\nNov 2, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModel calibration for classification task using Python\n\n\n4 min\n\n\n\nModel Calibration\n\n\nMachine Learning\n\n\n\n\n\n\n\nOct 12, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMixing art into the science of model explainability\n\n\n9 min\n\n\n\nExplainability\n\n\nMachine Learning\n\n\n\n\n\n\n\nSep 23, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCausal inference with Synthetic Control using Python and SparseSC\n\n\n7 min\n\n\n\nCausal Inference\n\n\nSynthetic Control\n\n\n\n\n\n\n\nSep 19, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFinding similar images using Deep learning and Locality Sensitive Hashing\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\n\n\n\n\n\nMar 17, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nReal-time Multi-Facial attribute detection using computer vision and deep learning with FastAI and OpenCV\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\nVideo\n\n\n\n\n\n\n\nFeb 17, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMultiLayer Perceptron using Fastai and Pytorch\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\n\n\n\n\n\nJan 5, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLeaf Disease detection by Tranfer learning using FastAI V1 library\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nVision\n\n\n\n\n\n\n\nOct 28, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMulti-Layer perceptron using Tensorflow\n\n\n0 min\n\n\n\nMachine Learning\n\n\nDeep Learning\n\n\n\n\n\n\n\nSep 12, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding Neural Network from scratch\n\n\n14 min\n\n\n\nMachine Learning\n\n\nDeep Learning\n\n\n\n\n\n\n\nJun 3, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSolving business usecases by recommender system using lightFM\n\n\n30 min\n\n\n\nRecommender System\n\n\nMachine learning\n\n\nBusiness\n\n\n\n\n\n\n\nApr 17, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWebsite launch\n\n\n0 min\n\n\n\nlaunch\n\n\nannouncement\n\n\n\n\n\n\n\nFeb 19, 2018\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\nDraft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.\n\n\n2 min\n\n\n\nStable Diffusion\n\n\n\n\n\n\n\n\nNov 4, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIntroduction to Stable diffusion using 🤗 Hugging Face\n\n\n2 min\n\n\n\nStable Diffusion\n\n\n\n\n\n\n\n\nNov 2, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModel calibration for classification task using Python\n\n\n4 min\n\n\n\nModel Calibration\n\n\nMachine Learning\n\n\n\n\n\n\n\nOct 12, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMixing art into the science of model explainability\n\n\n9 min\n\n\n\nExplainability\n\n\nMachine Learning\n\n\n\n\n\n\n\nSep 23, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCausal inference with Synthetic Control using Python and SparseSC\n\n\n7 min\n\n\n\nCausal Inference\n\n\nSynthetic Control\n\n\n\n\n\n\n\nSep 19, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFinding similar images using Deep learning and Locality Sensitive Hashing\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\n\n\n\n\n\nMar 17, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nReal-time Multi-Facial attribute detection using computer vision and deep learning with FastAI and OpenCV\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\nVideo\n\n\n\n\n\n\n\nFeb 17, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMultiLayer Perceptron using Fastai and Pytorch\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nPytorch\n\n\nVision\n\n\n\n\n\n\n\nJan 5, 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLeaf Disease detection by Tranfer learning using FastAI V1 library\n\n\n0 min\n\n\n\nDeep Learning\n\n\nFastAI\n\n\nVision\n\n\n\n\n\n\n\nOct 28, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMulti-Layer perceptron using Tensorflow\n\n\n0 min\n\n\n\nMachine Learning\n\n\nDeep Learning\n\n\n\n\n\n\n\nSep 12, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding Neural Network from scratch\n\n\n14 min\n\n\n\nMachine Learning\n\n\nDeep Learning\n\n\n\n\n\n\n\nJun 3, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSolving business usecases by recommender system using lightFM\n\n\n30 min\n\n\n\nRecommender System\n\n\nMachine learning\n\n\nBusiness\n\n\n\n\n\n\n\nApr 17, 2018\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWebsite launch\n\n\n0 min\n\n\n\nlaunch\n\n\nannouncement\n\n\n\n\n\n\n\nFeb 19, 2018\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2018-02-19-launch/index.html",
@@ -306,6 +306,55 @@
     "title": "Introduction to Stable diffusion using 🤗 Hugging Face",
     "section": "4 Conclusion",
     "text": "4 Conclusion\nIn this post, we saw how to install diffusers library from hugging face and use the Stable diffusion model to generate images using a textual prompt.\nI hope you enjoyed reading it, and feel free to use my code and try it out for generating your images. Also, if there is any feedback on the code or just the blog post, feel free to reach out on LinkedIn or email me at aayushmnit@gmail.com."
+  },
+  {
+    "objectID": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html",
+    "href": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html",
+    "title": "Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.",
+    "section": "",
+    "text": "A introduction into what goes on in the pipe function of 🤗 hugging face diffusers library StableDiffusionPipeline function.\nThis is my second post of the Stable diffusion series, if you haven’t checkout the first one, you can read it here -  1. Part 1 - Introduction to Stable diffusion using 🤗 Hugging Face.\nIn this post, we will understand basic components of stable diffusion pipeline and their purpose. Later we will reconstruct StableDiffusionPipeline.from_pretrained function using these components. Let’s get started -"
+  },
+  {
+    "objectID": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#introduction",
+    "href": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#introduction",
+    "title": "Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.",
+    "section": "1 Introduction",
+    "text": "1 Introduction\nDiffusion models as seen from the previous post can generate high-quality images. Stable diffusion models are special kind of diffusion models called Latent Diffusion model. They were first proposed in this paper High-Resolution Image Synthesis with Latent Diffusion Models. The original Diffusion model tend to consume a lot more memory, so latent diffusion models were created which can do the diffusion process in lower dimension space called Latent Space. On a high level, diffusion models are machine learning models that are trained to denoise random Gaussian noise step by step, to get the result i.e. image. In latent diffusion the model is trained to do this same process in lower dimension. \nThere are three main components in latent diffusion - \n\nA text encoder, in this case a CLIP’s Text encoder\nAn autoencoder, in this case a Variational Auto Encoder also referred as VAE\nA U-Net\n\nLet’s dive into each of these components and understand their use in diffusion process. The way I will be attempting to explain these components is talking about them in following 3 stages - \n\nWhat goes in the component and what comes out of the component - This is really important, and key part of top down learning approach of understanding “the whole game”.\nWhat’s their role in Stable diffusion pipeline - This will build your intuition around how this component fit in Stable diffusion process. This will help your intuition on the diffusion process\nHow they are originally trained - This part will provide more understanding on training of these individual components and how they come in existence."
+  },
+  {
+    "objectID": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#clip-text-encoder",
+    "href": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#clip-text-encoder",
+    "title": "Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.",
+    "section": "2 CLIP Text Encoder",
+    "text": "2 CLIP Text Encoder\nTo be written."
+  },
+  {
+    "objectID": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#vae---variational-auto-encoder",
+    "href": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#vae---variational-auto-encoder",
+    "title": "Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.",
+    "section": "3 VAE - Variational Auto Encoder",
+    "text": "3 VAE - Variational Auto Encoder\nTo be written."
+  },
+  {
+    "objectID": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#u-net",
+    "href": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#u-net",
+    "title": "Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.",
+    "section": "4 U-Net",
+    "text": "4 U-Net\nTo be written."
+  },
+  {
+    "objectID": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#stable-diffusion-process",
+    "href": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#stable-diffusion-process",
+    "title": "Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.",
+    "section": "5 Stable Diffusion Process",
+    "text": "5 Stable Diffusion Process\nTo be written."
+  },
+  {
+    "objectID": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#conclusion",
+    "href": "posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html#conclusion",
+    "title": "Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.",
+    "section": "6 Conclusion",
+    "text": "6 Conclusion\nTo be written.\nI hope you enjoyed reading it, and feel free to use my code and try it out for generating your images. Also, if there is any feedback on the code or just the blog post, feel free to reach out on LinkedIn or email me at aayushmnit@gmail.com."
   },
   {
     "objectID": "talks/2017-09-13-introduction-to-keras/index.html",

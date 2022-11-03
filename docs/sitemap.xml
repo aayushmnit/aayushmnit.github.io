@@ -2,86 +2,90 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://aayushmnit.com/about.html</loc>
-    <lastmod>2022-11-02T16:33:44.737Z</lastmod>
+    <lastmod>2022-11-03T07:03:05.719Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/blog.html</loc>
-    <lastmod>2022-11-02T16:33:49.734Z</lastmod>
+    <lastmod>2022-11-03T07:03:07.218Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2018-02-19-launch/index.html</loc>
-    <lastmod>2022-11-02T16:33:50.792Z</lastmod>
+    <lastmod>2022-11-03T07:03:07.553Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html</loc>
-    <lastmod>2022-11-02T16:33:52.605Z</lastmod>
+    <lastmod>2022-11-03T07:03:08.262Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2018-06-03-Building_neural_network_from_scratch/index.html</loc>
-    <lastmod>2022-11-02T16:33:54.860Z</lastmod>
+    <lastmod>2022-11-03T07:03:08.977Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html</loc>
-    <lastmod>2022-11-02T16:33:55.996Z</lastmod>
+    <lastmod>2022-11-03T07:03:09.327Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html</loc>
-    <lastmod>2022-11-02T16:33:57.132Z</lastmod>
+    <lastmod>2022-11-03T07:03:09.679Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html</loc>
-    <lastmod>2022-11-02T16:33:58.247Z</lastmod>
+    <lastmod>2022-11-03T07:03:10.038Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html</loc>
-    <lastmod>2022-11-02T16:33:59.349Z</lastmod>
+    <lastmod>2022-11-03T07:03:10.388Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html</loc>
-    <lastmod>2022-11-02T16:34:00.504Z</lastmod>
+    <lastmod>2022-11-03T07:03:10.714Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html</loc>
-    <lastmod>2022-11-02T16:34:03.541Z</lastmod>
+    <lastmod>2022-11-03T07:03:11.958Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2022-09-23-Explainability/2022-09-23-Explainability.html</loc>
-    <lastmod>2022-11-02T16:34:06.483Z</lastmod>
+    <lastmod>2022-11-03T07:03:13.144Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2022-10-26-Model_Calibration/Model Calibration.html</loc>
-    <lastmod>2022-11-02T16:34:09.920Z</lastmod>
+    <lastmod>2022-11-03T07:03:14.422Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html</loc>
-    <lastmod>2022-11-02T16:34:11.269Z</lastmod>
+    <lastmod>2022-11-03T07:03:14.904Z</lastmod>
+  </url>
+  <url>
+    <loc>https://aayushmnit.com/posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.html</loc>
+    <lastmod>2022-11-03T07:03:15.288Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/talks/2017-09-13-introduction-to-keras/index.html</loc>
-    <lastmod>2022-11-02T16:34:12.458Z</lastmod>
+    <lastmod>2022-11-03T07:03:15.642Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/talks/2017-10-11-deep-dive-in-hierarchichal-clustering/index.html</loc>
-    <lastmod>2022-11-02T16:34:13.690Z</lastmod>
+    <lastmod>2022-11-03T07:03:15.994Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/talks/2017-11-08-Transfer-Learning/index.html</loc>
-    <lastmod>2022-11-02T16:34:14.918Z</lastmod>
+    <lastmod>2022-11-03T07:03:16.356Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/talks/2018-10-18-msba_devops/index.html</loc>
-    <lastmod>2022-11-02T16:34:16.184Z</lastmod>
+    <lastmod>2022-11-03T07:03:16.740Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/talks/2018-7-28-Model-Building-Explainability-Deployment/index.html</loc>
-    <lastmod>2022-11-02T16:34:17.442Z</lastmod>
+    <lastmod>2022-11-03T07:03:17.115Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/talks/2020-12-15-OrcaHello/index.html</loc>
-    <lastmod>2022-11-02T16:34:18.688Z</lastmod>
+    <lastmod>2022-11-03T07:03:17.482Z</lastmod>
   </url>
   <url>
     <loc>https://aayushmnit.com/talks.html</loc>
-    <lastmod>2022-11-02T16:34:21.253Z</lastmod>
+    <lastmod>2022-11-03T07:03:18.256Z</lastmod>
   </url>
 </urlset>

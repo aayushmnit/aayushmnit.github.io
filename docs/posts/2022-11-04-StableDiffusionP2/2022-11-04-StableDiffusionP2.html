@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Aayush Agrawal">
+<meta name="dcterms.date" content="2022-11-04">
 
-<title>Aayush Agrawal - About Me</title>
+<title>Aayush Agrawal - Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,23 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,30 +73,30 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 </script>
 
 
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Aayush Agrawal - About Me">
-<meta property="og:description" content="I’m an experienced Data Scientist with specialized skills in machine learning-based solutions.">
-<meta property="og:image" content="https://aayushmnit.com/headshot.png">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Aayush Agrawal - Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.">
+<meta property="og:description" content="This is my second post of the Stable diffusion series, if you haven’t checkout the first one, you can read it here -  1. Part 1 - Introduction to Stable diffusion using 🤗 Hugging Face.">
+<meta property="og:image" content="https://aayushmnit.com/posts/2022-11-04-StableDiffusionP2/underthehood.png">
 <meta property="og:site-name" content="Aayush Agrawal">
-<meta property="og:image:height" content="460">
-<meta property="og:image:width" content="460">
-<meta name="twitter:title" content="Aayush Agrawal - About Me">
-<meta name="twitter:description" content="I’m an experienced Data Scientist with specialized skills in machine learning-based solutions.">
-<meta name="twitter:image" content="https://aayushmnit.com/headshot.png">
+<meta property="og:image:height" content="256">
+<meta property="og:image:width" content="256">
+<meta name="twitter:title" content="Aayush Agrawal - Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.">
+<meta name="twitter:description" content="This is my second post of the Stable diffusion series, if you haven’t checkout the first one, you can read it here -  1. Part 1 - Introduction to Stable diffusion using 🤗 Hugging Face.">
+<meta name="twitter:image" content="https://aayushmnit.com/posts/2022-11-04-StableDiffusionP2/underthehood.png">
 <meta name="twitter:creator" content="@aayushmnit">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image-height" content="460">
-<meta name="twitter:image-width" content="460">
+<meta name="twitter:image-height" content="256">
+<meta name="twitter:image-width" content="256">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Aayush Agrawal</span>
     </a>
   </div>
@@ -103,15 +106,15 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page">
+    <a class="nav-link" href="../../about.html">
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog.html">
+    <a class="nav-link" href="../../blog.html">
  <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./talks.html">
+    <a class="nav-link" href="../../talks.html">
  <span class="menu-text">Talks</span></a>
   </li>  
 </ul>
@@ -142,7 +145,7 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./blog.xml"><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../blog.xml"><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -159,50 +162,107 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
-<!-- main -->
-<div class="quarto-about-solana column-body">
-  <div class="about-entity">
-    <div class="entity-contents">
-      <header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">About Me</h1>
-</div>
-<div class="quarto-title-meta">
-  </div>
-</header> <div class="about-links">
-  <a href="https://github.com/aayushmnit" class="about-link">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
-  <a href="https://www.linkedin.com/in/aayushmnit/" class="about-link">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="https://medium.com/@aayushmnit" class="about-link">
-    <i class="bi bi-medium"></i>
-     <span class="about-link-text">Medium</span>
-  </a>
-  <a href="https://twitter.com/aayushmnit" class="about-link">
-    <i class="bi bi-twitter"></i>
-     <span class="about-link-text">Twitter</span>
-  </a>
-  <a href="mailto:aayushmnit@gmail.com" class="about-link">
-    <i class="bi bi-envelope"></i>
-     <span class="about-link-text">Email</span>
-  </a>
-</div>
-      <div class="about-contents"><main class="content" id="quarto-document-content">
-<p>I’m an experienced Data Scientist with specialized skills in machine learning-based solutions. I enjoy staying on top of cutting-edge data technologies, including big data platforms, deep learning, optimization methods, and business analytics. My current work involves building data-driven products to enable smarter recommendations for Microsoft Partners, M365 service administrators and end-users to ensure the best usage of M365 services. Before that, I have experience working in various verticals like agricultural technology, pharmaceuticals, retail, e-commerce, and ride-sharing business model.</p>
-
-
-</main></div>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">1</span>  Introduction</a></li>
+  <li><a href="#clip-text-encoder" id="toc-clip-text-encoder" class="nav-link" data-scroll-target="#clip-text-encoder"><span class="toc-section-number">2</span>  CLIP Text Encoder</a></li>
+  <li><a href="#vae---variational-auto-encoder" id="toc-vae---variational-auto-encoder" class="nav-link" data-scroll-target="#vae---variational-auto-encoder"><span class="toc-section-number">3</span>  VAE - Variational Auto Encoder</a></li>
+  <li><a href="#u-net" id="toc-u-net" class="nav-link" data-scroll-target="#u-net"><span class="toc-section-number">4</span>  U-Net</a></li>
+  <li><a href="#stable-diffusion-process" id="toc-stable-diffusion-process" class="nav-link" data-scroll-target="#stable-diffusion-process"><span class="toc-section-number">5</span>  Stable Diffusion Process</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="toc-section-number">6</span>  Conclusion</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/aayushmnit/aayushmnit.github.io/blob/main/posts/2022-11-04-StableDiffusionP2/2022-11-04-StableDiffusionP2.ipynb" class="toc-action">Edit this page</a></p><p><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
-    <img src="headshot.png" class="about-image
-  round " style="height: 10em; width: 10em;">
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Stable Diffusion</div>
   </div>
-</div>
- <!-- /main -->
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aayush Agrawal </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 4, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p>A introduction into what goes on in the pipe function of 🤗 <a href="https://github.com/huggingface/diffusers">hugging face diffusers library</a> <code>StableDiffusionPipeline</code> function.</p>
+</blockquote>
+<p>This is my second post of the Stable diffusion series, if you haven’t checkout the first one, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Introduction to Stable diffusion using 🤗 Hugging Face</a>.</p>
+<p>In this post, we will understand basic components of stable diffusion pipeline and their purpose. Later we will reconstruct <code>StableDiffusionPipeline.from_pretrained</code> function using these components. Let’s get started -</p>
+<figure class="figure">
+<img src="./underthehood.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 1: This image was generated by 🤗 Stable diffusion model using “a scientist looking under the hood of a car realistic 4k image” prompt.
+</figcaption>
+</figure>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>Diffusion models as seen from the previous post can generate high-quality images. Stable diffusion models are special kind of diffusion models called <strong>Latent Diffusion</strong> model. They were first proposed in this paper <a href="https://arxiv.org/abs/2112.10752">High-Resolution Image Synthesis with Latent Diffusion Models</a>. The original Diffusion model tend to consume a lot more memory, so latent diffusion models were created which can do the diffusion process in lower dimension space called <code>Latent</code> Space. On a high level, diffusion models are machine learning models that are trained to <code>denoise</code> random Gaussian noise step by step, to get the result i.e.&nbsp;<code>image</code>. In <code>latent diffusion</code> the model is trained to do this same process in lower dimension. <br></p>
+<p>There are three main components in latent diffusion - <br></p>
+<ol type="1">
+<li>A text encoder, in this case a <a href="https://openai.com/blog/clip/">CLIP’s Text encoder</a></li>
+<li>An autoencoder, in this case a Variational Auto Encoder also referred as VAE</li>
+<li>A <a href="https://arxiv.org/abs/1505.04597">U-Net</a></li>
+</ol>
+<p>Let’s dive into each of these components and understand their use in diffusion process. The way I will be attempting to explain these components is talking about them in following 3 stages - <br></p>
+<ol type="1">
+<li><strong><em>What goes in the component and what comes out of the component</em></strong> - This is really important, and key part of <a href="https://www.fast.ai/posts/2016-10-08-teaching-philosophy.html">top down learning approach</a> of understanding “the whole game”.</li>
+<li><strong><em>What’s their role in Stable diffusion pipeline</em></strong> - This will build your intuition around how this component fit in Stable diffusion process. This will help your intuition on the diffusion process</li>
+<li><strong><em>How they are originally trained</em></strong> - This part will provide more understanding on training of these individual components and how they come in existence.</li>
+</ol>
+</section>
+<section id="clip-text-encoder" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="clip-text-encoder"><span class="header-section-number">2</span> CLIP Text Encoder</h2>
+<p>To be written.</p>
+</section>
+<section id="vae---variational-auto-encoder" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="vae---variational-auto-encoder"><span class="header-section-number">3</span> VAE - Variational Auto Encoder</h2>
+<p>To be written.</p>
+</section>
+<section id="u-net" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="u-net"><span class="header-section-number">4</span> U-Net</h2>
+<p>To be written.</p>
+</section>
+<section id="stable-diffusion-process" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="stable-diffusion-process"><span class="header-section-number">5</span> Stable Diffusion Process</h2>
+<p>To be written.</p>
+</section>
+<section id="conclusion" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">6</span> Conclusion</h2>
+<p>To be written.</p>
+<p>I hope you enjoyed reading it, and feel free to use my code and try it out for generating your images. Also, if there is any feedback on the code or just the blog post, feel free to reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a> or email me at aayushmnit@gmail.com.</p>
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -338,6 +398,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   } else {
     toggleColorMode(false);
   }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const clipboard = new window.ClipboardJS('.code-copy-button', {
     target: function(trigger) {
       return trigger.previousElementSibling;
@@ -443,6 +510,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
+</script>
+<script src="https://utteranc.es/client.js" repo="aayushmnit/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script>
 </div> <!-- /content -->
 
