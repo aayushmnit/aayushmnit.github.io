@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Aayush Agrawal">
-<meta name="dcterms.date" content="2022-11-04">
+<meta name="dcterms.date" content="1999-11-04">
 
 <title>Aayush Agrawal - Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.</title>
 <style>
@@ -22,6 +22,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -75,13 +138,13 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Aayush Agrawal - Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.">
-<meta property="og:description" content="This is my second post of the Stable diffusion series, if you haven’t checkout the first one, you can read it here -  1. Part 1 - Introduction to Stable diffusion using 🤗 Hugging Face.">
+<meta property="og:description" content="This is my second post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here -  1. Part 1 - Introduction to Stable diffusion using 🤗 Hugging Face.">
 <meta property="og:image" content="https://aayushmnit.com/posts/2022-11-04-StableDiffusionP2/underthehood.png">
 <meta property="og:site-name" content="Aayush Agrawal">
 <meta property="og:image:height" content="256">
 <meta property="og:image:width" content="256">
 <meta name="twitter:title" content="Aayush Agrawal - Draft - Stable diffusion using 🤗 Hugging Face - Looking under the hood.">
-<meta name="twitter:description" content="This is my second post of the Stable diffusion series, if you haven’t checkout the first one, you can read it here -  1. Part 1 - Introduction to Stable diffusion using 🤗 Hugging Face.">
+<meta name="twitter:description" content="This is my second post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here -  1. Part 1 - Introduction to Stable diffusion using 🤗 Hugging Face.">
 <meta name="twitter:image" content="https://aayushmnit.com/posts/2022-11-04-StableDiffusionP2/underthehood.png">
 <meta name="twitter:creator" content="@aayushmnit">
 <meta name="twitter:card" content="summary_large_image">
@@ -168,7 +231,12 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">1</span>  Introduction</a></li>
-  <li><a href="#clip-text-encoder" id="toc-clip-text-encoder" class="nav-link" data-scroll-target="#clip-text-encoder"><span class="toc-section-number">2</span>  CLIP Text Encoder</a></li>
+  <li><a href="#clip-text-encoder" id="toc-clip-text-encoder" class="nav-link" data-scroll-target="#clip-text-encoder"><span class="toc-section-number">2</span>  CLIP Text Encoder</a>
+  <ul class="collapse">
+  <li><a href="#basics---what-goes-in-the-component-and-what-comes-out-of-the-component" id="toc-basics---what-goes-in-the-component-and-what-comes-out-of-the-component" class="nav-link" data-scroll-target="#basics---what-goes-in-the-component-and-what-comes-out-of-the-component"><span class="toc-section-number">2.1</span>  Basics - What goes in the component and what comes out of the component?</a></li>
+  <li><a href="#deeper-explanation-using-code" id="toc-deeper-explanation-using-code" class="nav-link" data-scroll-target="#deeper-explanation-using-code"><span class="toc-section-number">2.2</span>  Deeper explanation using 🤗 code</a></li>
+  <li><a href="#whats-their-role-in-the-stable-diffusion-pipeline" id="toc-whats-their-role-in-the-stable-diffusion-pipeline" class="nav-link" data-scroll-target="#whats-their-role-in-the-stable-diffusion-pipeline"><span class="toc-section-number">2.3</span>  What’s their role in the Stable diffusion pipeline</a></li>
+  </ul></li>
   <li><a href="#vae---variational-auto-encoder" id="toc-vae---variational-auto-encoder" class="nav-link" data-scroll-target="#vae---variational-auto-encoder"><span class="toc-section-number">3</span>  VAE - Variational Auto Encoder</a></li>
   <li><a href="#u-net" id="toc-u-net" class="nav-link" data-scroll-target="#u-net"><span class="toc-section-number">4</span>  U-Net</a></li>
   <li><a href="#stable-diffusion-process" id="toc-stable-diffusion-process" class="nav-link" data-scroll-target="#stable-diffusion-process"><span class="toc-section-number">5</span>  Stable Diffusion Process</a></li>
@@ -201,7 +269,7 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 4, 2022</p>
+      <p class="date">November 4, 1999</p>
     </div>
   </div>
   
@@ -212,10 +280,10 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 </header>
 
 <blockquote class="blockquote">
-<p>A introduction into what goes on in the pipe function of 🤗 <a href="https://github.com/huggingface/diffusers">hugging face diffusers library</a> <code>StableDiffusionPipeline</code> function.</p>
+<p>An introduction into what goes on in the pipe function of 🤗 <a href="https://github.com/huggingface/diffusers">hugging face diffusers library</a> <code>StableDiffusionPipeline</code> function.</p>
 </blockquote>
-<p>This is my second post of the Stable diffusion series, if you haven’t checkout the first one, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Introduction to Stable diffusion using 🤗 Hugging Face</a>.</p>
-<p>In this post, we will understand basic components of stable diffusion pipeline and their purpose. Later we will reconstruct <code>StableDiffusionPipeline.from_pretrained</code> function using these components. Let’s get started -</p>
+<p>This is my second post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Introduction to Stable diffusion using 🤗 Hugging Face</a>.</p>
+<p>In this post, we will understand the basic components of a stable diffusion pipeline and their purpose. Later we will reconstruct <code>StableDiffusionPipeline.from_pretrained</code> function using these components. Let’s get started -</p>
 <figure class="figure">
 <img src="./underthehood.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
@@ -224,23 +292,116 @@ Fig. 1: This image was generated by 🤗 Stable diffusion model using “a scien
 </figure>
 <section id="introduction" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>Diffusion models as seen from the previous post can generate high-quality images. Stable diffusion models are special kind of diffusion models called <strong>Latent Diffusion</strong> model. They were first proposed in this paper <a href="https://arxiv.org/abs/2112.10752">High-Resolution Image Synthesis with Latent Diffusion Models</a>. The original Diffusion model tend to consume a lot more memory, so latent diffusion models were created which can do the diffusion process in lower dimension space called <code>Latent</code> Space. On a high level, diffusion models are machine learning models that are trained to <code>denoise</code> random Gaussian noise step by step, to get the result i.e.&nbsp;<code>image</code>. In <code>latent diffusion</code> the model is trained to do this same process in lower dimension. <br></p>
+<p>Diffusion models as seen in the previous post can generate high-quality images. Stable diffusion models are a special kind of diffusion model called the <strong>Latent Diffusion</strong> model. They have first proposed in this paper <a href="https://arxiv.org/abs/2112.10752">High-Resolution Image Synthesis with Latent Diffusion Models</a>. The original Diffusion model tends to consume a lot more memory, so latent diffusion models were created which can do the diffusion process in lower dimension space called <code>Latent</code> Space. On a high level, diffusion models are machine learning models that are trained to <code>denoise</code> random Gaussian noise step by step, to get the result i.e.&nbsp;<code>image</code>. In <code>latent diffusion</code>, the model is trained to do this same process in a lower dimension. <br></p>
 <p>There are three main components in latent diffusion - <br></p>
 <ol type="1">
-<li>A text encoder, in this case a <a href="https://openai.com/blog/clip/">CLIP’s Text encoder</a></li>
-<li>An autoencoder, in this case a Variational Auto Encoder also referred as VAE</li>
+<li>A text encoder, in this case, a <a href="https://openai.com/blog/clip/">CLIP’s Text encoder</a></li>
+<li>An autoencoder, in this case, a Variational Auto Encoder also referred to as VAE</li>
 <li>A <a href="https://arxiv.org/abs/1505.04597">U-Net</a></li>
 </ol>
-<p>Let’s dive into each of these components and understand their use in diffusion process. The way I will be attempting to explain these components is talking about them in following 3 stages - <br></p>
+<p>Let’s dive into each of these components and understand their use in the diffusion process. The way I will be attempting to explain these components is by talking about them in the following three stages - <br></p>
 <ol type="1">
-<li><strong><em>What goes in the component and what comes out of the component</em></strong> - This is really important, and key part of <a href="https://www.fast.ai/posts/2016-10-08-teaching-philosophy.html">top down learning approach</a> of understanding “the whole game”.</li>
-<li><strong><em>What’s their role in Stable diffusion pipeline</em></strong> - This will build your intuition around how this component fit in Stable diffusion process. This will help your intuition on the diffusion process</li>
-<li><strong><em>How they are originally trained</em></strong> - This part will provide more understanding on training of these individual components and how they come in existence.</li>
+<li><strong><em>The Basics: What goes in the component and what comes out of the component</em></strong> - This is an important, and key part of the <a href="https://www.fast.ai/posts/2016-10-08-teaching-philosophy.html">top down learning approach</a> of understanding “the whole game”</li>
+<li><strong><em>Deeper explanation using 🤗 code.</em></strong> - This part will provide more understanding of what the model produces using the code</li>
+<li><strong><em>What’s their role in the Stable diffusion pipeline</em></strong> - This will build your intuition around how this component fits in the Stable diffusion process. This will help your intuition on the diffusion process</li>
 </ol>
 </section>
 <section id="clip-text-encoder" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="clip-text-encoder"><span class="header-section-number">2</span> CLIP Text Encoder</h2>
-<p>To be written.</p>
+<section id="basics---what-goes-in-the-component-and-what-comes-out-of-the-component" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="basics---what-goes-in-the-component-and-what-comes-out-of-the-component"><span class="header-section-number">2.1</span> Basics - What goes in the component and what comes out of the component?</h3>
+<p>CLIP(Contrastive Language–Image Pre-training) text encoder takes the text as an input and generates text embeddings that are close in latent space as it may be if you would have encoded an image through a CLIP model.</p>
+<figure class="figure">
+<img src="./clip_image.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 2: CLIP text encoder
+</figcaption>
+</figure>
+</section>
+<section id="deeper-explanation-using-code" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="deeper-explanation-using-code"><span class="header-section-number">2.2</span> Deeper explanation using 🤗 code</h3>
+<p>Generally, any machine learning model doesn’t understand text data. For any model to understand text data, we need to convert this text into numbers that hold the meaning of the text, generally referred to as <code>embeddings</code>. The process of converting a text to a number can be broken down into two parts - <br> 1. <strong><em>Tokenizer</em></strong> - Breaking down each word into sub-words and then using a lookup table to convert them into a number <br> 2. <strong><em>Token_To_Embedding Encoder</em></strong> - Converting those numerical sub-words into a representation that contains the representation of that text <br></p>
+<p>Let’s look at it through code. We will start by importing the relevant artifacts.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-04T06:05:23.773117Z&quot;,&quot;start_time&quot;:&quot;2022-11-04T06:05:19.141903Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, logging</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">## disable warnings</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>logging.disable(logging.WARNING)  </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">## Import the CLIP artifacts </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> CLIPTextModel, CLIPTokenizer</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">## Initiating tokenizer and encoder.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>tokenizer <span class="op">=</span> CLIPTokenizer.from_pretrained(<span class="st">"openai/clip-vit-large-patch14"</span>, torch_dtype<span class="op">=</span>torch.float16)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>text_encoder <span class="op">=</span> CLIPTextModel.from_pretrained(<span class="st">"openai/clip-vit-large-patch14"</span>, torch_dtype<span class="op">=</span>torch.float16).to(<span class="st">"cuda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s initialize a prompt and tokenize it.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-04T06:11:32.723472Z&quot;,&quot;start_time&quot;:&quot;2022-11-04T06:11:32.718595Z&quot;}" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> [<span class="st">"a dog wearing hat"</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tok <span class="op">=</span>tokenizer(prompt, padding<span class="op">=</span><span class="st">"max_length"</span>, max_length<span class="op">=</span>tokenizer.model_max_length, truncation<span class="op">=</span><span class="va">True</span>, return_tensors<span class="op">=</span><span class="st">"pt"</span>) </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tok.input_ids.shape)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>tok</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([1, 77])</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>{'input_ids': tensor([[49406,   320,  1929,  3309,  3801, 49407, 49407, 49407, 49407, 49407,
+         49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407,
+         49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407,
+         49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407,
+         49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407,
+         49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407,
+         49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407, 49407,
+         49407, 49407, 49407, 49407, 49407, 49407, 49407]]), 'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0]])}</code></pre>
+</div>
+</div>
+<p>A <code>tokenizer</code> returns two objects in the form of a dictionary - <br> 1. <strong><em><code>input_ids</code></em></strong> - A tensor of size 1x77 as one prompt was passed and padded to 77 max length. <em><code>49406</code></em> is a start token, <em><code>320</code></em> is a token given to the word “a”, <em><code>1929</code></em> to the word dog, <em><code>3309</code></em> to the word wearing, <em><code>3801</code></em> to the word hat, and <em><code>49407</code></em> is the end of text token repeated till the pad length of 77. <br> 2. <strong><em><code>attention_mask</code></em></strong> - <code>1</code> representing an embedded value and <code>0</code> representing padding.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-04T06:22:58.991115Z&quot;,&quot;start_time&quot;:&quot;2022-11-04T06:22:58.988104Z&quot;}" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> token <span class="kw">in</span> <span class="bu">list</span>(tok.input_ids[<span class="dv">0</span>,:<span class="dv">7</span>]): <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>token<span class="sc">}</span><span class="ss">:</span><span class="sc">{</span>tokenizer<span class="sc">.</span>convert_ids_to_tokens(<span class="bu">int</span>(token))<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>49406:&lt;|startoftext|&gt;
+320:a&lt;/w&gt;
+1929:dog&lt;/w&gt;
+3309:wearing&lt;/w&gt;
+3801:hat&lt;/w&gt;
+49407:&lt;|endoftext|&gt;
+49407:&lt;|endoftext|&gt;</code></pre>
+</div>
+</div>
+<p>So let’s look at the <code>Token_To_Embedding Encoder</code> which takes the <code>input_ids</code> generated by the tokenizer and converts them into embeddings -</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-04T06:25:32.116720Z&quot;,&quot;start_time&quot;:&quot;2022-11-04T06:25:32.060968Z&quot;}" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>emb <span class="op">=</span> text_encoder(tok.input_ids.to(<span class="st">"cuda"</span>))[<span class="dv">0</span>].half()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Shape of embedding : </span><span class="sc">{</span>emb<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>emb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Shape of embedding : torch.Size([1, 77, 768])</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="48">
+<pre><code>tensor([[[-0.3887,  0.0229, -0.0522,  ..., -0.4902, -0.3066,  0.0673],
+         [ 0.0292, -1.3242,  0.3074,  ..., -0.5264,  0.9766,  0.6655],
+         [-1.5928,  0.5063,  1.0791,  ..., -1.5283, -0.8438,  0.1597],
+         ...,
+         [-1.4688,  0.3113,  1.1670,  ...,  0.3755,  0.5366, -1.5049],
+         [-1.4697,  0.3000,  1.1777,  ...,  0.3774,  0.5420, -1.5000],
+         [-1.4395,  0.3137,  1.1982,  ...,  0.3535,  0.5400, -1.5488]]],
+       device='cuda:0', dtype=torch.float16, grad_fn=&lt;NativeLayerNormBackward0&gt;)</code></pre>
+</div>
+</div>
+<p>As we can see above, each tokenized input of size 1x77 has now been translated to 1x77x768 shape embedding. So, each word got represented in a 768-dimensional space.</p>
+</section>
+<section id="whats-their-role-in-the-stable-diffusion-pipeline" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="whats-their-role-in-the-stable-diffusion-pipeline"><span class="header-section-number">2.3</span> What’s their role in the Stable diffusion pipeline</h3>
+<p>Stable diffusion only uses a CLIP trained encoder for the conversion of text to embeddings. This becomes one of the inputs to the U-net. On a high level, CLIP uses an image encoder and text encoder to create embeddings that are similar in latent space. This similarity is more precisely defined as a <a href="https://arxiv.org/abs/1807.03748">Contrastive objective</a>. For more information on how CLIP is trained, please refer to this <a href="https://openai.com/blog/clip/">Open AI blog</a>.</p>
+<figure class="figure">
+<img src="./clip_contrastive.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 2: CLIP pre-trains an image encoder and a text encoder to predict which images were paired with which texts in our dataset. Credit - <a href="https://openai.com/blog/clip/">OpenAI</a>
+</figcaption>
+</figure>
+</section>
 </section>
 <section id="vae---variational-auto-encoder" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="vae---variational-auto-encoder"><span class="header-section-number">3</span> VAE - Variational Auto Encoder</h2>
