@@ -2,7 +2,7 @@
 title: 'Solving business usecases by recommender system using lightFM'
 author: "Aayush Agrawal"
 date: "2018-04-17"
-categories: [Recommender System, Machine learning, Business]
+categories: [Recommender System, Machine Learning, Business]
 image: "personalization_benefits.PNG"
 ---
 
