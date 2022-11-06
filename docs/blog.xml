@@ -417,7 +417,7 @@ Fig. 12: De-Noised Output from U-Net
   <media:content url="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/underthehood.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
-  <title>Introduction to Stable diffusion using 🤗 Hugging Face</title>
+  <title>Stable diffusion using 🤗 Hugging Face - Introduction</title>
   <dc:creator>Aayush Agrawal</dc:creator>
   <link>https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html</link>
   <description><![CDATA[ 
