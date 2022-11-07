@@ -10,9 +10,226 @@
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush&#39;s personal website</description>
 <generator>quarto-1.2.226</generator>
-<lastBuildDate>Sat, 05 Nov 2022 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 07 Nov 2022 08:00:00 GMT</lastBuildDate>
 <item>
-  <title>Stable diffusion using 🤗 Hugging Face - Looking under the hood.</title>
+  <title>Stable diffusion using 🤗 Hugging Face - Putting everything together.</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html</link>
+  <description><![CDATA[ 
+
+
+
+<blockquote class="blockquote">
+<p>An introduction to the diffusion process using 🤗 <a href="https://github.com/huggingface/diffusers">hugging face diffusers library</a>.</p>
+</blockquote>
+<p>This is my third post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Stable diffusion using 🤗 Hugging Face - Introduction</a>. <br> 2. <strong>Part 2</strong> - <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">Stable diffusion using 🤗 Hugging Face - Looking under the hood</a>. <br></p>
+<p>In previous posts, I went over showing how to install 🤗 diffuser library to start generating your own AI images and key components of the stable diffusion pipeline i.e., CLIP text encoder, VAE, and U-Net. In this post, we will try to put these key components together and do a walk-through of the diffusion process which generates the image.</p>
+<figure class="figure">
+<img src="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/building-blocks-vector-28.jpg" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 1: <a href="https://vectorified.com/building-blocks-vector">Building Blocks Vector</a>
+</figcaption>
+</figure>
+<section id="overview---the-diffusion-process" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="overview---the-diffusion-process"><span class="header-section-number">1</span> Overview - The Diffusion Process</h2>
+<p>The stable diffusion model takes the textual input and a seed. The textual input is then passed through the CLIP model to generate textual embedding of size 77x768 and the seed is used to generate Gaussian noise of size 4x64x64 which becomes the first latent image representation.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You will notice that there is an additional dimension mentioned (1x) in the image like 1x77x768 for text embedding, that is because it represents the batch size of 1.</p>
+</div>
+</div>
+<figure class="figure">
+<img src="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/diffusion_image.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 2: The diffusion process.
+</figcaption>
+</figure>
+<p>Next, the U-Net iteratively denoises the random latent image representations while conditioning on the text embeddings. The output of the U-Net is predicted noise residual, which is then used to compute conditioned latents via a scheduler algorithm. This process of denoising and text conditioning is repeated N times (We will use 50) to retrieve a better latent image representation. Once this process is complete, the latent image representation (4x64x64) is decoded by the VAE decoder to retrieve the final output image (3x512x512).</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This iterative denoising is an important step for getting a good output image. Typical steps are in the range of 30-80. However, there are <a href="https://arxiv.org/abs/2202.00512">recent papers</a> that claim to reduce it to 4-5 steps by using distillation techniques.</p>
+</div>
+</div>
+</section>
+<section id="understanding-the-diffusion-process-through-code" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="understanding-the-diffusion-process-through-code"><span class="header-section-number">2</span> Understanding the diffusion process through code</h2>
+<p>Let’s start by importing the required libraries and helper functions. All of this was already used and explained in the previous <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">part 2 of the series</a>.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-07T00:49:09.577528Z&quot;,&quot;start_time&quot;:&quot;2022-11-07T00:48:56.412697Z&quot;}" data-code_folding="[]" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;">import</span> torch, logging</span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;">## disable warnings</span></span>
+<span id="cb1-4">logging.disable(logging.WARNING)  </span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;">## Imaging  library</span></span>
+<span id="cb1-7"><span class="im" style="color: #00769E;">from</span> PIL <span class="im" style="color: #00769E;">import</span> Image</span>
+<span id="cb1-8"><span class="im" style="color: #00769E;">from</span> torchvision <span class="im" style="color: #00769E;">import</span> transforms <span class="im" style="color: #00769E;">as</span> tfms</span>
+<span id="cb1-9"></span>
+<span id="cb1-10"><span class="co" style="color: #5E5E5E;">## Basic libraries</span></span>
+<span id="cb1-11"><span class="im" style="color: #00769E;">import</span> numpy <span class="im" style="color: #00769E;">as</span> np</span>
+<span id="cb1-12"><span class="im" style="color: #00769E;">from</span> tqdm.auto <span class="im" style="color: #00769E;">import</span> tqdm</span>
+<span id="cb1-13"><span class="im" style="color: #00769E;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;">as</span> plt</span>
+<span id="cb1-14"><span class="im" style="color: #00769E;">from</span> IPython.display <span class="im" style="color: #00769E;">import</span> display</span>
+<span id="cb1-15"><span class="op" style="color: #5E5E5E;">%</span>matplotlib inline</span>
+<span id="cb1-16"></span>
+<span id="cb1-17"><span class="co" style="color: #5E5E5E;">## Import the CLIP artifacts </span></span>
+<span id="cb1-18"><span class="im" style="color: #00769E;">from</span> transformers <span class="im" style="color: #00769E;">import</span> CLIPTextModel, CLIPTokenizer</span>
+<span id="cb1-19"><span class="im" style="color: #00769E;">from</span> diffusers <span class="im" style="color: #00769E;">import</span> AutoencoderKL, UNet2DConditionModel, LMSDiscreteScheduler</span>
+<span id="cb1-20"></span>
+<span id="cb1-21"><span class="co" style="color: #5E5E5E;">## Initiating tokenizer and encoder.</span></span>
+<span id="cb1-22">tokenizer <span class="op" style="color: #5E5E5E;">=</span> CLIPTokenizer.from_pretrained(<span class="st" style="color: #20794D;">"openai/clip-vit-large-patch14"</span>, torch_dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16)</span>
+<span id="cb1-23">text_encoder <span class="op" style="color: #5E5E5E;">=</span> CLIPTextModel.from_pretrained(<span class="st" style="color: #20794D;">"openai/clip-vit-large-patch14"</span>, torch_dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16).to(<span class="st" style="color: #20794D;">"cuda"</span>)</span>
+<span id="cb1-24"></span>
+<span id="cb1-25"><span class="co" style="color: #5E5E5E;">## Initiating the VAE</span></span>
+<span id="cb1-26">vae <span class="op" style="color: #5E5E5E;">=</span> AutoencoderKL.from_pretrained(<span class="st" style="color: #20794D;">"CompVis/stable-diffusion-v1-4"</span>, subfolder<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"vae"</span>, torch_dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16).to(<span class="st" style="color: #20794D;">"cuda"</span>)</span>
+<span id="cb1-27"></span>
+<span id="cb1-28"><span class="co" style="color: #5E5E5E;">## Initializing a scheduler and Setting number of sampling steps</span></span>
+<span id="cb1-29">scheduler <span class="op" style="color: #5E5E5E;">=</span> LMSDiscreteScheduler(beta_start<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.00085</span>, beta_end<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.012</span>, beta_schedule<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"scaled_linear"</span>, num_train_timesteps<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">1000</span>)</span>
+<span id="cb1-30">scheduler.set_timesteps(<span class="dv" style="color: #AD0000;">50</span>)</span>
+<span id="cb1-31"></span>
+<span id="cb1-32"><span class="co" style="color: #5E5E5E;">## Initializing the U-Net model</span></span>
+<span id="cb1-33">unet <span class="op" style="color: #5E5E5E;">=</span> UNet2DConditionModel.from_pretrained(<span class="st" style="color: #20794D;">"CompVis/stable-diffusion-v1-4"</span>, subfolder<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"unet"</span>, torch_dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16).to(<span class="st" style="color: #20794D;">"cuda"</span>)</span>
+<span id="cb1-34"></span>
+<span id="cb1-35"><span class="co" style="color: #5E5E5E;">## Helper functions</span></span>
+<span id="cb1-36"><span class="kw" style="color: #003B4F;">def</span> load_image(p):</span>
+<span id="cb1-37">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb1-38"><span class="co" style="color: #5E5E5E;">    Function to load images from a defined path</span></span>
+<span id="cb1-39"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb1-40">    <span class="cf" style="color: #003B4F;">return</span> Image.<span class="bu" style="color: null;">open</span>(p).convert(<span class="st" style="color: #20794D;">'RGB'</span>).resize((<span class="dv" style="color: #AD0000;">512</span>,<span class="dv" style="color: #AD0000;">512</span>))</span>
+<span id="cb1-41"></span>
+<span id="cb1-42"><span class="kw" style="color: #003B4F;">def</span> pil_to_latents(image):</span>
+<span id="cb1-43">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb1-44"><span class="co" style="color: #5E5E5E;">    Function to convert image to latents</span></span>
+<span id="cb1-45"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb1-46">    init_image <span class="op" style="color: #5E5E5E;">=</span> tfms.ToTensor()(image).unsqueeze(<span class="dv" style="color: #AD0000;">0</span>) <span class="op" style="color: #5E5E5E;">*</span> <span class="fl" style="color: #AD0000;">2.0</span> <span class="op" style="color: #5E5E5E;">-</span> <span class="fl" style="color: #AD0000;">1.0</span></span>
+<span id="cb1-47">    init_image <span class="op" style="color: #5E5E5E;">=</span> init_image.to(device<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"cuda"</span>, dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16) </span>
+<span id="cb1-48">    init_latent_dist <span class="op" style="color: #5E5E5E;">=</span> vae.encode(init_image).latent_dist.sample() <span class="op" style="color: #5E5E5E;">*</span> <span class="fl" style="color: #AD0000;">0.18215</span></span>
+<span id="cb1-49">    <span class="cf" style="color: #003B4F;">return</span> init_latent_dist</span>
+<span id="cb1-50"></span>
+<span id="cb1-51"><span class="kw" style="color: #003B4F;">def</span> latents_to_pil(latents):</span>
+<span id="cb1-52">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb1-53"><span class="co" style="color: #5E5E5E;">    Function to convert latents to images</span></span>
+<span id="cb1-54"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb1-55">    latents <span class="op" style="color: #5E5E5E;">=</span> (<span class="dv" style="color: #AD0000;">1</span> <span class="op" style="color: #5E5E5E;">/</span> <span class="fl" style="color: #AD0000;">0.18215</span>) <span class="op" style="color: #5E5E5E;">*</span> latents</span>
+<span id="cb1-56">    <span class="cf" style="color: #003B4F;">with</span> torch.no_grad():</span>
+<span id="cb1-57">        image <span class="op" style="color: #5E5E5E;">=</span> vae.decode(latents).sample</span>
+<span id="cb1-58">    image <span class="op" style="color: #5E5E5E;">=</span> (image <span class="op" style="color: #5E5E5E;">/</span> <span class="dv" style="color: #AD0000;">2</span> <span class="op" style="color: #5E5E5E;">+</span> <span class="fl" style="color: #AD0000;">0.5</span>).clamp(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb1-59">    image <span class="op" style="color: #5E5E5E;">=</span> image.detach().cpu().permute(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">3</span>, <span class="dv" style="color: #AD0000;">1</span>).numpy()</span>
+<span id="cb1-60">    images <span class="op" style="color: #5E5E5E;">=</span> (image <span class="op" style="color: #5E5E5E;">*</span> <span class="dv" style="color: #AD0000;">255</span>).<span class="bu" style="color: null;">round</span>().astype(<span class="st" style="color: #20794D;">"uint8"</span>)</span>
+<span id="cb1-61">    pil_images <span class="op" style="color: #5E5E5E;">=</span> [Image.fromarray(image) <span class="cf" style="color: #003B4F;">for</span> image <span class="kw" style="color: #003B4F;">in</span> images]</span>
+<span id="cb1-62">    <span class="cf" style="color: #003B4F;">return</span> pil_images</span>
+<span id="cb1-63"></span>
+<span id="cb1-64"><span class="kw" style="color: #003B4F;">def</span> text_enc(prompts, maxlen<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>):</span>
+<span id="cb1-65">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb1-66"><span class="co" style="color: #5E5E5E;">    A function to take a texual promt and convert it into embeddings</span></span>
+<span id="cb1-67"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb1-68">    <span class="cf" style="color: #003B4F;">if</span> maxlen <span class="kw" style="color: #003B4F;">is</span> <span class="va" style="color: #111111;">None</span>: maxlen <span class="op" style="color: #5E5E5E;">=</span> tokenizer.model_max_length</span>
+<span id="cb1-69">    inp <span class="op" style="color: #5E5E5E;">=</span> tokenizer(prompts, padding<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"max_length"</span>, max_length<span class="op" style="color: #5E5E5E;">=</span>maxlen, truncation<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>, return_tensors<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"pt"</span>) </span>
+<span id="cb1-70">    <span class="cf" style="color: #003B4F;">return</span> text_encoder(inp.input_ids.to(<span class="st" style="color: #20794D;">"cuda"</span>))[<span class="dv" style="color: #AD0000;">0</span>].half()</span></code></pre></div>
+</div>
+<p>The code below is a stripped-down version of what is present in the <a href="https://github.com/huggingface/diffusers/blob/269109dbfbbdbe2800535239b881e96e1828a0ef/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion.py"><code>StableDiffusionPipeline.from_pretrained</code></a> function to show the important parts of the diffusion process.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-07T00:52:04.788045Z&quot;,&quot;start_time&quot;:&quot;2022-11-07T00:52:04.784224Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;">def</span> mk_img(prompts, g<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">7.5</span>, seed<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">100</span>, steps<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">70</span>, dim<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">512</span>):</span>
+<span id="cb2-2">    <span class="co" style="color: #5E5E5E;">"""</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;">    Diffusion process to convert prompt to image</span></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;">    """</span></span>
+<span id="cb2-5">    </span>
+<span id="cb2-6">    <span class="co" style="color: #5E5E5E;"># Defining batch size</span></span>
+<span id="cb2-7">    bs <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">len</span>(prompts) </span>
+<span id="cb2-8">    </span>
+<span id="cb2-9">    <span class="co" style="color: #5E5E5E;"># Converting textual prompts to embedding</span></span>
+<span id="cb2-10">    text <span class="op" style="color: #5E5E5E;">=</span> text_enc(prompts) </span>
+<span id="cb2-11">    </span>
+<span id="cb2-12">    <span class="co" style="color: #5E5E5E;"># Adding an unconditional prompt , helps in the generation process</span></span>
+<span id="cb2-13">    uncond <span class="op" style="color: #5E5E5E;">=</span>  text_enc([<span class="st" style="color: #20794D;">""</span>] <span class="op" style="color: #5E5E5E;">*</span> bs, text.shape[<span class="dv" style="color: #AD0000;">1</span>])</span>
+<span id="cb2-14">    emb <span class="op" style="color: #5E5E5E;">=</span> torch.cat([uncond, text])</span>
+<span id="cb2-15">    </span>
+<span id="cb2-16">    <span class="co" style="color: #5E5E5E;"># Setting the seed</span></span>
+<span id="cb2-17">    <span class="cf" style="color: #003B4F;">if</span> seed: torch.manual_seed(seed)</span>
+<span id="cb2-18">    </span>
+<span id="cb2-19">    <span class="co" style="color: #5E5E5E;"># Initiating random noise</span></span>
+<span id="cb2-20">    latents <span class="op" style="color: #5E5E5E;">=</span> torch.randn((bs, unet.in_channels, dim<span class="op" style="color: #5E5E5E;">//</span><span class="dv" style="color: #AD0000;">8</span>, dim<span class="op" style="color: #5E5E5E;">//</span><span class="dv" style="color: #AD0000;">8</span>))</span>
+<span id="cb2-21">    </span>
+<span id="cb2-22">    <span class="co" style="color: #5E5E5E;"># Setting number of steps in scheduler</span></span>
+<span id="cb2-23">    scheduler.set_timesteps(steps)</span>
+<span id="cb2-24">    </span>
+<span id="cb2-25">    <span class="co" style="color: #5E5E5E;"># Adding noise to the latents </span></span>
+<span id="cb2-26">    latents <span class="op" style="color: #5E5E5E;">=</span> latents.to(<span class="st" style="color: #20794D;">"cuda"</span>).half() <span class="op" style="color: #5E5E5E;">*</span> scheduler.init_noise_sigma</span>
+<span id="cb2-27">    </span>
+<span id="cb2-28">    <span class="co" style="color: #5E5E5E;"># Iterating through defined steps</span></span>
+<span id="cb2-29">    <span class="cf" style="color: #003B4F;">for</span> i,ts <span class="kw" style="color: #003B4F;">in</span> <span class="bu" style="color: null;">enumerate</span>(tqdm(scheduler.timesteps)):</span>
+<span id="cb2-30">        <span class="co" style="color: #5E5E5E;"># We need to scale the i/p latents to match the variance</span></span>
+<span id="cb2-31">        inp <span class="op" style="color: #5E5E5E;">=</span> scheduler.scale_model_input(torch.cat([latents] <span class="op" style="color: #5E5E5E;">*</span> <span class="dv" style="color: #AD0000;">2</span>), ts)</span>
+<span id="cb2-32">        </span>
+<span id="cb2-33">        <span class="co" style="color: #5E5E5E;"># Predicting noise residual using U-Net</span></span>
+<span id="cb2-34">        <span class="cf" style="color: #003B4F;">with</span> torch.no_grad(): u,t <span class="op" style="color: #5E5E5E;">=</span> unet(inp, ts, encoder_hidden_states<span class="op" style="color: #5E5E5E;">=</span>emb).sample.chunk(<span class="dv" style="color: #AD0000;">2</span>)</span>
+<span id="cb2-35">            </span>
+<span id="cb2-36">        <span class="co" style="color: #5E5E5E;"># Performing Guidance</span></span>
+<span id="cb2-37">        pred <span class="op" style="color: #5E5E5E;">=</span> u <span class="op" style="color: #5E5E5E;">+</span> g<span class="op" style="color: #5E5E5E;">*</span>(t<span class="op" style="color: #5E5E5E;">-</span>u)</span>
+<span id="cb2-38">        </span>
+<span id="cb2-39">        <span class="co" style="color: #5E5E5E;"># Conditioning  the latents</span></span>
+<span id="cb2-40">        latents <span class="op" style="color: #5E5E5E;">=</span> scheduler.step(pred, ts, latents).prev_sample</span>
+<span id="cb2-41">    </span>
+<span id="cb2-42">    <span class="co" style="color: #5E5E5E;"># Returning the latent representation to output an image of 3x512x512</span></span>
+<span id="cb2-43">    <span class="cf" style="color: #003B4F;">return</span> latents_to_pil(latents)</span></code></pre></div>
+</div>
+<p>Let’s see if the function works as intended.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-07T01:13:56.411163Z&quot;,&quot;start_time&quot;:&quot;2022-11-07T01:13:45.084901Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1">images <span class="op" style="color: #5E5E5E;">=</span> mk_img([<span class="st" style="color: #20794D;">"A dog wearing a hat"</span>, <span class="st" style="color: #20794D;">"a photograph of an astronaut riding a horse"</span>])</span>
+<span id="cb3-2"><span class="cf" style="color: #003B4F;">for</span> img <span class="kw" style="color: #003B4F;">in</span> images:display(img)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"3dabb19d334f4bb28b1c48ccff824ab0","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3_files/figure-html/cell-4-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Looks like it is working! So let’s take a deeper dive at the hyper-parameters of the function. <br> 1. <code>prompt</code> - this is the textual prompt we pass through to generate an image. Similar to the <code>pipe(prompt)</code> function we saw in part 1 <br> 2. <code>g</code> or <code>guidance scale</code> - It’s a value that determines how close the image should be to the textual prompt. This is related to a technique called <a href="https://benanne.github.io/2022/05/26/guidance.html">Classifier free guidance</a> which improves the quality of the images generated. The higher the value of the guidance scale, more close it will be to the textual prompt <br> 3. <code>seed</code> - This sets the seed from which the initial Gaussian noisy latents are generated <br> 4. <code>steps</code> - Number of de-noising steps taken for generating the final latents. <br> 5. <code>dim</code> - dimension of the image, for simplicity we are currently generating square images, so only one value is needed <br></p>
+</section>
+<section id="conclusion" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">3</span> Conclusion</h2>
+<p>I hope this gives a good overview and breaks the code to the bare minimum so that we can understand each component. Now that we have the minimum code implemented, in the next post we will see make some tweaks to the <code>mk_img</code> function to add additional functionality i.e., img2img pipeline and negative prompt.</p>
+<p>I hope you enjoyed reading it, and feel free to use my code and try it out for generating your images. Also, if there is any feedback on the code or just the blog post, feel free to reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a> or email me at aayushmnit@gmail.com.</p>
+</section>
+<section id="references" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="references"><span class="header-section-number">4</span> References</h2>
+<ul>
+<li><a href="https://www.fast.ai/posts/part2-2022-preview.html">Fast.ai course - 1st Two Lessons of From Deep Learning Foundations to Stable Diffusion</a></li>
+<li><a href="https://huggingface.co/blog/stable_diffusion">Stable Diffusion with 🧨 Diffusers</a></li>
+<li><a href="https://bipinkrishnan.github.io/posts/getting-started-in-the-world-of-stable-diffusion/">Getting Started in the World of Stable Diffusion</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>Stable Diffusion</category>
+  <guid>https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html</guid>
+  <pubDate>Mon, 07 Nov 2022 08:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/building-blocks-vector-28.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Stable diffusion using 🤗 Hugging Face - Looking under the hood</title>
   <dc:creator>Aayush Agrawal</dc:creator>
   <link>https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html</link>
   <description><![CDATA[ 
@@ -397,7 +614,7 @@ Fig. 12: De-Noised Output from U-Net
 </section>
 <section id="conclusion" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">5</span> Conclusion</h2>
-<p>In this post, we saw the key components of a Stable diffusion pipeline i.e., CLIP Text encoder, VAE, and U-Net. In the next post, we will look at the diffusion process using these components.</p>
+<p>In this post, we saw the key components of a Stable diffusion pipeline i.e., CLIP Text encoder, VAE, and U-Net. In the next post, we will look at the diffusion process using these components. Read the <a href="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">next part here</a>.</p>
 <p>I hope you enjoyed reading it, and feel free to use my code and try it out for generating your images. Also, if there is any feedback on the code or just the blog post, feel free to reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a> or email me at aayushmnit@gmail.com.</p>
 </section>
 <section id="references" class="level2" data-number="6">
