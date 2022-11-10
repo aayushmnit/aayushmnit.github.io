@@ -4541,5 +4541,345 @@ Item similar to the above item:
   <pubDate>Mon, 19 Feb 2018 08:00:00 GMT</pubDate>
   <media:content url="https://aayushmnit.com/posts/2018-02-19-launch/launch.jpg" medium="image" type="image/jpeg"/>
 </item>
+<item>
+  <title>Stable diffusion using 🤗 Hugging Face - Variations of Stable Diffusion</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html</link>
+  <description><![CDATA[ 
+
+
+
+<blockquote class="blockquote">
+<p>An introduction to the diffusion process using 🤗 <a href="https://github.com/huggingface/diffusers">hugging face diffusers library</a>.</p>
+</blockquote>
+<p>This is my third post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Stable diffusion using 🤗 Hugging Face - Introduction</a>. <br> 2. <strong>Part 2</strong> - <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">Stable diffusion using 🤗 Hugging Face - Looking under the hood</a>. <br> 3. <strong>Part 3</strong> - <a href="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">Stable diffusion using 🤗 Hugging Face - Putting everything together</a></p>
+<p>In previous posts, I went over all key components of Stable Diffusion and how to get a prompt to image pipeline working. In this post, I will show how to edit the prompt to image function to add additional functionality to our Stable diffusion pipeline i.e.&nbsp;<code>Negative prompting</code> and <code>Imgage to Image</code> pipeline. Hopefully this will provide enough motivation to play around this function and doing your own research.</p>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/diverging_roads.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 1: A Stable diffusion generated image using prompt - <br>“A road diverging in two different direction”
+</figcaption>
+</figure>
+<section id="variation-1-negative-prompt" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="variation-1-negative-prompt"><span class="header-section-number">1</span> Variation 1: Negative Prompt</h2>
+<section id="what-is-negative-prompting" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="what-is-negative-prompting"><span class="header-section-number">1.1</span> What is negative prompting?</h3>
+<p>A negative prompt is a additional capability we can add to our model to tell the stable diffusion model what we doesn’t want to see in the generated image. This feature is extremely popular to remove anything a user doesn’t want to see from the original image.</p>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/negative_prompt_example.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 2: Negative prompt example
+</figcaption>
+</figure>
+</section>
+<section id="understanding-negative-prompting-through-code" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="understanding-negative-prompting-through-code"><span class="header-section-number">1.2</span> Understanding negative prompting through code</h3>
+<p>Let’s start by importing the required libraries and helper functions. All of this was already used and explained in the previous <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">part 2</a> and <a href="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">part 3</a> of the series.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T07:10:53.904236Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T07:10:42.967922Z&quot;}" data-code_folding="[]" data-execution_count="5">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;">import</span> torch, logging</span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;">## disable warnings</span></span>
+<span id="cb1-4">logging.disable(logging.WARNING)  </span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;">## Imaging  library</span></span>
+<span id="cb1-7"><span class="im" style="color: #00769E;">from</span> PIL <span class="im" style="color: #00769E;">import</span> Image</span>
+<span id="cb1-8"><span class="im" style="color: #00769E;">from</span> torchvision <span class="im" style="color: #00769E;">import</span> transforms <span class="im" style="color: #00769E;">as</span> tfms</span>
+<span id="cb1-9"></span>
+<span id="cb1-10"></span>
+<span id="cb1-11"><span class="co" style="color: #5E5E5E;">## Basic libraries</span></span>
+<span id="cb1-12"><span class="im" style="color: #00769E;">from</span> fastdownload <span class="im" style="color: #00769E;">import</span> FastDownload</span>
+<span id="cb1-13"><span class="im" style="color: #00769E;">import</span> numpy <span class="im" style="color: #00769E;">as</span> np</span>
+<span id="cb1-14"><span class="im" style="color: #00769E;">from</span> tqdm.auto <span class="im" style="color: #00769E;">import</span> tqdm</span>
+<span id="cb1-15"><span class="im" style="color: #00769E;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;">as</span> plt</span>
+<span id="cb1-16"><span class="op" style="color: #5E5E5E;">%</span>matplotlib inline</span>
+<span id="cb1-17"><span class="im" style="color: #00769E;">from</span> IPython.display <span class="im" style="color: #00769E;">import</span> display</span>
+<span id="cb1-18"><span class="im" style="color: #00769E;">import</span> shutil</span>
+<span id="cb1-19"><span class="im" style="color: #00769E;">import</span> os</span>
+<span id="cb1-20"></span>
+<span id="cb1-21"><span class="co" style="color: #5E5E5E;">## For video display</span></span>
+<span id="cb1-22"><span class="im" style="color: #00769E;">from</span> IPython.display <span class="im" style="color: #00769E;">import</span> HTML</span>
+<span id="cb1-23"><span class="im" style="color: #00769E;">from</span> base64 <span class="im" style="color: #00769E;">import</span> b64encode</span>
+<span id="cb1-24"></span>
+<span id="cb1-25"></span>
+<span id="cb1-26"><span class="co" style="color: #5E5E5E;">## Import the CLIP artifacts </span></span>
+<span id="cb1-27"><span class="im" style="color: #00769E;">from</span> transformers <span class="im" style="color: #00769E;">import</span> CLIPTextModel, CLIPTokenizer</span>
+<span id="cb1-28"><span class="im" style="color: #00769E;">from</span> diffusers <span class="im" style="color: #00769E;">import</span> AutoencoderKL, UNet2DConditionModel, LMSDiscreteScheduler</span>
+<span id="cb1-29"></span>
+<span id="cb1-30"><span class="co" style="color: #5E5E5E;">## Initiating tokenizer and encoder.</span></span>
+<span id="cb1-31">tokenizer <span class="op" style="color: #5E5E5E;">=</span> CLIPTokenizer.from_pretrained(<span class="st" style="color: #20794D;">"openai/clip-vit-large-patch14"</span>, torch_dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16)</span>
+<span id="cb1-32">text_encoder <span class="op" style="color: #5E5E5E;">=</span> CLIPTextModel.from_pretrained(<span class="st" style="color: #20794D;">"openai/clip-vit-large-patch14"</span>, torch_dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16).to(<span class="st" style="color: #20794D;">"cuda"</span>)</span>
+<span id="cb1-33"></span>
+<span id="cb1-34"><span class="co" style="color: #5E5E5E;">## Initiating the VAE</span></span>
+<span id="cb1-35">vae <span class="op" style="color: #5E5E5E;">=</span> AutoencoderKL.from_pretrained(<span class="st" style="color: #20794D;">"CompVis/stable-diffusion-v1-4"</span>, subfolder<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"vae"</span>, torch_dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16).to(<span class="st" style="color: #20794D;">"cuda"</span>)</span>
+<span id="cb1-36"></span>
+<span id="cb1-37"><span class="co" style="color: #5E5E5E;">## Initializing a scheduler and Setting number of sampling steps</span></span>
+<span id="cb1-38">scheduler <span class="op" style="color: #5E5E5E;">=</span> LMSDiscreteScheduler(beta_start<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.00085</span>, beta_end<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.012</span>, beta_schedule<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"scaled_linear"</span>, num_train_timesteps<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">1000</span>)</span>
+<span id="cb1-39">scheduler.set_timesteps(<span class="dv" style="color: #AD0000;">50</span>)</span>
+<span id="cb1-40"></span>
+<span id="cb1-41"><span class="co" style="color: #5E5E5E;">## Initializing the U-Net model</span></span>
+<span id="cb1-42">unet <span class="op" style="color: #5E5E5E;">=</span> UNet2DConditionModel.from_pretrained(<span class="st" style="color: #20794D;">"CompVis/stable-diffusion-v1-4"</span>, subfolder<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"unet"</span>, torch_dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16).to(<span class="st" style="color: #20794D;">"cuda"</span>)</span>
+<span id="cb1-43"></span>
+<span id="cb1-44"><span class="co" style="color: #5E5E5E;">## Helper functions</span></span>
+<span id="cb1-45"><span class="kw" style="color: #003B4F;">def</span> load_image(p):</span>
+<span id="cb1-46">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb1-47"><span class="co" style="color: #5E5E5E;">    Function to load images from a defined path</span></span>
+<span id="cb1-48"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb1-49">    <span class="cf" style="color: #003B4F;">return</span> Image.<span class="bu" style="color: null;">open</span>(p).convert(<span class="st" style="color: #20794D;">'RGB'</span>).resize((<span class="dv" style="color: #AD0000;">512</span>,<span class="dv" style="color: #AD0000;">512</span>))</span>
+<span id="cb1-50"></span>
+<span id="cb1-51"><span class="kw" style="color: #003B4F;">def</span> pil_to_latents(image):</span>
+<span id="cb1-52">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb1-53"><span class="co" style="color: #5E5E5E;">    Function to convert image to latents</span></span>
+<span id="cb1-54"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb1-55">    init_image <span class="op" style="color: #5E5E5E;">=</span> tfms.ToTensor()(image).unsqueeze(<span class="dv" style="color: #AD0000;">0</span>) <span class="op" style="color: #5E5E5E;">*</span> <span class="fl" style="color: #AD0000;">2.0</span> <span class="op" style="color: #5E5E5E;">-</span> <span class="fl" style="color: #AD0000;">1.0</span></span>
+<span id="cb1-56">    init_image <span class="op" style="color: #5E5E5E;">=</span> init_image.to(device<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"cuda"</span>, dtype<span class="op" style="color: #5E5E5E;">=</span>torch.float16) </span>
+<span id="cb1-57">    init_latent_dist <span class="op" style="color: #5E5E5E;">=</span> vae.encode(init_image).latent_dist.sample() <span class="op" style="color: #5E5E5E;">*</span> <span class="fl" style="color: #AD0000;">0.18215</span></span>
+<span id="cb1-58">    <span class="cf" style="color: #003B4F;">return</span> init_latent_dist</span>
+<span id="cb1-59"></span>
+<span id="cb1-60"><span class="kw" style="color: #003B4F;">def</span> latents_to_pil(latents):</span>
+<span id="cb1-61">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb1-62"><span class="co" style="color: #5E5E5E;">    Function to convert latents to images</span></span>
+<span id="cb1-63"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb1-64">    latents <span class="op" style="color: #5E5E5E;">=</span> (<span class="dv" style="color: #AD0000;">1</span> <span class="op" style="color: #5E5E5E;">/</span> <span class="fl" style="color: #AD0000;">0.18215</span>) <span class="op" style="color: #5E5E5E;">*</span> latents</span>
+<span id="cb1-65">    <span class="cf" style="color: #003B4F;">with</span> torch.no_grad():</span>
+<span id="cb1-66">        image <span class="op" style="color: #5E5E5E;">=</span> vae.decode(latents).sample</span>
+<span id="cb1-67">    image <span class="op" style="color: #5E5E5E;">=</span> (image <span class="op" style="color: #5E5E5E;">/</span> <span class="dv" style="color: #AD0000;">2</span> <span class="op" style="color: #5E5E5E;">+</span> <span class="fl" style="color: #AD0000;">0.5</span>).clamp(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">1</span>)</span>
+<span id="cb1-68">    image <span class="op" style="color: #5E5E5E;">=</span> image.detach().cpu().permute(<span class="dv" style="color: #AD0000;">0</span>, <span class="dv" style="color: #AD0000;">2</span>, <span class="dv" style="color: #AD0000;">3</span>, <span class="dv" style="color: #AD0000;">1</span>).numpy()</span>
+<span id="cb1-69">    images <span class="op" style="color: #5E5E5E;">=</span> (image <span class="op" style="color: #5E5E5E;">*</span> <span class="dv" style="color: #AD0000;">255</span>).<span class="bu" style="color: null;">round</span>().astype(<span class="st" style="color: #20794D;">"uint8"</span>)</span>
+<span id="cb1-70">    pil_images <span class="op" style="color: #5E5E5E;">=</span> [Image.fromarray(image) <span class="cf" style="color: #003B4F;">for</span> image <span class="kw" style="color: #003B4F;">in</span> images]</span>
+<span id="cb1-71">    <span class="cf" style="color: #003B4F;">return</span> pil_images</span>
+<span id="cb1-72"></span>
+<span id="cb1-73"><span class="kw" style="color: #003B4F;">def</span> text_enc(prompts, maxlen<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>):</span>
+<span id="cb1-74">    <span class="co" style="color: #5E5E5E;">'''</span></span>
+<span id="cb1-75"><span class="co" style="color: #5E5E5E;">    A function to take a texual promt and convert it into embeddings</span></span>
+<span id="cb1-76"><span class="co" style="color: #5E5E5E;">    '''</span></span>
+<span id="cb1-77">    <span class="cf" style="color: #003B4F;">if</span> maxlen <span class="kw" style="color: #003B4F;">is</span> <span class="va" style="color: #111111;">None</span>: maxlen <span class="op" style="color: #5E5E5E;">=</span> tokenizer.model_max_length</span>
+<span id="cb1-78">    inp <span class="op" style="color: #5E5E5E;">=</span> tokenizer(prompts, padding<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"max_length"</span>, max_length<span class="op" style="color: #5E5E5E;">=</span>maxlen, truncation<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>, return_tensors<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"pt"</span>) </span>
+<span id="cb1-79">    <span class="cf" style="color: #003B4F;">return</span> text_encoder(inp.input_ids.to(<span class="st" style="color: #20794D;">"cuda"</span>))[<span class="dv" style="color: #AD0000;">0</span>].half()</span></code></pre></div>
+</details>
+</div>
+<p>Now we are going to change the <code>prompt_2_img</code> function from part 3 by passing an additional function <code>neg_prompts</code>. The way negative prompt works is by using user-specified text instead of empty string for <code>uncond</code> when doing sampling.</p>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/neg_prompt_code.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 3: Negative prompt code change
+</figcaption>
+</figure>
+<p>So let’s make this change and update out <code>prompt_2_img</code> function.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T05:25:05.237707Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T05:25:05.233092Z&quot;}" data-code_folding="[]" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="kw" style="color: #003B4F;">def</span> prompt_2_img(prompts, neg_prompts<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>, g<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">7.5</span>, seed<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">100</span>, steps<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">70</span>, dim<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">512</span>, save_int<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>):</span>
+<span id="cb2-2">    <span class="co" style="color: #5E5E5E;">"""</span></span>
+<span id="cb2-3"><span class="co" style="color: #5E5E5E;">    Diffusion process to convert prompt to image</span></span>
+<span id="cb2-4"><span class="co" style="color: #5E5E5E;">    """</span></span>
+<span id="cb2-5">    </span>
+<span id="cb2-6">    <span class="co" style="color: #5E5E5E;"># Defining batch size</span></span>
+<span id="cb2-7">    bs <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">len</span>(prompts) </span>
+<span id="cb2-8">    </span>
+<span id="cb2-9">    <span class="co" style="color: #5E5E5E;"># Converting textual prompts to embedding</span></span>
+<span id="cb2-10">    text <span class="op" style="color: #5E5E5E;">=</span> text_enc(prompts) </span>
+<span id="cb2-11">    </span>
+<span id="cb2-12">    <span class="co" style="color: #5E5E5E;"># Adding an unconditional prompt , helps in the generation process</span></span>
+<span id="cb2-13">    <span class="cf" style="color: #003B4F;">if</span> <span class="kw" style="color: #003B4F;">not</span> neg_prompts:</span>
+<span id="cb2-14">        uncond <span class="op" style="color: #5E5E5E;">=</span>  text_enc([<span class="st" style="color: #20794D;">""</span>] <span class="op" style="color: #5E5E5E;">*</span> bs, text.shape[<span class="dv" style="color: #AD0000;">1</span>])</span>
+<span id="cb2-15">    <span class="cf" style="color: #003B4F;">else</span>:</span>
+<span id="cb2-16">        uncond <span class="op" style="color: #5E5E5E;">=</span>  text_enc(neg_prompts, text.shape[<span class="dv" style="color: #AD0000;">1</span>])</span>
+<span id="cb2-17">    emb <span class="op" style="color: #5E5E5E;">=</span> torch.cat([uncond, text])</span>
+<span id="cb2-18">    </span>
+<span id="cb2-19">    <span class="co" style="color: #5E5E5E;"># Setting the seed</span></span>
+<span id="cb2-20">    <span class="cf" style="color: #003B4F;">if</span> seed: torch.manual_seed(seed)</span>
+<span id="cb2-21">    </span>
+<span id="cb2-22">    <span class="co" style="color: #5E5E5E;"># Initiating random noise</span></span>
+<span id="cb2-23">    latents <span class="op" style="color: #5E5E5E;">=</span> torch.randn((bs, unet.in_channels, dim<span class="op" style="color: #5E5E5E;">//</span><span class="dv" style="color: #AD0000;">8</span>, dim<span class="op" style="color: #5E5E5E;">//</span><span class="dv" style="color: #AD0000;">8</span>))</span>
+<span id="cb2-24">    </span>
+<span id="cb2-25">    <span class="co" style="color: #5E5E5E;"># Setting number of steps in scheduler</span></span>
+<span id="cb2-26">    scheduler.set_timesteps(steps)</span>
+<span id="cb2-27">    </span>
+<span id="cb2-28">    <span class="co" style="color: #5E5E5E;"># Adding noise to the latents </span></span>
+<span id="cb2-29">    latents <span class="op" style="color: #5E5E5E;">=</span> latents.to(<span class="st" style="color: #20794D;">"cuda"</span>).half() <span class="op" style="color: #5E5E5E;">*</span> scheduler.init_noise_sigma</span>
+<span id="cb2-30">    </span>
+<span id="cb2-31">    <span class="co" style="color: #5E5E5E;"># Iterating through defined steps</span></span>
+<span id="cb2-32">    <span class="cf" style="color: #003B4F;">for</span> i,ts <span class="kw" style="color: #003B4F;">in</span> <span class="bu" style="color: null;">enumerate</span>(tqdm(scheduler.timesteps)):</span>
+<span id="cb2-33">        <span class="co" style="color: #5E5E5E;"># We need to scale the i/p latents to match the variance</span></span>
+<span id="cb2-34">        inp <span class="op" style="color: #5E5E5E;">=</span> scheduler.scale_model_input(torch.cat([latents] <span class="op" style="color: #5E5E5E;">*</span> <span class="dv" style="color: #AD0000;">2</span>), ts)</span>
+<span id="cb2-35">        </span>
+<span id="cb2-36">        <span class="co" style="color: #5E5E5E;"># Predicting noise residual using U-Net</span></span>
+<span id="cb2-37">        <span class="cf" style="color: #003B4F;">with</span> torch.no_grad(): u,t <span class="op" style="color: #5E5E5E;">=</span> unet(inp, ts, encoder_hidden_states<span class="op" style="color: #5E5E5E;">=</span>emb).sample.chunk(<span class="dv" style="color: #AD0000;">2</span>)</span>
+<span id="cb2-38">            </span>
+<span id="cb2-39">        <span class="co" style="color: #5E5E5E;"># Performing Guidance</span></span>
+<span id="cb2-40">        pred <span class="op" style="color: #5E5E5E;">=</span> u <span class="op" style="color: #5E5E5E;">+</span> g<span class="op" style="color: #5E5E5E;">*</span>(t<span class="op" style="color: #5E5E5E;">-</span>u)</span>
+<span id="cb2-41">        </span>
+<span id="cb2-42">        <span class="co" style="color: #5E5E5E;"># Conditioning  the latents</span></span>
+<span id="cb2-43">        latents <span class="op" style="color: #5E5E5E;">=</span> scheduler.step(pred, ts, latents).prev_sample</span>
+<span id="cb2-44">        </span>
+<span id="cb2-45">        <span class="co" style="color: #5E5E5E;"># Saving intermediate images</span></span>
+<span id="cb2-46">        <span class="cf" style="color: #003B4F;">if</span> save_int: </span>
+<span id="cb2-47">            <span class="cf" style="color: #003B4F;">if</span> <span class="kw" style="color: #003B4F;">not</span> os.path.exists(<span class="ss" style="color: #20794D;">f'./steps'</span>):</span>
+<span id="cb2-48">                os.mkdir(<span class="ss" style="color: #20794D;">f'./steps'</span>)</span>
+<span id="cb2-49">            latents_to_pil(latents)[<span class="dv" style="color: #AD0000;">0</span>].save(<span class="ss" style="color: #20794D;">f'steps/</span><span class="sc" style="color: #5E5E5E;">{</span>i<span class="sc" style="color: #5E5E5E;">:04}</span><span class="ss" style="color: #20794D;">.jpeg'</span>)</span>
+<span id="cb2-50">            </span>
+<span id="cb2-51">    <span class="co" style="color: #5E5E5E;"># Returning the latent representation to output an image of 3x512x512</span></span>
+<span id="cb2-52">    <span class="cf" style="color: #003B4F;">return</span> latents_to_pil(latents)</span></code></pre></div>
+</div>
+<p>Let’s see if the function works as intended.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T05:08:35.834365Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T05:08:35.556766Z&quot;}" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;">## Image without neg prompt</span></span>
+<span id="cb3-2">images <span class="op" style="color: #5E5E5E;">=</span> [<span class="va" style="color: #111111;">None</span>, <span class="va" style="color: #111111;">None</span>]</span>
+<span id="cb3-3">images[<span class="dv" style="color: #AD0000;">0</span>] <span class="op" style="color: #5E5E5E;">=</span> prompt_2_img(prompts <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"A dog wearing a white hat"</span>], neg_prompts<span class="op" style="color: #5E5E5E;">=</span>[<span class="st" style="color: #20794D;">""</span>],steps<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">50</span>, save_int<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>)[<span class="dv" style="color: #AD0000;">0</span>]</span>
+<span id="cb3-4">images[<span class="dv" style="color: #AD0000;">1</span>] <span class="op" style="color: #5E5E5E;">=</span> prompt_2_img(prompts <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"A dog wearing a white hat"</span>], neg_prompts<span class="op" style="color: #5E5E5E;">=</span>[<span class="st" style="color: #20794D;">"White hat"</span>],steps<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">50</span>, save_int<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>)[<span class="dv" style="color: #AD0000;">0</span>]</span>
+<span id="cb3-5">    </span>
+<span id="cb3-6"><span class="co" style="color: #5E5E5E;">## Plotting side by side</span></span>
+<span id="cb3-7">fig, axs <span class="op" style="color: #5E5E5E;">=</span> plt.subplots(<span class="dv" style="color: #AD0000;">1</span>, <span class="dv" style="color: #AD0000;">2</span>, figsize<span class="op" style="color: #5E5E5E;">=</span>(<span class="dv" style="color: #AD0000;">12</span>, <span class="dv" style="color: #AD0000;">6</span>))</span>
+<span id="cb3-8"><span class="cf" style="color: #003B4F;">for</span> c, img <span class="kw" style="color: #003B4F;">in</span> <span class="bu" style="color: null;">enumerate</span>(images): </span>
+<span id="cb3-9">    axs[c].imshow(img)</span>
+<span id="cb3-10">    <span class="cf" style="color: #003B4F;">if</span> c <span class="op" style="color: #5E5E5E;">==</span> <span class="dv" style="color: #AD0000;">0</span> : axs[c].set_title(<span class="ss" style="color: #20794D;">f"A dog wearing a white hat"</span>)</span>
+<span id="cb3-11">    <span class="cf" style="color: #003B4F;">else</span>: axs[c].set_title(<span class="ss" style="color: #20794D;">f"Neg prompt - white hat"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<figcaption align="center">
+Fig. 4: Visualization of negative prompting. Left SD generated with prompt “A dog wearing a white hat” and on right the same caption with negative prompt of “White hat”
+</figcaption>
+<p><br>As we can see it can be really handy feature to fine-tune the image to your liking. You can also use it to generate pretty realistic face by being really descriptive as this <a href="https://www.reddit.com/r/StableDiffusion/comments/yqnh2c/closeup_photo_of_a_face_just_txt2img_and_lsdr/">reddit post explains</a>. Let’s try it -</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T06:03:45.203757Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T06:03:39.634497Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">prompt <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">'Close-up photography of the face of a 30 years old man with brown eyes, (by Alyssa Monks:1.1), by Joseph Lorusso, by Lilia Alvarado, beautiful lighting, sharp focus, 8k, high res, (pores:0.1), (sweaty:0.8), Masterpiece, Nikon Z9, Award - winning photograph'</span>]</span>
+<span id="cb4-2">neg_prompt <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">'lowres, signs, memes, labels, text, food, text, error, mutant, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, made by children, caricature, ugly, boring, sketch, lacklustre, repetitive, cropped, (long neck), facebook, youtube, body horror, out of frame, mutilated, tiled, frame, border, porcelain skin, doll like, doll'</span>]</span>
+<span id="cb4-3">images <span class="op" style="color: #5E5E5E;">=</span> prompt_2_img(prompts <span class="op" style="color: #5E5E5E;">=</span> prompt, neg_prompts<span class="op" style="color: #5E5E5E;">=</span>neg_prompt, steps<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">50</span>, save_int<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>)</span>
+<span id="cb4-4">images[<span class="dv" style="color: #AD0000;">0</span>]</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"36ff5fbfbbcf49da87f34afde915d8a0","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<p><img src="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<figcaption align="center">
+Fig. 5: An image generated using negative prompting.
+</figcaption>
+<p><br> Pretty neat! I hope this gives you some ideas on how to get going with your own variations of stable diffusion. Now lets look at another variation of Stable diffusion.</p>
+</section>
+</section>
+<section id="variation-2-image-to-image-pipeline" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="variation-2-image-to-image-pipeline"><span class="header-section-number">2</span> Variation 2: Image to Image pipeline</h2>
+<section id="what-is-image-to-image-pipeline" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="what-is-image-to-image-pipeline"><span class="header-section-number">2.1</span> What is image to image pipeline?</h3>
+<p>As seen above, <code>prompt_2_img</code> functions start generating an image from a random gaussian noise, but what if we feed an initial seed image to guide the diffusion process. This is exactly how image 2 image pipeline works. Instead of purely relying on text conditioning for output image, we can use a initial seed image mix it with some noise (can be guided by a <code>strength</code> parameter) and then run the diffusion loop.</p>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/img2img_example.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 2: Image to image pipeline example.
+</figcaption>
+</figure>
+</section>
+<section id="understanding-image-to-image-prompting-through-code" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="understanding-image-to-image-prompting-through-code"><span class="header-section-number">2.2</span> Understanding image to image prompting through code</h3>
+<p>Now we are going to change the <code>prompt_2_img</code> function defined above. We will introduce two more parameter to our <code>prompt_2_img_i2i</code> function - <br> 1. <code>init_img</code> : Which is going to be the <code>Image</code> object containing the seed image <br> 2. <code>strength</code>: This parameter will take value b/w 0 and 1. Higher the value more the final image is going to look similar to the seed image.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T07:14:13.900628Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T07:14:13.895762Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="kw" style="color: #003B4F;">def</span> prompt_2_img_i2i(prompts, init_img, neg_prompts<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>, g<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">7.5</span>, seed<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">100</span>, strength <span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.8</span>, steps<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">50</span>, dim<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">512</span>, save_int<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>):</span>
+<span id="cb5-2">    <span class="co" style="color: #5E5E5E;">"""</span></span>
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;">    Diffusion process to convert prompt to image</span></span>
+<span id="cb5-4"><span class="co" style="color: #5E5E5E;">    """</span></span>
+<span id="cb5-5">    <span class="co" style="color: #5E5E5E;"># Converting textual prompts to embedding</span></span>
+<span id="cb5-6">    text <span class="op" style="color: #5E5E5E;">=</span> text_enc(prompt) </span>
+<span id="cb5-7">    </span>
+<span id="cb5-8">    <span class="co" style="color: #5E5E5E;"># Adding an unconditional prompt , helps in the generation process</span></span>
+<span id="cb5-9">    <span class="cf" style="color: #003B4F;">if</span> <span class="kw" style="color: #003B4F;">not</span> neg_prompts: uncond <span class="op" style="color: #5E5E5E;">=</span>  text_enc([<span class="st" style="color: #20794D;">""</span>], text.shape[<span class="dv" style="color: #AD0000;">1</span>])</span>
+<span id="cb5-10">    <span class="cf" style="color: #003B4F;">else</span>: uncond <span class="op" style="color: #5E5E5E;">=</span>  text_enc(neg_prompt, text.shape[<span class="dv" style="color: #AD0000;">1</span>])</span>
+<span id="cb5-11">    emb <span class="op" style="color: #5E5E5E;">=</span> torch.cat([uncond, text])</span>
+<span id="cb5-12">    </span>
+<span id="cb5-13">    <span class="co" style="color: #5E5E5E;"># Setting the seed</span></span>
+<span id="cb5-14">    <span class="cf" style="color: #003B4F;">if</span> seed: torch.manual_seed(seed)</span>
+<span id="cb5-15">    </span>
+<span id="cb5-16">    <span class="co" style="color: #5E5E5E;"># Setting number of steps in scheduler</span></span>
+<span id="cb5-17">    scheduler.set_timesteps(steps)</span>
+<span id="cb5-18">    </span>
+<span id="cb5-19">    <span class="co" style="color: #5E5E5E;"># Convert the seed image to latent</span></span>
+<span id="cb5-20">    init_latents <span class="op" style="color: #5E5E5E;">=</span> pil_to_latents(init_img)</span>
+<span id="cb5-21">    </span>
+<span id="cb5-22">    <span class="co" style="color: #5E5E5E;"># Figuring initial time step based on strength</span></span>
+<span id="cb5-23">    init_timestep <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">int</span>(steps <span class="op" style="color: #5E5E5E;">*</span> strength) </span>
+<span id="cb5-24">    timesteps <span class="op" style="color: #5E5E5E;">=</span> scheduler.timesteps[<span class="op" style="color: #5E5E5E;">-</span>init_timestep]</span>
+<span id="cb5-25">    timesteps <span class="op" style="color: #5E5E5E;">=</span> torch.tensor([timesteps], device<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"cuda"</span>)</span>
+<span id="cb5-26">    </span>
+<span id="cb5-27">    <span class="co" style="color: #5E5E5E;"># Adding noise to the latents </span></span>
+<span id="cb5-28">    noise <span class="op" style="color: #5E5E5E;">=</span> torch.randn(init_latents.shape, generator<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>, device<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"cuda"</span>, dtype<span class="op" style="color: #5E5E5E;">=</span>init_latents.dtype)</span>
+<span id="cb5-29">    init_latents <span class="op" style="color: #5E5E5E;">=</span> scheduler.add_noise(init_latents, noise, timesteps)</span>
+<span id="cb5-30">    latents <span class="op" style="color: #5E5E5E;">=</span> init_latents</span>
+<span id="cb5-31">    </span>
+<span id="cb5-32">    <span class="co" style="color: #5E5E5E;"># Computing the timestep to start the diffusion loop</span></span>
+<span id="cb5-33">    t_start <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">max</span>(steps <span class="op" style="color: #5E5E5E;">-</span> init_timestep, <span class="dv" style="color: #AD0000;">0</span>)</span>
+<span id="cb5-34">    timesteps <span class="op" style="color: #5E5E5E;">=</span> scheduler.timesteps[t_start:].to(<span class="st" style="color: #20794D;">"cuda"</span>)</span>
+<span id="cb5-35">    </span>
+<span id="cb5-36">    <span class="co" style="color: #5E5E5E;"># Iterating through defined steps</span></span>
+<span id="cb5-37">    <span class="cf" style="color: #003B4F;">for</span> i,ts <span class="kw" style="color: #003B4F;">in</span> <span class="bu" style="color: null;">enumerate</span>(tqdm(timesteps)):</span>
+<span id="cb5-38">        <span class="co" style="color: #5E5E5E;"># We need to scale the i/p latents to match the variance</span></span>
+<span id="cb5-39">        inp <span class="op" style="color: #5E5E5E;">=</span> scheduler.scale_model_input(torch.cat([latents] <span class="op" style="color: #5E5E5E;">*</span> <span class="dv" style="color: #AD0000;">2</span>), ts)</span>
+<span id="cb5-40">        </span>
+<span id="cb5-41">        <span class="co" style="color: #5E5E5E;"># Predicting noise residual using U-Net</span></span>
+<span id="cb5-42">        <span class="cf" style="color: #003B4F;">with</span> torch.no_grad(): u,t <span class="op" style="color: #5E5E5E;">=</span> unet(inp, ts, encoder_hidden_states<span class="op" style="color: #5E5E5E;">=</span>emb).sample.chunk(<span class="dv" style="color: #AD0000;">2</span>)</span>
+<span id="cb5-43">            </span>
+<span id="cb5-44">        <span class="co" style="color: #5E5E5E;"># Performing Guidance</span></span>
+<span id="cb5-45">        pred <span class="op" style="color: #5E5E5E;">=</span> u <span class="op" style="color: #5E5E5E;">+</span> g<span class="op" style="color: #5E5E5E;">*</span>(t<span class="op" style="color: #5E5E5E;">-</span>u)</span>
+<span id="cb5-46">        </span>
+<span id="cb5-47">        <span class="co" style="color: #5E5E5E;"># Conditioning  the latents</span></span>
+<span id="cb5-48">        latents <span class="op" style="color: #5E5E5E;">=</span> scheduler.step(pred, ts, latents).prev_sample</span>
+<span id="cb5-49">        </span>
+<span id="cb5-50">        <span class="co" style="color: #5E5E5E;"># Saving intermediate images</span></span>
+<span id="cb5-51">        <span class="cf" style="color: #003B4F;">if</span> save_int: </span>
+<span id="cb5-52">            <span class="cf" style="color: #003B4F;">if</span> <span class="kw" style="color: #003B4F;">not</span> os.path.exists(<span class="ss" style="color: #20794D;">f'./steps'</span>):</span>
+<span id="cb5-53">                os.mkdir(<span class="ss" style="color: #20794D;">f'./steps'</span>)</span>
+<span id="cb5-54">            latents_to_pil(latents)[<span class="dv" style="color: #AD0000;">0</span>].save(<span class="ss" style="color: #20794D;">f'steps/</span><span class="sc" style="color: #5E5E5E;">{</span>i<span class="sc" style="color: #5E5E5E;">:04}</span><span class="ss" style="color: #20794D;">.jpeg'</span>)</span>
+<span id="cb5-55">            </span>
+<span id="cb5-56">    <span class="co" style="color: #5E5E5E;"># Returning the latent representation to output an image of 3x512x512</span></span>
+<span id="cb5-57">    <span class="cf" style="color: #003B4F;">return</span> latents_to_pil(latents)</span></code></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T07:11:01.841976Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T07:11:01.819243Z&quot;}" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">p <span class="op" style="color: #5E5E5E;">=</span> FastDownload().download(<span class="st" style="color: #20794D;">'https://s3.amazonaws.com/moonup/production/uploads/1664665907257-noauth.png'</span>)</span>
+<span id="cb6-2">image <span class="op" style="color: #5E5E5E;">=</span> Image.<span class="bu" style="color: null;">open</span>(p).convert(<span class="st" style="color: #20794D;">'RGB'</span>).resize((<span class="dv" style="color: #AD0000;">512</span>,<span class="dv" style="color: #AD0000;">512</span>))</span>
+<span id="cb6-3">image</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<p><img src="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T07:15:11.133538Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T07:14:18.123519Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">prompt <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"Wolf howling at the moon, photorealistic 4K"</span>]</span>
+<span id="cb7-2">images <span class="op" style="color: #5E5E5E;">=</span> prompt_2_img_i2i(prompts <span class="op" style="color: #5E5E5E;">=</span> prompt, init_img <span class="op" style="color: #5E5E5E;">=</span> image)</span>
+<span id="cb7-3">images[<span class="dv" style="color: #AD0000;">0</span>]</span></code></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"b34f6f5d0f05474da36a5735faf630c2","version_major":2,"version_minor":0}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<p><img src="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">3</span> Conclusion</h2>
+<p>I hope this gives a good overview and breaks the code to the bare minimum so that we can understand each component. Now that we have the minimum code implemented, in the next post we will see make some tweaks to the <code>mk_img</code> function to add additional functionality i.e., img2img pipeline and negative prompt.</p>
+<p>I hope you enjoyed reading it, and feel free to use my code and try it out for generating your images. Also, if there is any feedback on the code or just the blog post, feel free to reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a> or email me at aayushmnit@gmail.com.</p>
+</section>
+<section id="references" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="references"><span class="header-section-number">4</span> References</h2>
+<ul>
+<li><a href="https://www.fast.ai/posts/part2-2022-preview.html">Fast.ai course - 1st Two Lessons of From Deep Learning Foundations to Stable Diffusion</a></li>
+<li><a href="https://huggingface.co/blog/stable_diffusion">Stable Diffusion with 🧨 Diffusers</a></li>
+<li><a href="https://bipinkrishnan.github.io/posts/getting-started-in-the-world-of-stable-diffusion/">Getting Started in the World of Stable Diffusion</a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <category>Stable Diffusion</category>
+  <guid>https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html</guid>
+  <pubDate>Thu, 11 Nov 1999 08:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/diverging_roads.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 </channel>
 </rss>
