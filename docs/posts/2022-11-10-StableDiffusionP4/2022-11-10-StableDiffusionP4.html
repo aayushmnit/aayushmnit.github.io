@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Aayush Agrawal">
-<meta name="dcterms.date" content="1999-11-11">
+<meta name="dcterms.date" content="2022-11-11">
 
 <title>Aayush Agrawal - Stable diffusion using 🤗 Hugging Face - Variations of Stable Diffusion</title>
 <style>
@@ -142,13 +142,13 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Aayush Agrawal - Stable diffusion using 🤗 Hugging Face - Variations of Stable Diffusion">
-<meta property="og:description" content="This is my third post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here -  1. Part 1 - Stable diffusion using 🤗 Hugging Face - Introduction.  2.">
+<meta property="og:description" content="This is my fourth post of the Stable diffusion series, if you haven’t checked out the previous ones, you can read it here -  1. Part 1 - Stable diffusion using 🤗 Hugging Face - Introduction.  2.">
 <meta property="og:image" content="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/diverging_roads.png">
 <meta property="og:site-name" content="Aayush Agrawal">
 <meta property="og:image:height" content="512">
 <meta property="og:image:width" content="512">
 <meta name="twitter:title" content="Aayush Agrawal - Stable diffusion using 🤗 Hugging Face - Variations of Stable Diffusion">
-<meta name="twitter:description" content="This is my third post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here -  1. Part 1 - Stable diffusion using 🤗 Hugging Face - Introduction.  2.">
+<meta name="twitter:description" content="This is my fourth post of the Stable diffusion series, if you haven’t checked out the previous ones, you can read it here -  1. Part 1 - Stable diffusion using 🤗 Hugging Face - Introduction.  2.">
 <meta name="twitter:image" content="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/diverging_roads.png">
 <meta name="twitter:creator" content="@aayushmnit">
 <meta name="twitter:card" content="summary_large_image">
@@ -241,7 +241,7 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
   </ul></li>
   <li><a href="#variation-2-image-to-image-pipeline" id="toc-variation-2-image-to-image-pipeline" class="nav-link" data-scroll-target="#variation-2-image-to-image-pipeline"><span class="toc-section-number">2</span>  Variation 2: Image to Image pipeline</a>
   <ul class="collapse">
-  <li><a href="#what-is-image-to-image-pipeline" id="toc-what-is-image-to-image-pipeline" class="nav-link" data-scroll-target="#what-is-image-to-image-pipeline"><span class="toc-section-number">2.1</span>  What is image to image pipeline?</a></li>
+  <li><a href="#what-is-an-image-to-image-pipeline" id="toc-what-is-an-image-to-image-pipeline" class="nav-link" data-scroll-target="#what-is-an-image-to-image-pipeline"><span class="toc-section-number">2.1</span>  What is an image to image pipeline?</a></li>
   <li><a href="#understanding-image-to-image-prompting-through-code" id="toc-understanding-image-to-image-prompting-through-code" class="nav-link" data-scroll-target="#understanding-image-to-image-prompting-through-code"><span class="toc-section-number">2.2</span>  Understanding image to image prompting through code</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="toc-section-number">3</span>  Conclusion</a></li>
@@ -274,7 +274,7 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 11, 1999</p>
+      <p class="date">November 11, 2022</p>
     </div>
   </div>
   
@@ -285,10 +285,10 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 </header>
 
 <blockquote class="blockquote">
-<p>An introduction to the diffusion process using 🤗 <a href="https://github.com/huggingface/diffusers">hugging face diffusers library</a>.</p>
+<p>An introduction to negative prompting and image to image stable diffusion pipeline using 🤗 <a href="https://github.com/huggingface/diffusers">hugging face diffusers library</a>.</p>
 </blockquote>
-<p>This is my third post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Stable diffusion using 🤗 Hugging Face - Introduction</a>. <br> 2. <strong>Part 2</strong> - <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">Stable diffusion using 🤗 Hugging Face - Looking under the hood</a>. <br> 3. <strong>Part 3</strong> - <a href="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">Stable diffusion using 🤗 Hugging Face - Putting everything together</a></p>
-<p>In previous posts, I went over all key components of Stable Diffusion and how to get a prompt to image pipeline working. In this post, I will show how to edit the prompt to image function to add additional functionality to our Stable diffusion pipeline i.e.&nbsp;<code>Negative prompting</code> and <code>Imgage to Image</code> pipeline. Hopefully this will provide enough motivation to play around this function and doing your own research.</p>
+<p>This is my fourth post of the Stable diffusion series, if you haven’t checked out the previous ones, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Stable diffusion using 🤗 Hugging Face - Introduction</a>. <br> 2. <strong>Part 2</strong> - <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">Stable diffusion using 🤗 Hugging Face - Looking under the hood</a>. <br> 3. <strong>Part 3</strong> - <a href="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">Stable diffusion using 🤗 Hugging Face - Putting everything together</a></p>
+<p>In previous posts, I went over all the key components of Stable Diffusion and how to get a <code>prompt to image</code> pipeline working. In this post, I will show how to edit the <code>prompt to image</code> function to add additional functionality to our Stable diffusion pipeline i.e., <code>Negative prompting</code> and <code>Image to Image</code> pipeline. Hopefully, this will provide enough motivation to play around with this function and conduct your research.</p>
 <figure align="center" class="figure">
 <img src="./diverging_roads.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
@@ -299,7 +299,7 @@ Fig. 1: A Stable diffusion generated image using prompt - <br>“A road divergin
 <h2 data-number="1" class="anchored" data-anchor-id="variation-1-negative-prompt"><span class="header-section-number">1</span> Variation 1: Negative Prompt</h2>
 <section id="what-is-negative-prompting" class="level3" data-number="1.1">
 <h3 data-number="1.1" class="anchored" data-anchor-id="what-is-negative-prompting"><span class="header-section-number">1.1</span> What is negative prompting?</h3>
-<p>A negative prompt is a additional capability we can add to our model to tell the stable diffusion model what we doesn’t want to see in the generated image. This feature is extremely popular to remove anything a user doesn’t want to see from the original image.</p>
+<p>A negative prompt is an additional capability we can add to our model to tell the stable diffusion model what we don’t want to see in the generated image. This feature is popular to remove anything a user doesn’t want to see from the original generated image.</p>
 <figure align="center" class="figure">
 <img src="./negative_prompt_example.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
@@ -310,7 +310,7 @@ Fig. 2: Negative prompt example
 <section id="understanding-negative-prompting-through-code" class="level3" data-number="1.2">
 <h3 data-number="1.2" class="anchored" data-anchor-id="understanding-negative-prompting-through-code"><span class="header-section-number">1.2</span> Understanding negative prompting through code</h3>
 <p>Let’s start by importing the required libraries and helper functions. All of this was already used and explained in the previous <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">part 2</a> and <a href="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">part 3</a> of the series.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T07:10:53.904236Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T07:10:42.967922Z&quot;}" data-code_folding="[]" data-execution_count="5">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-11T05:06:40.594563Z&quot;,&quot;start_time&quot;:&quot;2022-11-11T05:06:23.897768Z&quot;}" data-code_folding="[]" data-execution_count="1">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, logging</span>
@@ -394,15 +394,15 @@ Fig. 2: Negative prompt example
 <span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text_encoder(inp.input_ids.to(<span class="st">"cuda"</span>))[<span class="dv">0</span>].half()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Now we are going to change the <code>prompt_2_img</code> function from part 3 by passing an additional function <code>neg_prompts</code>. The way negative prompt works is by using user-specified text instead of empty string for <code>uncond</code> when doing sampling.</p>
+<p>Now we are going to change the <code>prompt_2_img</code> function from part 3 by passing an additional function <code>neg_prompts</code>. The way negative prompt works is by using user-specified text instead of an empty string for unconditional embedding(<code>uncond</code>) when doing sampling.</p>
 <figure align="center" class="figure">
 <img src="./neg_prompt_code.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 3: Negative prompt code change
 </figcaption>
 </figure>
-<p>So let’s make this change and update out <code>prompt_2_img</code> function.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T05:25:05.237707Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T05:25:05.233092Z&quot;}" data-code_folding="[]" data-execution_count="2">
+<p>So let’s make this change and update our <code>prompt_2_img</code> function.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-11T05:06:40.613951Z&quot;,&quot;start_time&quot;:&quot;2022-11-11T05:06:40.604201Z&quot;}" data-code_folding="[]" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prompt_2_img(prompts, neg_prompts<span class="op">=</span><span class="va">None</span>, g<span class="op">=</span><span class="fl">7.5</span>, seed<span class="op">=</span><span class="dv">100</span>, steps<span class="op">=</span><span class="dv">70</span>, dim<span class="op">=</span><span class="dv">512</span>, save_int<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Diffusion process to convert prompt to image</span></span>
@@ -415,46 +415,43 @@ Fig. 3: Negative prompt code change
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text_enc(prompts) </span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adding an unconditional prompt , helps in the generation process</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> neg_prompts:</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        uncond <span class="op">=</span>  text_enc([<span class="st">""</span>] <span class="op">*</span> bs, text.shape[<span class="dv">1</span>])</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        uncond <span class="op">=</span>  text_enc(neg_prompts, text.shape[<span class="dv">1</span>])</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    emb <span class="op">=</span> torch.cat([uncond, text])</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setting the seed</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> seed: torch.manual_seed(seed)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initiating random noise</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    latents <span class="op">=</span> torch.randn((bs, unet.in_channels, dim<span class="op">//</span><span class="dv">8</span>, dim<span class="op">//</span><span class="dv">8</span>))</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setting number of steps in scheduler</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    scheduler.set_timesteps(steps)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adding noise to the latents </span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    latents <span class="op">=</span> latents.to(<span class="st">"cuda"</span>).half() <span class="op">*</span> scheduler.init_noise_sigma</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterating through defined steps</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i,ts <span class="kw">in</span> <span class="bu">enumerate</span>(tqdm(scheduler.timesteps)):</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We need to scale the i/p latents to match the variance</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        inp <span class="op">=</span> scheduler.scale_model_input(torch.cat([latents] <span class="op">*</span> <span class="dv">2</span>), ts)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Predicting noise residual using U-Net</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad(): u,t <span class="op">=</span> unet(inp, ts, encoder_hidden_states<span class="op">=</span>emb).sample.chunk(<span class="dv">2</span>)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Performing Guidance</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> u <span class="op">+</span> g<span class="op">*</span>(t<span class="op">-</span>u)</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Conditioning  the latents</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        latents <span class="op">=</span> scheduler.step(pred, ts, latents).prev_sample</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Saving intermediate images</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> save_int: </span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> os.path.exists(<span class="ss">f'./steps'</span>):</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>                os.mkdir(<span class="ss">f'./steps'</span>)</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>            latents_to_pil(latents)[<span class="dv">0</span>].save(<span class="ss">f'steps/</span><span class="sc">{</span>i<span class="sc">:04}</span><span class="ss">.jpeg'</span>)</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returning the latent representation to output an image of 3x512x512</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> latents_to_pil(latents)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> neg_prompts: uncond <span class="op">=</span>  text_enc([<span class="st">""</span>] <span class="op">*</span> bs, text.shape[<span class="dv">1</span>])</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>: uncond <span class="op">=</span>  text_enc(neg_prompts, text.shape[<span class="dv">1</span>])</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    emb <span class="op">=</span> torch.cat([uncond, text])</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setting the seed</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> seed: torch.manual_seed(seed)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initiating random noise</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    latents <span class="op">=</span> torch.randn((bs, unet.in_channels, dim<span class="op">//</span><span class="dv">8</span>, dim<span class="op">//</span><span class="dv">8</span>))</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setting number of steps in scheduler</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    scheduler.set_timesteps(steps)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adding noise to the latents </span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    latents <span class="op">=</span> latents.to(<span class="st">"cuda"</span>).half() <span class="op">*</span> scheduler.init_noise_sigma</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterating through defined steps</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i,ts <span class="kw">in</span> <span class="bu">enumerate</span>(tqdm(scheduler.timesteps)):</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We need to scale the i/p latents to match the variance</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        inp <span class="op">=</span> scheduler.scale_model_input(torch.cat([latents] <span class="op">*</span> <span class="dv">2</span>), ts)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Predicting noise residual using U-Net</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad(): u,t <span class="op">=</span> unet(inp, ts, encoder_hidden_states<span class="op">=</span>emb).sample.chunk(<span class="dv">2</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Performing Guidance</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> u <span class="op">+</span> g<span class="op">*</span>(t<span class="op">-</span>u)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Conditioning  the latents</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        latents <span class="op">=</span> scheduler.step(pred, ts, latents).prev_sample</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Saving intermediate images</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> save_int: </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> os.path.exists(<span class="ss">f'./steps'</span>): os.mkdir(<span class="ss">f'./steps'</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>            latents_to_pil(latents)[<span class="dv">0</span>].save(<span class="ss">f'steps/</span><span class="sc">{</span>i<span class="sc">:04}</span><span class="ss">.jpeg'</span>)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returning the latent representation to output an image of 3x512x512</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> latents_to_pil(latents)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s see if the function works as intended.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T05:08:35.834365Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T05:08:35.556766Z&quot;}" data-execution_count="29">
@@ -476,7 +473,7 @@ Fig. 3: Negative prompt code change
 <figcaption align="center">
 Fig. 4: Visualization of negative prompting. Left SD generated with prompt “A dog wearing a white hat” and on right the same caption with negative prompt of “White hat”
 </figcaption>
-<p><br>As we can see it can be really handy feature to fine-tune the image to your liking. You can also use it to generate pretty realistic face by being really descriptive as this <a href="https://www.reddit.com/r/StableDiffusion/comments/yqnh2c/closeup_photo_of_a_face_just_txt2img_and_lsdr/">reddit post explains</a>. Let’s try it -</p>
+<p><br>As we can see it can be a really handy feature to fine-tune the image to your liking. You can also use it to generate a pretty realistic face by being really descriptive as this <a href="https://www.reddit.com/r/StableDiffusion/comments/yqnh2c/closeup_photo_of_a_face_just_txt2img_and_lsdr/">Reddit post</a>. Let’s try it -</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T06:03:45.203757Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T06:03:39.634497Z&quot;}" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> [<span class="st">'Close-up photography of the face of a 30 years old man with brown eyes, (by Alyssa Monks:1.1), by Joseph Lorusso, by Lilia Alvarado, beautiful lighting, sharp focus, 8k, high res, (pores:0.1), (sweaty:0.8), Masterpiece, Nikon Z9, Award - winning photograph'</span>]</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>neg_prompt <span class="op">=</span> [<span class="st">'lowres, signs, memes, labels, text, food, text, error, mutant, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, made by children, caricature, ugly, boring, sketch, lacklustre, repetitive, cropped, (long neck), facebook, youtube, body horror, out of frame, mutilated, tiled, frame, border, porcelain skin, doll like, doll'</span>]</span>
@@ -494,25 +491,25 @@ Fig. 4: Visualization of negative prompting. Left SD generated with prompt “A 
 <figcaption align="center">
 Fig. 5: An image generated using negative prompting.
 </figcaption>
-<p><br> Pretty neat! I hope this gives you some ideas on how to get going with your own variations of stable diffusion. Now lets look at another variation of Stable diffusion.</p>
+<p><br> Pretty neat! I hope this gives you some ideas on how to get going with your own variations of stable diffusion. Now let’s look at another variation of Stable diffusion.</p>
 </section>
 </section>
 <section id="variation-2-image-to-image-pipeline" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="variation-2-image-to-image-pipeline"><span class="header-section-number">2</span> Variation 2: Image to Image pipeline</h2>
-<section id="what-is-image-to-image-pipeline" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="what-is-image-to-image-pipeline"><span class="header-section-number">2.1</span> What is image to image pipeline?</h3>
-<p>As seen above, <code>prompt_2_img</code> functions start generating an image from a random gaussian noise, but what if we feed an initial seed image to guide the diffusion process. This is exactly how image 2 image pipeline works. Instead of purely relying on text conditioning for output image, we can use a initial seed image mix it with some noise (can be guided by a <code>strength</code> parameter) and then run the diffusion loop.</p>
+<section id="what-is-an-image-to-image-pipeline" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="what-is-an-image-to-image-pipeline"><span class="header-section-number">2.1</span> What is an image to image pipeline?</h3>
+<p>As seen above, <code>prompt_2_img</code> functions start generating an image from random gaussian noise, but what if we feed an initial seed image to guide the diffusion process? This is exactly how the image to image pipeline works. Instead of purely relying on text conditioning for the output image, we can use an initial seed image mix it with some noise (which can be guided by a <code>strength</code> parameter), and then run the diffusion loop.</p>
 <figure align="center" class="figure">
 <img src="./img2img_example.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig. 2: Image to image pipeline example.
+Fig. 6: Image to image pipeline example.
 </figcaption>
 </figure>
 </section>
 <section id="understanding-image-to-image-prompting-through-code" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="understanding-image-to-image-prompting-through-code"><span class="header-section-number">2.2</span> Understanding image to image prompting through code</h3>
-<p>Now we are going to change the <code>prompt_2_img</code> function defined above. We will introduce two more parameter to our <code>prompt_2_img_i2i</code> function - <br> 1. <code>init_img</code> : Which is going to be the <code>Image</code> object containing the seed image <br> 2. <code>strength</code>: This parameter will take value b/w 0 and 1. Higher the value more the final image is going to look similar to the seed image.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T07:14:13.900628Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T07:14:13.895762Z&quot;}" data-execution_count="13">
+<p>Now we are going to change the <code>prompt_2_img</code> function defined above. We will introduce two more parameters to our <code>prompt_2_img_i2i</code> function - <br> 1. <code>init_img</code>: Which is going to be the <code>Image</code> object containing the seed image <br> 2. <code>strength</code>: This parameter will take a value between 0 and 1. The higher the value less the final image is going to look similar to the seed image.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-11T05:16:51.093922Z&quot;,&quot;start_time&quot;:&quot;2022-11-11T05:16:51.088844Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prompt_2_img_i2i(prompts, init_img, neg_prompts<span class="op">=</span><span class="va">None</span>, g<span class="op">=</span><span class="fl">7.5</span>, seed<span class="op">=</span><span class="dv">100</span>, strength <span class="op">=</span><span class="fl">0.8</span>, steps<span class="op">=</span><span class="dv">50</span>, dim<span class="op">=</span><span class="dv">512</span>, save_int<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Diffusion process to convert prompt to image</span></span>
@@ -571,32 +568,50 @@ Fig. 2: Image to image pipeline example.
 <span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returning the latent representation to output an image of 3x512x512</span></span>
 <span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> latents_to_pil(latents)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T07:11:01.841976Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T07:11:01.819243Z&quot;}" data-execution_count="7">
+<p>Instead of using random noise, you will notice we use the <code>strength</code> parameter to figure out how much noise to add and also the number of steps to run the diffusion loop for. The amount of noise is calculated by multiplying strength(default = 0.8) with steps (default = 50) which is the 10th (50 - 50 * 0.8) step and running the diffusion loop for 40(50*0.8) remaining steps. Let’s load an initial image and pass it through the <code>prompt_2_img_i2i</code> function.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-11T05:17:46.766820Z&quot;,&quot;start_time&quot;:&quot;2022-11-11T05:16:52.000280Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> FastDownload().download(<span class="st">'https://s3.amazonaws.com/moonup/production/uploads/1664665907257-noauth.png'</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>image <span class="op">=</span> Image.<span class="bu">open</span>(p).convert(<span class="st">'RGB'</span>).resize((<span class="dv">512</span>,<span class="dv">512</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>image</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<p><img src="2022-11-10-StableDiffusionP4_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-10T07:15:11.133538Z&quot;,&quot;start_time&quot;:&quot;2022-11-10T07:14:18.123519Z&quot;}" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> [<span class="st">"Wolf howling at the moon, photorealistic 4K"</span>]</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> prompt_2_img_i2i(prompts <span class="op">=</span> prompt, init_img <span class="op">=</span> image)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>images[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> [<span class="st">"Wolf howling at the moon, photorealistic 4K"</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> prompt_2_img_i2i(prompts <span class="op">=</span> prompt, init_img <span class="op">=</span> image)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"b34f6f5d0f05474da36a5735faf630c2","version_major":2,"version_minor":0}
+{"model_id":"f27386f3fa1d46c9afb8905ca6347f49","version_major":2,"version_minor":0}
 </script>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="14">
-<p><img src="2022-11-10-StableDiffusionP4_files/figure-html/cell-8-output-2.png" class="img-fluid"></p>
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/aayush/miniconda3/envs/fastai/lib/python3.9/site-packages/diffusers/schedulers/scheduling_lms_discrete.py:146: IntegrationWarning: The maximum number of subdivisions (50) has been achieved.
+  If increasing the limit yields no improvement it is advised to analyze 
+  the integrand in order to determine the difficulties.  If the position of a 
+  local difficulty can be determined (singularity, discontinuity) one will 
+  probably gain from splitting up the interval and calling the integrator 
+  on the subranges.  Perhaps a special-purpose integrator should be used.
+  integrated_coeff = integrate.quad(lms_derivative, self.sigmas[t], self.sigmas[t + 1], epsrel=1e-4)[0]</code></pre>
 </div>
 </div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-11T05:22:29.514236Z&quot;,&quot;start_time&quot;:&quot;2022-11-11T05:22:29.334124Z&quot;}" data-execution_count="10">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Plotting side by side</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c, img <span class="kw">in</span> <span class="bu">enumerate</span>([image, images[<span class="dv">0</span>]]): </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    axs[c].imshow(img)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> c <span class="op">==</span> <span class="dv">0</span> : axs[c].set_title(<span class="ss">f"Initial image"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>: axs[c].set_title(<span class="ss">f"Image 2 Image output"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-10-StableDiffusionP4_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<figcaption align="center">
+Fig. 7: Visualization of image to image pipeline. Left is initial image passed in img2img pipeline and right is the output of the img2img pipeline.
+</figcaption>
+<p><br>We can see our <code>prompt_2_img_i2i</code> function creates a pretty epic image from the initial sketch provided.</p>
 </section>
 </section>
 <section id="conclusion" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">3</span> Conclusion</h2>
-<p>I hope this gives a good overview and breaks the code to the bare minimum so that we can understand each component. Now that we have the minimum code implemented, in the next post we will see make some tweaks to the <code>mk_img</code> function to add additional functionality i.e., img2img pipeline and negative prompt.</p>
+<p>I hope this gives a good overview of how to tweak the <code>prompt_2_img</code> function to add additional capabilities to your stable diffusion loop. The understanding of this lower-level function is useful for trying your own idea to improve stable diffusion or implement new papers which I might cover in my next post.</p>
 <p>I hope you enjoyed reading it, and feel free to use my code and try it out for generating your images. Also, if there is any feedback on the code or just the blog post, feel free to reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a> or email me at aayushmnit@gmail.com.</p>
 </section>
 <section id="references" class="level2" data-number="4">

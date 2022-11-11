@@ -142,11 +142,11 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="Aayush Agrawal - Stable diffusion using 🤗 Hugging Face - Putting everything together">
-<meta property="og:description" content="This is my third post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here -  1. Part 1 - Stable diffusion using 🤗 Hugging Face - Introduction.  2.">
+<meta property="og:description" content="This is my third post of the Stable diffusion series, if you haven’t checked out the previous ones, you can read it here -  1. Part 1 - Stable diffusion using 🤗 Hugging Face - Introduction.  2.">
 <meta property="og:image" content="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/building-blocks-vector-28.jpg">
 <meta property="og:site-name" content="Aayush Agrawal">
 <meta name="twitter:title" content="Aayush Agrawal - Stable diffusion using 🤗 Hugging Face - Putting everything together">
-<meta name="twitter:description" content="This is my third post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here -  1. Part 1 - Stable diffusion using 🤗 Hugging Face - Introduction.  2.">
+<meta name="twitter:description" content="This is my third post of the Stable diffusion series, if you haven’t checked out the previous ones, you can read it here -  1. Part 1 - Stable diffusion using 🤗 Hugging Face - Introduction.  2.">
 <meta name="twitter:image" content="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/building-blocks-vector-28.jpg">
 <meta name="twitter:creator" content="@aayushmnit">
 <meta name="twitter:card" content="summary_large_image">
@@ -275,9 +275,9 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 <blockquote class="blockquote">
 <p>An introduction to the diffusion process using 🤗 <a href="https://github.com/huggingface/diffusers">hugging face diffusers library</a>.</p>
 </blockquote>
-<p>This is my third post of the Stable diffusion series, if you haven’t checked out the first one, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Stable diffusion using 🤗 Hugging Face - Introduction</a>. <br> 2. <strong>Part 2</strong> - <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">Stable diffusion using 🤗 Hugging Face - Looking under the hood</a>. <br></p>
+<p>This is my third post of the Stable diffusion series, if you haven’t checked out the previous ones, you can read it here - <br> 1. <strong>Part 1</strong> - <a href="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html">Stable diffusion using 🤗 Hugging Face - Introduction</a>. <br> 2. <strong>Part 2</strong> - <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">Stable diffusion using 🤗 Hugging Face - Looking under the hood</a>. <br></p>
 <p>In previous posts, I went over showing how to install 🤗 diffuser library to start generating your own AI images and key components of the stable diffusion pipeline i.e., CLIP text encoder, VAE, and U-Net. In this post, we will try to put these key components together and do a walk-through of the diffusion process which generates the image.</p>
-<figure class="figure">
+<figure align="center" class="figure">
 <img src="./building-blocks-vector-28.jpg" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 1: <a href="https://vectorified.com/building-blocks-vector">Building Blocks Vector</a>
@@ -299,7 +299,7 @@ Note
 <p>You will notice that there is an additional dimension mentioned (1x) in the image like 1x77x768 for text embedding, that is because it represents the batch size of 1.</p>
 </div>
 </div>
-<figure class="figure">
+<figure align="center" class="figure">
 <img src="./diffusion_image.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
 Fig. 2: The diffusion process.
@@ -511,7 +511,7 @@ Fig 3: The de-noisation steps visualization.
 </section>
 <section id="conclusion" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">3</span> Conclusion</h2>
-<p>I hope this gives a good overview and breaks the code to the bare minimum so that we can understand each component. Now that we have the minimum code implemented, in the next post we will see make some tweaks to the <code>mk_img</code> function to add additional functionality i.e., img2img pipeline and negative prompt.</p>
+<p>I hope this gives a good overview and breaks the code to the bare minimum so that we can understand each component. Now that we have the minimum code implemented, in the <a href="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html">next post</a> we will see make some tweaks to the <code>mk_img</code> function to add additional functionality i.e., img2img pipeline and negative prompt.</p>
 <p>I hope you enjoyed reading it, and feel free to use my code and try it out for generating your images. Also, if there is any feedback on the code or just the blog post, feel free to reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a> or email me at aayushmnit@gmail.com.</p>
 </section>
 <section id="references" class="level2" data-number="4">
