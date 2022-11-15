@@ -232,7 +232,7 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
   <ul>
   <li><a href="#what-is-diffedit" id="toc-what-is-diffedit" class="nav-link active" data-scroll-target="#what-is-diffedit"><span class="toc-section-number">1</span>  What is DiffEdit?</a></li>
   <li><a href="#mask-creation-first-step-of-diffedit-process" id="toc-mask-creation-first-step-of-diffedit-process" class="nav-link" data-scroll-target="#mask-creation-first-step-of-diffedit-process"><span class="toc-section-number">2</span>  Mask Creation: First Step of DiffEdit process</a></li>
-  <li><a href="#mask-creation-first-step-of-diffedit-process-1" id="toc-mask-creation-first-step-of-diffedit-process-1" class="nav-link" data-scroll-target="#mask-creation-first-step-of-diffedit-process-1"><span class="toc-section-number">3</span>  Mask Creation: First Step of DiffEdit process</a></li>
+  <li><a href="#masked-diffusion-step-2-and-3-of-diffedit-paper." id="toc-masked-diffusion-step-2-and-3-of-diffedit-paper." class="nav-link" data-scroll-target="#masked-diffusion-step-2-and-3-of-diffedit-paper."><span class="toc-section-number">3</span>  Masked Diffusion: Step 2 and 3 of DiffEdit paper.</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="toc-section-number">4</span>  Conclusion</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/aayushmnit/aayushmnit.github.io/blob/main/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.ipynb" class="toc-action">Edit this page</a></p><p><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -305,7 +305,7 @@ Fig. 3: Three steps of DiffEdit. Credit - <a href="https://arxiv.org/pdf/2210.11
 <p>As I was reading this paper, it seems generating the masking is the most important step and rest is just textual conditioning using diffusion process. The conditioning of an image using mask is a similar idea implemented in <a href="https://github.com/huggingface/diffusers/blob/main/src/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion_inpaint.py">Hugging face In-Paint Pipeline</a>. As suggested by the authors, “there are three steps to <code>DiffEdit</code> process - <br> <strong>Step 1:</strong> Add noise to the input image, and denoise it: once conditioned on the query text, and once conditioned on a reference text (or unconditionally). We derive a mask based on the difference in the denoising results. <br> <strong>Step2:</strong> we encode the input image with DDIM, to estimate the latents corresponding to the input image <br> <strong>Step3:</strong> we perform DDIM decoding conditioned on the text query, using the inferred mask to replace the background with pixel values coming from the encoding process at the corresponding timestep”<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>In next sections we will start implementing these ideas into actual code.</p>
 <p>Let’s start by importing the required libraries and helper functions. All of this was already used and explained in the previous <a href="https://aayushmnit.com/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html">part 2</a> and <a href="https://aayushmnit.com/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">part 3</a> of the stable diffusion series.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T02:28:27.793115Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T02:28:11.452670Z&quot;}" data-code_folding="[]" data-execution_count="1">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T04:42:06.659048Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T04:41:52.971994Z&quot;}" data-code_folding="[]" data-execution_count="1">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch, logging</span>
@@ -390,11 +390,11 @@ Fig. 3: Three steps of DiffEdit. Credit - <a href="https://arxiv.org/pdf/2210.11
 </details>
 </div>
 <p>Let’s also download an image which we will use for the code implementation process.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T02:28:28.031630Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T02:28:27.802908Z&quot;}" data-execution_count="2">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T06:09:36.531703Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T06:09:36.308924Z&quot;}" data-execution_count="189">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> FastDownload().download(<span class="st">'https://images.pexels.com/photos/1996333/pexels-photo-1996333.jpeg?cs=srgb&amp;dl=pexels-helena-lopes-1996333.jpg&amp;fm=jpg&amp;_gl=1*1pc0nw8*_ga*OTk4MTI0MzE4LjE2NjY1NDQwMjE.*_ga_8JE65Q40S6*MTY2Njc1MjIwMC4yLjEuMTY2Njc1MjIwMS4wLjAuMA..'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>init_img <span class="op">=</span> load_image(p)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>init_img</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="189">
 <p><img src="2022-11-17-DiffEdit_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
 </div>
 </div>
@@ -404,12 +404,12 @@ Fig. 3: Three steps of DiffEdit. Credit - <a href="https://arxiv.org/pdf/2210.11
 <figure align="center" class="figure">
 <img src="./step1.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig. 4: Step 1 of the <code>DiffEdit</code> paper.
+Fig. 4: Step 1 from the <code>DiffEdit</code> paper.
 </figcaption>
 </figure>
 <p>There is the more detailed explaination of Step 1 from the paper, here are the key parts mentioned - <br> 1. Denoise image using different text conditioning, one using reference text and other using query text and take differences from the result. The idea is there is more changes in the differed part and not in the background of the image. <br> 2. Repeat this differencing process 10 times and binarize the output by setting a 0.5 default to get the resultant mask. <br></p>
 <p>First, we will try to implement the paper exactly how it’s mentioned. We will modify the <a href="https://aayushmnit.com/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html#variation-2-image-to-image-pipeline">prompt_2_img_i2i</a> function for this task to return latents instead of actually de-noised image.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T02:44:52.081475Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T02:44:52.075991Z&quot;}" data-execution_count="76">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T06:09:40.886240Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T06:09:40.881297Z&quot;}" data-execution_count="190">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prompt_2_img_i2i(prompts, init_img, neg_prompts<span class="op">=</span><span class="va">None</span>, g<span class="op">=</span><span class="fl">7.5</span>, seed<span class="op">=</span><span class="dv">100</span>, strength <span class="op">=</span><span class="fl">0.8</span>, steps<span class="op">=</span><span class="dv">50</span>, dim<span class="op">=</span><span class="dv">512</span>):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Diffusion process to convert prompt to image</span></span>
@@ -463,7 +463,7 @@ Fig. 4: Step 1 of the <code>DiffEdit</code> paper.
 <span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> latents.detach().cpu()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we will make a <code>create_mask</code> function, which will take initial image, reference prompt and query prompt with the number of times we need to repeat the steps. In paper, author suggests that n=10 and strength of 0.5 works well in their experimentation. Hence, default for the function is adjusted to that. <code>create_mask</code> function performs the following steps - <br> 1. Create two denoised version conditioned on reference text and query text and take a difference <br> 2. Repeat this step n times <br> 3. Take an average of these difference and standardize <br> 4. Pick a threshold of 0.5 to binarize and create a mask</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T03:17:04.716880Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T03:16:18.254238Z&quot;}" data-scrolled="true" data-execution_count="138">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T06:10:31.179854Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T06:09:44.468745Z&quot;}" data-scrolled="true" data-execution_count="191">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_mask(init_img, rp, qp, n<span class="op">=</span><span class="dv">10</span>, s<span class="op">=</span><span class="fl">0.5</span>):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Initialize a dictionary to save n iterations</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    diff <span class="op">=</span> {}</span>
@@ -476,11 +476,11 @@ Fig. 4: Step 1 of the <code>DiffEdit</code> paper.
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        diff[idx] <span class="op">=</span> (np.array(orig_noise)<span class="op">-</span>np.array(query_noise))</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Creating a mask placeholder</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> np.zeros_like(diff0[<span class="dv">0</span>])</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> np.zeros_like(diff[<span class="dv">0</span>])</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Taking an average of 10 iterations</span></span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idx <span class="kw">in</span> <span class="bu">range</span>(n):</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">+=</span> diff0[idx] </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">+=</span> diff[idx] </span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> (mask <span class="op">/</span> n)</span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Normalizing and binarizing</span></span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> (mask <span class="op">-</span> mask.<span class="bu">min</span>()) <span class="op">/</span> (mask.<span class="bu">max</span>() <span class="op">-</span> mask.<span class="bu">min</span>()) <span class="op">&gt;</span> <span class="fl">0.5</span></span>
@@ -491,107 +491,107 @@ Fig. 4: Step 1 of the <code>DiffEdit</code> paper.
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> create_mask(init_img<span class="op">=</span>init_img, rp<span class="op">=</span>[<span class="st">"a horse image"</span>], qp<span class="op">=</span>[<span class="st">"a zebra image"</span>], n<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"66670b0e77ae4592bacd092a5fb0bbf0","version_major":2,"version_minor":0}
+{"model_id":"de26d8e84af745099e27765d969427ec","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"cfda7fb3262b4945a610ee5ceca6511f","version_major":2,"version_minor":0}
+{"model_id":"082384649de84020b3c6ecc8a3af5439","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"408bced888b24138a209db0418afd5a8","version_major":2,"version_minor":0}
+{"model_id":"5507597b41244ef78702ded31ff13d5e","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"18d08bad41a148cf8b04b3b62d5c9cd3","version_major":2,"version_minor":0}
+{"model_id":"30f432c2e32b4304b94a3f4096d80591","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"5c4ae719be354f82a04152f9459bfbad","version_major":2,"version_minor":0}
+{"model_id":"bfbef66c2e5541c4a37b72a06da881f9","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"041b0ba933c34da0a18f46b521e3a3b3","version_major":2,"version_minor":0}
+{"model_id":"693d323934ba4ab5a739d4694edd0096","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"ff01bbe9bf2f433892f6a422e146962b","version_major":2,"version_minor":0}
+{"model_id":"e872be00440a4f0cb963c42a9131ca0c","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"573739a73e194e2f92247c87eb9ad46d","version_major":2,"version_minor":0}
+{"model_id":"d91753dd7e7e463091148de837b1f379","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"776100ba20be4fe594fae6658a6ed28e","version_major":2,"version_minor":0}
+{"model_id":"e3c5ed9b154043dfb592185598447f44","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"e3c795337e75497f8b7a598ff7a14331","version_major":2,"version_minor":0}
+{"model_id":"896c4f7e2cc64928afcbab0c94f0e80e","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"be8d26df4fc04043b59298b5e19c9601","version_major":2,"version_minor":0}
+{"model_id":"d49e12c2d09546ea82cbef5eaf8d6b9d","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"ee8b819e1baa4ea59e94ed0082b0c243","version_major":2,"version_minor":0}
+{"model_id":"2f9c9c7619dd4d55b3c302f9d1745c9e","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"826735cd8a0f443ca7844138d4021ae8","version_major":2,"version_minor":0}
+{"model_id":"c96c20cb15ec45a88a5c372e3e018dac","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"486da2ce6d214613b3be26db1be928fe","version_major":2,"version_minor":0}
+{"model_id":"2e979e8aa6bd427f84e4fdd4c5804575","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"4a20d626cc9d4fb4b65d0272ab36dc48","version_major":2,"version_minor":0}
+{"model_id":"08b75e7852aa4dbb8608cf3efa62a4ca","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f7e57c93eb854c08aa29c3c6f2b8a632","version_major":2,"version_minor":0}
+{"model_id":"6c8901a54f124be5b3fc2120d3806541","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"85984072406e46c1bf46de9c1fef8e43","version_major":2,"version_minor":0}
+{"model_id":"47ac2f9cb4f94aa58e1c16578a730d2f","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"4bcb7a62bb384a4d9fc0b47641c6ac61","version_major":2,"version_minor":0}
+{"model_id":"c4ad090d892b49328d512aa9f56570b9","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"c6860a18804c45638ecd9e78f32c8e8c","version_major":2,"version_minor":0}
+{"model_id":"d5a934474b8a47a9a5904a0b0aad659a","version_major":2,"version_minor":0}
 </script>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"1e9d00e661114c0eb092044aba924e95","version_major":2,"version_minor":0}
+{"model_id":"80a73f80ddc5446b8e83b4dc3269fb8a","version_major":2,"version_minor":0}
 </script>
 </div>
 </div>
 <p>Let’s visualize the generated mask over the image.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T04:29:22.748787Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T04:29:22.606776Z&quot;}" data-execution_count="189">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T06:10:31.361005Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T06:10:31.213772Z&quot;}" data-execution_count="192">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.imshow(np.array(init_img), cmap<span class="op">=</span><span class="st">'gray'</span>) <span class="co"># I would add interpolation='none'</span></span>
@@ -601,17 +601,109 @@ Fig. 4: Step 1 of the <code>DiffEdit</code> paper.
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.5</span><span class="op">*</span>(np.array(Image.fromarray(mask<span class="op">*</span><span class="dv">255</span>).resize((<span class="dv">512</span>,<span class="dv">512</span>))) <span class="op">&gt;</span> <span class="dv">0</span>)  </span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="189">
-<pre><code>&lt;matplotlib.image.AxesImage at 0x7fc25c6227c0&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="192">
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7f037194c0d0&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="2022-11-17-DiffEdit_files/figure-html/cell-6-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<p>As we can see it decently covers the horse and generate a good enough mask.</p>
+<figcaption align="center">
+Fig. 5: Masking visualization over our horse image.
+</figcaption>
+<p><br>As we can see it decently covers the horse and generate a good enough mask.</p>
 </section>
-<section id="mask-creation-first-step-of-diffedit-process-1" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="mask-creation-first-step-of-diffedit-process-1"><span class="header-section-number">3</span> Mask Creation: First Step of DiffEdit process</h2>
+<section id="masked-diffusion-step-2-and-3-of-diffedit-paper." class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="masked-diffusion-step-2-and-3-of-diffedit-paper."><span class="header-section-number">3</span> Masked Diffusion: Step 2 and 3 of DiffEdit paper.</h2>
+<figure align="center" class="figure">
+<img src="./step23.png" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+Fig. 6: Step 2 and 3 from the <code>DiffEdit</code> paper.
+</figcaption>
+</figure>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T06:10:31.400209Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T06:10:31.394999Z&quot;}" data-execution_count="193">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prompt_2_img_diffedit(rp, qp, init_img, mask, g<span class="op">=</span><span class="fl">7.5</span>, seed<span class="op">=</span><span class="dv">100</span>, strength <span class="op">=</span><span class="fl">0.5</span>, steps<span class="op">=</span><span class="dv">50</span>, dim<span class="op">=</span><span class="dv">512</span>):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Diffusion process to convert prompt to image</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Converting textual prompts to embedding</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    rtext <span class="op">=</span> text_enc(rp) </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    qtext <span class="op">=</span> text_enc(qp)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adding an unconditional prompt , helps in the generation process</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    uncond <span class="op">=</span>  text_enc([<span class="st">""</span>], rtext.shape[<span class="dv">1</span>])</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    emb <span class="op">=</span> torch.cat([uncond, rtext, qtext])</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setting the seed</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> seed: torch.manual_seed(seed)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setting number of steps in scheduler</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    scheduler.set_timesteps(steps)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert the seed image to latent</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    init_latents <span class="op">=</span> pil_to_latents(init_img)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Figuring initial time step based on strength</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    init_timestep <span class="op">=</span> <span class="bu">int</span>(steps <span class="op">*</span> strength) </span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    timesteps <span class="op">=</span> scheduler.timesteps[<span class="op">-</span>init_timestep]</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    timesteps <span class="op">=</span> torch.tensor([timesteps], device<span class="op">=</span><span class="st">"cuda"</span>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adding noise to the latents </span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    noise <span class="op">=</span> torch.randn(init_latents.shape, generator<span class="op">=</span><span class="va">None</span>, device<span class="op">=</span><span class="st">"cuda"</span>, dtype<span class="op">=</span>init_latents.dtype)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    init_latents <span class="op">=</span> scheduler.add_noise(init_latents, noise, timesteps)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    latents <span class="op">=</span> init_latents</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Computing the timestep to start the diffusion loop</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    t_start <span class="op">=</span> <span class="bu">max</span>(steps <span class="op">-</span> init_timestep, <span class="dv">0</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    timesteps <span class="op">=</span> scheduler.timesteps[t_start:].to(<span class="st">"cuda"</span>)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Converting mask to torch tensor</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> torch.tensor(mask, dtype<span class="op">=</span>unet.dtype).unsqueeze(<span class="dv">0</span>).unsqueeze(<span class="dv">0</span>).to(<span class="st">"cuda"</span>)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterating through defined steps</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i,ts <span class="kw">in</span> <span class="bu">enumerate</span>(tqdm(timesteps)):</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We need to scale the i/p latents to match the variance</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>        inp <span class="op">=</span> scheduler.scale_model_input(torch.cat([latents] <span class="op">*</span> <span class="dv">3</span>), ts)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Predicting noise residual using U-Net</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad(): u, rt, qt <span class="op">=</span> unet(inp, ts, encoder_hidden_states<span class="op">=</span>emb).sample.chunk(<span class="dv">3</span>)</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Performing Guidance</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>        rpred <span class="op">=</span> u <span class="op">+</span> g<span class="op">*</span>(rt<span class="op">-</span>u)</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>        qpred <span class="op">=</span> u <span class="op">+</span> g<span class="op">*</span>(qt<span class="op">-</span>u)</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Conditioning  the latents</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>        rlatents <span class="op">=</span> scheduler.step(rpred, ts, latents).prev_sample</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>        qlatents <span class="op">=</span> scheduler.step(qpred, ts, latents).prev_sample</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>        latents <span class="op">=</span> mask<span class="op">*</span>qlatents <span class="op">+</span> (<span class="dv">1</span><span class="op">-</span>mask)<span class="op">*</span>rlatents</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returning the latent representation to output an array of 4x64x64</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> latents_to_pil(latents)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T06:12:53.441900Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T06:12:49.046558Z&quot;}" data-execution_count="209">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>output <span class="op">=</span> prompt_2_img_diffedit(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    rp <span class="op">=</span> [<span class="st">"a horse image"</span>], </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    qp<span class="op">=</span>[<span class="st">"a zebra image"</span>],</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    init_img<span class="op">=</span>init_img, </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> mask, </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    g<span class="op">=</span><span class="fl">7.5</span>, seed<span class="op">=</span><span class="dv">100</span>, strength <span class="op">=</span><span class="fl">0.5</span>, steps<span class="op">=</span><span class="dv">50</span>, dim<span class="op">=</span><span class="dv">512</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"cd2afb2a34784059b050240915337ef7","version_major":2,"version_minor":0}
+</script>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-11-15T06:12:53.760246Z&quot;,&quot;start_time&quot;:&quot;2022-11-15T06:12:53.475152Z&quot;}" data-execution_count="210">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Plotting side by side</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c, img <span class="kw">in</span> <span class="bu">enumerate</span>([init_img, output[<span class="dv">0</span>]]): </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    axs[c].imshow(img)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> c <span class="op">==</span> <span class="dv">0</span> : axs[c].set_title(<span class="ss">f"Initial image "</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>: axs[c].set_title(<span class="ss">f"DiffEdit output "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2022-11-17-DiffEdit_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
 </section>
 <section id="conclusion" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4</span> Conclusion</h2>
