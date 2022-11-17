@@ -236,12 +236,12 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
    
   <ul>
   <li><a href="#what-is-diffedit" id="toc-what-is-diffedit" class="nav-link active" data-scroll-target="#what-is-diffedit"><span class="toc-section-number">1</span>  What is DiffEdit?</a></li>
-  <li><a href="#mask-creation-purist-implementation" id="toc-mask-creation-purist-implementation" class="nav-link" data-scroll-target="#mask-creation-purist-implementation"><span class="toc-section-number">2</span>  Mask Creation: Purist implementation</a>
+  <li><a href="#diffedit-purist-implementation" id="toc-diffedit-purist-implementation" class="nav-link" data-scroll-target="#diffedit-purist-implementation"><span class="toc-section-number">2</span>  DiffEdit: Purist implementation</a>
   <ul class="collapse">
   <li><a href="#mask-creation-first-step-of-the-diffedit-process" id="toc-mask-creation-first-step-of-the-diffedit-process" class="nav-link" data-scroll-target="#mask-creation-first-step-of-the-diffedit-process"><span class="toc-section-number">2.1</span>  Mask Creation: First Step of the DiffEdit process</a></li>
   <li><a href="#masked-diffusion-step-2-and-3-of-diffedit-paper." id="toc-masked-diffusion-step-2-and-3-of-diffedit-paper." class="nav-link" data-scroll-target="#masked-diffusion-step-2-and-3-of-diffedit-paper."><span class="toc-section-number">2.2</span>  Masked Diffusion: Step 2 and 3 of DiffEdit paper.</a></li>
   </ul></li>
-  <li><a href="#mask-creation-fastdiffedit" id="toc-mask-creation-fastdiffedit" class="nav-link" data-scroll-target="#mask-creation-fastdiffedit"><span class="toc-section-number">3</span>  Mask Creation: FastDiffEdit</a>
+  <li><a href="#fastdiffedit-a-faster-diffedit-implementation" id="toc-fastdiffedit-a-faster-diffedit-implementation" class="nav-link" data-scroll-target="#fastdiffedit-a-faster-diffedit-implementation"><span class="toc-section-number">3</span>  FastDiffEdit: A faster DiffEdit implementation</a>
   <ul class="collapse">
   <li><a href="#mask-creation-fast-diffedit-masking-process" id="toc-mask-creation-fast-diffedit-masking-process" class="nav-link" data-scroll-target="#mask-creation-fast-diffedit-masking-process"><span class="toc-section-number">3.1</span>  Mask Creation: Fast DiffEdit masking process</a></li>
   <li><a href="#masked-diffusion-replace-with-inpaint-pipeline" id="toc-masked-diffusion-replace-with-inpaint-pipeline" class="nav-link" data-scroll-target="#masked-diffusion-replace-with-inpaint-pipeline"><span class="toc-section-number">3.2</span>  Masked Diffusion: Replace with 🤗 inpaint pipeline</a></li>
@@ -413,8 +413,8 @@ Fig. 3: Three steps of DiffEdit. Credit - <a href="https://arxiv.org/pdf/2210.11
 </div>
 </div>
 </section>
-<section id="mask-creation-purist-implementation" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="mask-creation-purist-implementation"><span class="header-section-number">2</span> Mask Creation: Purist implementation</h2>
+<section id="diffedit-purist-implementation" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="diffedit-purist-implementation"><span class="header-section-number">2</span> DiffEdit: Purist implementation</h2>
 <p>Let’s start by implementing the paper as closely as the authors suggested, hence the Purist implementation.</p>
 <section id="mask-creation-first-step-of-the-diffedit-process" class="level3" data-number="2.1">
 <h3 data-number="2.1" class="anchored" data-anchor-id="mask-creation-first-step-of-the-diffedit-process"><span class="header-section-number">2.1</span> Mask Creation: First Step of the DiffEdit process</h3>
@@ -1027,8 +1027,8 @@ Fig. 9: Purist implementation output example
 </figcaption>
 </section>
 </section>
-<section id="mask-creation-fastdiffedit" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="mask-creation-fastdiffedit"><span class="header-section-number">3</span> Mask Creation: FastDiffEdit</h2>
+<section id="fastdiffedit-a-faster-diffedit-implementation" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="fastdiffedit-a-faster-diffedit-implementation"><span class="header-section-number">3</span> FastDiffEdit: A faster DiffEdit implementation</h2>
 <p>Now we have seen the purist implementation, there are some improvements I suggest we can make to the original DiffEdit process in terms of speed and better results. Let’s call these improvements <code>FastDiffEdit</code>.</p>
 <section id="mask-creation-fast-diffedit-masking-process" class="level3" data-number="3.1">
 <h3 data-number="3.1" class="anchored" data-anchor-id="mask-creation-fast-diffedit-masking-process"><span class="header-section-number">3.1</span> Mask Creation: Fast DiffEdit masking process</h3>
