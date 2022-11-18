@@ -16,7 +16,7 @@ website:
     pinned: True
     left:
       - icon: house
-        href: home.qmd
+        href: index.qmd
         text: Home
       - icon: newspaper
         href: blog.qmd
