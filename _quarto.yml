@@ -13,13 +13,20 @@ website:
     creator: "@aayushmnit"
     card-style: summary_large_image
   navbar:
+    pinned: True
     left:
-      - href: about.qmd
-        text: About
-      - href: blog.qmd
+      - icon: house
+        href: home.qmd
+        text: Home
+      - icon: newspaper
+        href: blog.qmd
         text: Blog
-      - href: talks.qmd
+      - icon: megaphone
+        href: talks.qmd
         text: Talks
+      - icon: file-person
+        href: about.qmd
+        text: About
     right:
       - icon: github
         href: https://github.com/aayushmnit/
@@ -27,6 +34,8 @@ website:
         href: https://www.linkedin.com/in/aayushmnit/
       - icon: medium
         href: https://medium.com/@aayushmnit
+      - icon: mastodon
+        href: https://sigmoid.social/@aayushmnit
       - icon: twitter
         href: https://twitter.com/aayushmnit
       - icon: envelope
@@ -38,7 +47,7 @@ format:
   html:
     theme: 
       light: sandstone
-      dark: darkly
+      dark: cyborg
     mainfont: Roboto
     css: styles.css
     toc: true

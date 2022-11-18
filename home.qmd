@@ -1,57 +1,58 @@
 ---
-title: "Aayush Agrawal"
+title: Welcome to aayushmnit.com
+comments: False
+format:
+  html:
+    page-layout: full
+listing:
+  - id: landing-posts
+    contents: posts
+    type: default
+    max-items: 3
+    sort: 
+      - "date desc"
+      - "title asc"
 about:
-  template: trestles
+  id: about-me
+  template: jolla
   image: headshot.png
-  image-width: 10em
   image-shape: round
   links:
-    - icon: github
-      text: Github
-      href: https://github.com/aayushmnit
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/in/aayushmnit/
+    - icon: github
+      text: GitHub
+      href: https://github.com/aayushmnit
     - icon: medium
       text: Medium
-      href: https://medium.com/@aayushmnit
+      href: https://medium.com/@aayushmnit  
     - icon: mastodon
       text: Mastodon
       href: https://sigmoid.social/@aayushmnit
     - icon: twitter
       text: Twitter
       href: https://twitter.com/aayushmnit
+    - icon: clipboard-data
+      text: Kaggle
+      href: https://www.kaggle.com/aayushmnit
     - icon: envelope
       text: Email
       href: mailto:aayushmnit@gmail.com
-comments: false
-page-layout: full
 ---
 
+:::{#about-me}
 I'm an experienced Data Scientist with specialized skills in machine learning-based solutions. I enjoy staying on top of cutting-edge data technologies, including big data platforms, deep learning, optimization methods, and business analytics. My current work involves building data-driven products to enable smarter recommendations for Microsoft Partners, M365 service administrators and end-users to ensure the best usage of M365 services. Before that, I have experience working in various verticals like agricultural technology, pharmaceuticals, retail, e-commerce, and ride-sharing business model.
 
-:::{.panel-tabset}
-
-# Experience
-
-**Senior ML Scientist** | Microsoft | June 2019 - Present | Redmond, WA, USA
-
-**Senior Data Scientist** | Land O' Lakes Inc. | June 2017 - June 2019 | Shoreview, MN, USA 
-
-**Senior Business Analyst** | Taxiforsure.com | March 2015 - May 2016 | Jaipur, India
-
-**Product Data Analyst** | Snapdeal.com | November 2014 - March 2015 | New Delhi, India
-
-**Trainee Decision Scientist** | Mu Sigma Business Solutions Pvt. Ltd | June 2013 - October 2014 | Bengaluru, India
-
+Read more about me [here](about.qmd).
 :::
 
-:::{.panel-tabset}
+:::::{.grid}
+::::{.g-col-12 .g-col-md-12}
+## Latest Blogs
+Click [here](blog.qmd) to check out more blogs.
 
-# Education
-
-**Carlson School of Management, University of Minnesota** | Master of Science in Business Analytics | Minneapolis, MN | May, 2017
-
-**Malaviya National Institute of Technology** | Bachelor of Technology in Electrical Engineering | Jaipur, India | May, 2013
-
+:::{#landing-posts}
 :::
+::::
+:::::

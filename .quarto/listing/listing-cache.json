@@ -3,6 +3,9 @@
     "blog.qmd": [
       "posts"
     ],
+    "home.qmd": [
+      "posts"
+    ],
     "talks.qmd": [
       "talks"
     ]

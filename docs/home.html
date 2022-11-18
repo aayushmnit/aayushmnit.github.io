@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Aayush Agrawal">
-<meta name="dcterms.date" content="2017-10-11">
 
-<title>Aayush Agrawal - Deep dive in Hierarchical clustering</title>
+<title>Aayush Agrawal - Welcome to aayushmnit.com</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,23 +23,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -61,6 +60,35 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-landing-posts .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-landing-posts'] = new List('listing-landing-posts', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-7QN8N70N41"></script>
 
 <script type="text/javascript">
@@ -71,17 +99,20 @@ gtag('js', new Date());
 gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="../../styles.css">
-<meta property="og:title" content="Aayush Agrawal - Deep dive in Hierarchical clustering">
-<meta property="og:description" content="Presentation and codes on “Deep dive in Hierarchical Clustering”. This was material presented by me in Analyze This! meetup on 11th October, 2017">
-<meta property="og:image" content="https://github.com/aayushmnit/Data-science-presentation/blob/master/Deep_dive_in_hierarchical_clustering/20171011_201451.jpg?raw=true">
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="Aayush Agrawal - Welcome to aayushmnit.com">
+<meta property="og:image" content="https://aayushmnit.com/posts/2022-11-17-DiffEdit/cover.png">
 <meta property="og:site-name" content="Aayush Agrawal">
-<meta name="twitter:title" content="Aayush Agrawal - Deep dive in Hierarchical clustering">
-<meta name="twitter:description" content="Presentation and codes on “Deep dive in Hierarchical Clustering”. This was material presented by me in Analyze This! meetup on 11th October, 2017">
-<meta name="twitter:image" content="https://github.com/aayushmnit/Data-science-presentation/blob/master/Deep_dive_in_hierarchical_clustering/20171011_201451.jpg?raw=true">
+<meta property="og:image:height" content="418">
+<meta property="og:image:width" content="430">
+<meta name="twitter:title" content="Aayush Agrawal - Welcome to aayushmnit.com">
+<meta name="twitter:image" content="https://aayushmnit.com/posts/2022-11-17-DiffEdit/cover.png">
 <meta name="twitter:creator" content="@aayushmnit">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image-height" content="418">
+<meta name="twitter:image-width" content="430">
 </head>
 
 <body class="nav-fixed">
@@ -91,7 +122,7 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Aayush Agrawal</span>
     </a>
   </div>
@@ -101,22 +132,22 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../home.html"><i class="bi bi-house" role="img">
+    <a class="nav-link active" href="./home.html" aria-current="page"><i class="bi bi-house" role="img">
 </i> 
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../blog.html"><i class="bi bi-newspaper" role="img">
+    <a class="nav-link" href="./blog.html"><i class="bi bi-newspaper" role="img">
 </i> 
  <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../talks.html"><i class="bi bi-megaphone" role="img">
+    <a class="nav-link" href="./talks.html"><i class="bi bi-megaphone" role="img">
 </i> 
  <span class="menu-text">Talks</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html"><i class="bi bi-file-person" role="img">
+    <a class="nav-link" href="./about.html"><i class="bi bi-file-person" role="img">
 </i> 
  <span class="menu-text">About</span></a>
   </li>  
@@ -153,7 +184,7 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../../blog.xml"><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="./blog.xml"><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
@@ -167,52 +198,162 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+
+
+<div class="quarto-about-jolla column-page">
+  <img src="headshot.png" class="about-image
+  round " style="height: 15em; width: 15em;">
+ <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Deep dive in Hierarchical clustering</h1>
-  <div class="quarto-categories">
-    <div class="quarto-category">Clustering</div>
-  </div>
-  </div>
-
-
-
+<h1 class="title">Welcome to aayushmnit.com</h1>
+</div>
 <div class="quarto-title-meta">
-
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Aayush Agrawal </p>
-          </div>
   </div>
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 11, 2017</p>
-    </div>
-  </div>
-  
-    
-  </div>
-  
+</header><div id="about-me">
+<p>I’m an experienced Data Scientist with specialized skills in machine learning-based solutions. I enjoy staying on top of cutting-edge data technologies, including big data platforms, deep learning, optimization methods, and business analytics. My current work involves building data-driven products to enable smarter recommendations for Microsoft Partners, M365 service administrators and end-users to ensure the best usage of M365 services. Before that, I have experience working in various verticals like agricultural technology, pharmaceuticals, retail, e-commerce, and ride-sharing business model.</p>
+<p>Read more about me <a href="./about.html">here</a>.</p>
+</div> 
+  <hr class="about-sep">
+   <div class="about-links">
+  <a href="https://www.linkedin.com/in/aayushmnit/" class="about-link">
+    <i class="bi bi-linkedin"></i>
+     <span class="about-link-text">LinkedIn</span>
+  </a>
+  <a href="https://github.com/aayushmnit" class="about-link">
+    <i class="bi bi-github"></i>
+     <span class="about-link-text">GitHub</span>
+  </a>
+  <a href="https://medium.com/@aayushmnit" class="about-link">
+    <i class="bi bi-medium"></i>
+     <span class="about-link-text">Medium</span>
+  </a>
+  <a href="https://sigmoid.social/@aayushmnit" class="about-link">
+    <i class="bi bi-mastodon"></i>
+     <span class="about-link-text">Mastodon</span>
+  </a>
+  <a href="https://twitter.com/aayushmnit" class="about-link">
+    <i class="bi bi-twitter"></i>
+     <span class="about-link-text">Twitter</span>
+  </a>
+  <a href="https://www.kaggle.com/aayushmnit" class="about-link">
+    <i class="bi bi-clipboard-data"></i>
+     <span class="about-link-text">Kaggle</span>
+  </a>
+  <a href="mailto:aayushmnit@gmail.com" class="about-link">
+    <i class="bi bi-envelope"></i>
+     <span class="about-link-text">Email</span>
+  </a>
+</div>
+</div>
 
-</header>
+<div class="grid">
+<section id="latest-blogs" class="level2 g-col-12 g-col-md-12">
+<h2 data-anchor-id="latest-blogs">Latest Blogs</h2>
+<p>Click <a href="./blog.html">here</a> to check out more blogs.</p>
+<div id="listing-landing-posts" class="quarto-listing quarto-listing-container-default">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="Stable Diffusion,Research" data-listing-date-sort="1668672000000" data-listing-file-modified-sort="1668670064781" data-listing-reading-time-sort="8.36">
+<div class="thumbnail">
+<p><a href="./posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html"> <img src="./posts/2022-11-17-DiffEdit/cover.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html">
+<h3 class="no-anchor listing-title">
+Stable diffusion using 🤗 Hugging Face - DiffEdit paper implementation
+</h3>
+<div class="listing-subtitle">
 
-<p>Presentation and codes on “Deep dive in Hierarchical Clustering”. This was material presented by me in Analyze This! meetup on 11th October, 2017</p>
-<p><strong><a href="https://www.meetup.com/AnalyzeThis/events/243463503/">Link to the meetup group</a></strong></p>
-<p><strong><a href="https://github.com/aayushmnit/Data-science-presentation/tree/master/Deep_dive_in_hierarchical_clustering">Link to Git repo</a></strong></p>
-<p>Photo of me presenting -</p>
-<p><img src="https://github.com/aayushmnit/Data-science-presentation/blob/master/Deep_dive_in_hierarchical_clustering/20171011_201451.jpg?raw=true"></p>
+</div>
+<div class="listing-description">
+An implementation of DIFFEDIT: DIFFUSION-BASED SEMANTIC IMAGE EDITING WITH MASK GUIDANCE using 🤗 hugging face diffusers library.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+<div class="listing-author">
+Aayush Agrawal
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="Stable Diffusion" data-listing-date-sort="1668153600000" data-listing-file-modified-sort="1668145628252" data-listing-reading-time-sort="4.7">
+<div class="thumbnail">
+<p><a href="./posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html"> <img src="./posts/2022-11-10-StableDiffusionP4/diverging_roads.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html">
+<h3 class="no-anchor listing-title">
+Stable diffusion using 🤗 Hugging Face - Variations of Stable Diffusion
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+An introduction to negative prompting and image to image stable diffusion pipeline using 🤗 hugging face diffusers library.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html">
+<div class="listing-date">
+Nov 11, 2022
+</div>
+<div class="listing-author">
+Aayush Agrawal
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="Stable Diffusion" data-listing-date-sort="1667808000000" data-listing-file-modified-sort="1668145613268" data-listing-reading-time-sort="3.73">
+<div class="thumbnail">
+<p><a href="./posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html"> <img src="./posts/2022-11-07-StableDiffusionP3/building-blocks-vector-28.jpg" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">
+<h3 class="no-anchor listing-title">
+Stable diffusion using 🤗 Hugging Face - Putting everything together
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+An introduction to the diffusion process using 🤗 hugging face diffusers library.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html">
+<div class="listing-date">
+Nov 7, 2022
+</div>
+<div class="listing-author">
+Aayush Agrawal
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div>
+</section>
+</div>
+
+
 
 
 
@@ -352,13 +493,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   } else {
     toggleColorMode(false);
   }
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
   const clipboard = new window.ClipboardJS('.code-copy-button', {
     target: function(trigger) {
       return trigger.previousElementSibling;
