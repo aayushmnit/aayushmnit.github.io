@@ -14,7 +14,7 @@ listing:
       - "title asc"
 about:
   id: about-me
-  template: jolla
+  template: solana
   image: headshot.png
   image-shape: round
   links:
