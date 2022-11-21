@@ -8,8 +8,8 @@
 <title>Aayush Agrawal</title>
 <link>https://aayushmnit.com/blog.html</link>
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
-<description>Aayush&#39;s personal website</description>
-<generator>quarto-1.2.226</generator>
+<description>Aayush's personal website</description>
+<generator>quarto-1.2.124</generator>
 <lastBuildDate>Thu, 17 Nov 2022 08:00:00 GMT</lastBuildDate>
 <item>
   <title>Stable diffusion using 🤗 Hugging Face - DiffEdit paper implementation</title>
