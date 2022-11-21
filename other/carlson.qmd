@@ -1,0 +1,116 @@
+---
+layout: page
+title: Carlson Students Q&A
+permalink: /other/incoming_carlson
+exclude_from_header: true
+number-sections: true
+comments: false
+---
+
+# Current Students
+::: {.callout-note icon=false collapse="true"}
+### **How I apply my learning from courses while my duration at the schoool?**
+
+Here are a few options to apply your learning from the course - 
+
+**University Curriculum**
+
+- **Live project** - MSBA program usually collaborates with companies around the Minneapolis area to run live projects every semester to allow students to work on real problems. Typically, these programs are part of some courses like Explorative Data analysis and Predictive modeling. 
+- **Experiential learning, Carlson Analytics Lab** - A six-credit course where students work in a group of four or five on a live project with a corporate partner to solve their real problem using real data. You can think of it as an internship.
+
+**Other initiatives**
+
+- **Meetup group**  - There are meetup groups like Social Data science,and Analyze This! etc., where you can actively participate and present.
+- **Local Competitions**  - There are local analytics competitions organized by Minneanalytics, STATCOM, UMN StatClub, Social Data Science, etc. Keep a look out for those and participate.
+- **Blogging** - Blogging is also an effective way to share your learning and establish your brand. Medium is a good place to start and publish in high-visibility publications like Towards Data Science, Analytics Vidhya, etc
+
+:::
+
+
+::: {.callout-note icon=false collapse="true"}
+### **What kind of analytics/DS/ML roles are available in tech companies?**
+
+There are three typical DS/ML roles in tech companies - 
+
+* **Data scientist** - Which is heavier on data analytics and experimentation. 
+* **Machine Learning Scientist / Applied Scientist** - This role is more focused on Machine learning model building, research, and software engineering.
+* **Machine Learning Engineers** - This role is more focused on ML Ops, building data pipelines, and requires a lot more software engineering skills.
+:::
+
+# Incoming Students
+## Admission
+::: {.callout-note icon=false collapse="true"}
+### **I am applying to Carlson School for MSBA program. Could you help me out with interviews?**
+
+Video interview usually is a formality to ensure that you can communicate in English. Interviewer will ask you following questions like - 
+
+- Tell me about yourself
+- Why MSBA program and Why Carlson? 
+- What are you hoping to achieve after the course? 
+- Walking through your work experience
+
+It's quite straightforward and usually just ensuring whatever you have written on your resume is actually you.
+:::
+
+::: {.callout-note icon=false collapse="true"}
+### **I want to apply to Carlson School for MSBA program. What would be good GRE score?**
+
+Score as high as you can, 320+ on GRE and 105 + on TOEFL would be good scores to aim for. You can find more about academic scores and prior background of current students on the university website.
+:::
+
+## Financial
+
+::: {.callout-note icon=false collapse="true"}
+### **How are the job prospects for a candidate after the course? Is the course worth it?**
+Job placements are usually close to 100% so everybody gets a job. Read the placement reports on the [website](https://carlsonschool.umn.edu/degrees/master-science-in-business-analytics/advance-your-career-in-business-analytics). I think the starting average salary is around $90k-$110k annually plus a 10% annual bonus, with that salary you should be able to recover your cost within 2-4 years. There are some companies that come on campus (Target, Cargill, Capital One, Ameriprise, etc.) but most of the students get jobs through their own search.
+:::
+
+::: {.callout-note icon=false collapse="true"}
+### **Is TA/RA possible in this course? Do you think I should be approaching professors (aligned with my interests) beforehand?**
+Yes, but not in the summer semester. You can do TA/RA in Fall & Spring semesters, but I would not recommend that as the course is hectic and you should be focusing on creating a portfolio and learning. You can reach out to professors during the summer semester if you need to do TA/RA. Typically TA/RA jobs pay $18/hour, and students are allowed to do 10-20 hours per week.
+:::
+
+::: {.callout-note icon=false collapse="true"}
+### **Tuition for the course is high are there any scholarships for International students?**
+Check the university page for grants and scholarships. In my time there was a $10k scholarship given by the university to students. Students didn't need to apply for it and were given automatically based on their prior background and GRE/TOEFL scores.
+:::
+
+## Accomodations
+
+::: {.callout-note icon=false collapse="true"}
+### **In which area or society(if you prefer one) should I search for accommodation? I am looking both in terms of proximity and rent?**
+ You can check out Grand Marc seven corners that are right next to Carlson and quite affordable(<$500/month sharing, fully furnished). Many MSBA students including myself have lived there in the past. Otherwise, you can look in Minnehaha apartments or Stadium village apartments. Here is the [FB page for Housing](https://www.facebook.com/groups/umnhousing/).
+:::
+
+::: {.callout-note icon=false collapse="true"}
+### **How much overall monthly expense do you estimate?**
+Depends on your lifestyle ~$1000 including rent is good enough to survive.
+:::
+
+::: {.callout-note icon=false collapse="true"}
+### **Is the weather very extreme and do you actually have to be indoors for a few months?**
+ Well someone in Minnesota will say "Its not cold, you just don’t have the right gear". So it is cold in winters for atleast 4-5 months usually below -5 C. It doesn't mean you can't go out or life stops. People do business as usual in those conditions as well. In my time in Carlson I used to spend more than 12-14 hours in Carlson campus so none of this actually bothered me. But yeah it's cold in winters so be prepared.
+:::
+
+## Course and Skills Related
+::: {.callout-note icon=false collapse="true"}
+### **How did you like the course and the skills development at Carlson?**
+I found the course useful in what I was trying to achieve. I was more looking for a business-oriented analytics/data science course and Carlson does a really good job in balancing these two aspects.
+:::
+
+::: {.callout-note icon=false collapse="true"}
+### **What prerequisite would you recommend for better prospects?**
+Depends on what you want to accomplish. If your aim is to be a data scientist then you need to be technically strong, if your aim is to become a consultant then you need to work more on soft skills. The ability to communicate with a business audience is a must and proficiency in python will give you an edge over others.
+:::
+
+::: {.callout-note icon=false collapse="true"}
+### **Is the curriculum good for someone who is more interested in a technical ds role or more of a consulting oriented role in the field of analytics?**
+The course does touch upon many DS technicalities, but if you don't have any prior experience, you need to put extra effort into honing skills in those areas. I would say the course does a much better job to prepare students for consulting oriented roles in the field of analytics. It also depends on individual aspirations and current skill level.
+:::
+
+::: {.callout-note icon=false collapse="true"}
+### **One of my great concern is the location. Minneapolis is not the big city and there might be less opportunity, especially for the international students. What do you think?**
+Minneapolis is not a small city and is home to 17 Fortune 500 companies. Also, university have active alumni in many of these companies which hire almost every year from the MSBA program. Some of the companies which hire regularly are Target, Capital One, Amazon, Ameriprise, Best Buy, Slalom, etc. Also, the MSBA program have nearly 100% placement stats. Not sure if other universities or programs have such stellar stats but finding employment should not be a problem if you happen to be in the top 50% of the class.
+:::
+
+

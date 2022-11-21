@@ -106,5 +106,20 @@
   },
   "home.qmd": {
     "home.html": "edcab120"
+  },
+  "other/carlson.qmd": {
+    "carlson.html": "58f2206d"
+  },
+  "other/incoming_carlson.qmd": {
+    "incoming_carlson.html": "40b7fe67"
+  },
+  "other/incoming_carlson.md": {
+    "incoming_carlson.html": "21753ea5"
+  },
+  "other/current_carlson.md": {
+    "current_carlson.html": "f2a69884"
+  },
+  "other/current_carlson.qmd": {
+    "current_carlson.html": "7e146da0"
   }
 }
