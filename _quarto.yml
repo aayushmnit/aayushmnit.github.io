@@ -34,6 +34,9 @@ website:
           - text: "Carlson Q&A"
             icon: box-arrow-up-right
             href: other/carlson.qmd
+          - text: "Pytorch Book"
+            icon: box-arrow-up-right
+            href: https://aayushmnit.com/pytorch_book/
     right:
       - icon: github
         href: https://github.com/aayushmnit/

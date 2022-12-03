@@ -121,5 +121,17 @@
   },
   "other/current_carlson.qmd": {
     "current_carlson.html": "7e146da0"
+  },
+  "book/index.qmd": {
+    "index.html": "25c6d217"
+  },
+  "book/intro.qmd": {
+    "intro.html": "d31085e0"
+  },
+  "book/references.qmd": {
+    "references.html": "b9a521c2"
+  },
+  "book/summary.qmd": {
+    "summary.html": "1641b268"
   }
 }
