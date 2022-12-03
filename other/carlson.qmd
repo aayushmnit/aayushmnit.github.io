@@ -4,7 +4,6 @@ title: Carlson Students Q&A
 permalink: /other/incoming_carlson
 exclude_from_header: true
 number-sections: true
-comments: false
 ---
 
 # Current Students
@@ -113,4 +112,6 @@ The course does touch upon many DS technicalities, but if you don't have any pri
 Minneapolis is not a small city and is home to 17 Fortune 500 companies. Also, university have active alumni in many of these companies which hire almost every year from the MSBA program. Some of the companies which hire regularly are Target, Capital One, Amazon, Ameriprise, Best Buy, Slalom, etc. Also, the MSBA program have nearly 100% placement stats. Not sure if other universities or programs have such stellar stats but finding employment should not be a problem if you happen to be in the top 50% of the class.
 :::
 
+# Got more questions?
 
+If you are a current Carlson student or considering the Carlson School of Management for the MSBA program and have any questions for me. Feel free to comment below, I will respond and add it in the Q&A section if relevant.
