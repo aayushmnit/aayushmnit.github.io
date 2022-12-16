@@ -8,8 +8,8 @@
 <title>Aayush Agrawal</title>
 <link>https://aayushmnit.com/blog.html</link>
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
-<description>Aayush&#39;s personal website</description>
-<generator>quarto-1.2.226</generator>
+<description>Aayush's personal website</description>
+<generator>quarto-1.2.124</generator>
 <lastBuildDate>Thu, 17 Nov 2022 08:00:00 GMT</lastBuildDate>
 <item>
   <title>Stable diffusion using 🤗 Hugging Face - DiffEdit paper implementation</title>
@@ -2224,7 +2224,7 @@ git config --global credential.helper store</code></pre>
   <media:content url="https://aayushmnit.com/posts/2022-11-02-StabeDiffusionP1/hf_emoji.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
-  <title>Model calibration for classification task using Python</title>
+  <title>Model calibration for classification tasks using Python</title>
   <dc:creator>Aayush Agrawal</dc:creator>
   <link>https://aayushmnit.com/posts/2022-10-26-Model_Calibration/Model Calibration.html</link>
   <description><![CDATA[ 
@@ -2234,14 +2234,12 @@ git config --global credential.helper store</code></pre>
 <blockquote class="blockquote">
 <p>A hands-on introduction to model calibration using Python.</p>
 </blockquote>
-<section id="what-is-model-calibration" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="what-is-model-calibration"><span class="header-section-number">1</span> What is Model Calibration?</h2>
-<p>When working with classification tasks, the machine learning models often produce a probabilistic outcome ranging between 0 to 1. This probabilistic output is then used by organizations/machine learning scientists to make decisions. Unfortunately, many machine learning models’ probabilistic outputs cannot be directly interpreted as the probability of an event happening backed by data. To achieve this outcome, the ML model needs to be calibrated.</p>
-<blockquote class="blockquote">
-<p>Formally, a model is said to be perfectly calibrated if, for any probability value <code>p</code>, a prediction of a class with confidence <code>p</code> is correct 100*<code>p</code> percent of the time.</p>
-</blockquote>
-<p>Let us visualize a perfect calibration curve.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:00.623299Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:00.620216Z&quot;}" data-code_folding="[]" data-execution_count="16">
+<section id="what-is-model-calibration" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-model-calibration">What is Model Calibration?</h2>
+<p>When working with classification problems, machine learning models often produce a probabilistic outcome ranging between 0 to 1. This probabilistic output is then used by people to make decisions. Unfortunately, many machine learning models’ probabilistic outputs cannot be directly interpreted as the probability of an event happening. To achieve this outcome, the model needs to be calibrated.</p>
+<p>Formally, a model is said to be perfectly calibrated if, for any probability value <code>p</code>, a prediction of a class with confidence <code>p</code> is correct 100*<code>p</code> percent of the time. In more simple terms, the probabilistic output equals the probability of occurrence.</p>
+<p>Let us visualize a perfect calibrated and non-calibrated curve.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-15T21:20:43.483163Z&quot;,&quot;start_time&quot;:&quot;2022-12-15T21:20:42.494504Z&quot;}" data-code_folding="[]" data-execution_count="1">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;">import</span> numpy <span class="im" style="color: #00769E;">as</span> np</span>
@@ -2252,34 +2250,37 @@ git config --global credential.helper store</code></pre>
 <span id="cb1-6">pio.renderers.default <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_mimetype+notebook_connected"</span></span></code></pre></div>
 </details>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:00.700923Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:00.625093Z&quot;}" data-code_folding="[]" data-execution_count="17">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T01:14:33.842480Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T01:14:33.732713Z&quot;}" data-execution_count="42">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
-<span id="cb2-2">    <span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>: np.arange(<span class="dv" style="color: #AD0000;">0</span>,<span class="fl" style="color: #AD0000;">1.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>),</span>
-<span id="cb2-3">    <span class="st" style="color: #20794D;">"Predicted Probability"</span>: np.arange(<span class="dv" style="color: #AD0000;">0</span>,<span class="fl" style="color: #AD0000;">1.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>)</span>
-<span id="cb2-4">})</span>
-<span id="cb2-5">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
-<span id="cb2-6">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
-<span id="cb2-7">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
-<span id="cb2-8">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Predicted Probability"</span>, </span>
-<span id="cb2-9">        y <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Fraction of Positives Captured"</span>,</span>
-<span id="cb2-10">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
-<span id="cb2-11"></span>
-<span id="cb2-12">fig.update_layout(</span>
-<span id="cb2-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Perfect calibration"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
-<span id="cb2-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
-<span id="cb2-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
-<span id="cb2-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
-<span id="cb2-17">)</span>
-<span id="cb2-18">fig.update_traces(patch<span class="op" style="color: #5E5E5E;">=</span>{<span class="st" style="color: #20794D;">"line"</span>: {<span class="st" style="color: #20794D;">"dash"</span>: <span class="st" style="color: #20794D;">"dash"</span>}}) </span>
-<span id="cb2-19">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"notebook"</span>)</span></code></pre></div>
+<span id="cb2-2">    <span class="st" style="color: #20794D;">"actual_prob"</span>: np.arange(<span class="dv" style="color: #AD0000;">0</span>,<span class="fl" style="color: #AD0000;">1.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>),</span>
+<span id="cb2-3">    <span class="st" style="color: #20794D;">"Calibrated"</span>: np.arange(<span class="dv" style="color: #AD0000;">0</span>,<span class="fl" style="color: #AD0000;">1.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>),</span>
+<span id="cb2-4">    <span class="st" style="color: #20794D;">"Non-Calibrated"</span>:  [val <span class="op" style="color: #5E5E5E;">-</span> np.random.randn()<span class="op" style="color: #5E5E5E;">*</span>(<span class="dv" style="color: #AD0000;">1</span><span class="op" style="color: #5E5E5E;">-</span>idx)<span class="op" style="color: #5E5E5E;">/</span><span class="dv" style="color: #AD0000;">20</span> <span class="cf" style="color: #003B4F;">for</span> idx, val <span class="kw" style="color: #003B4F;">in</span> <span class="bu" style="color: null;">enumerate</span>(np.arange(<span class="dv" style="color: #AD0000;">0</span>,<span class="fl" style="color: #AD0000;">1.1</span>, <span class="fl" style="color: #AD0000;">0.1</span>))]</span>
+<span id="cb2-5">})</span>
+<span id="cb2-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb2-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb2-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb2-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"actual_prob"</span>, </span>
+<span id="cb2-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"Calibrated"</span>, <span class="st" style="color: #20794D;">"Non-Calibrated"</span>],</span>
+<span id="cb2-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb2-12"></span>
+<span id="cb2-13">fig.update_layout(</span>
+<span id="cb2-14">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibrated vs Non-calibrated model"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.98</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb2-15">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb2-16">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
+<span id="cb2-17">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>), </span>
+<span id="cb2-18">        legend<span class="op" style="color: #5E5E5E;">=</span><span class="bu" style="color: null;">dict</span>(yanchor<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"bottom"</span>, y<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.95</span>, orientation<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"h"</span>)</span>
+<span id="cb2-19">)</span>
+<span id="cb2-20"></span>
+<span id="cb2-21">fig.update_traces(patch<span class="op" style="color: #5E5E5E;">=</span>{<span class="st" style="color: #20794D;">"line"</span>: {<span class="st" style="color: #20794D;">"dash"</span>: <span class="st" style="color: #20794D;">"dash"</span>}}) </span>
+<span id="cb2-22">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"notebook"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 
-<div>                            <div id="b6489411-8fb9-4a28-8161-b3560e0c569e" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("b6489411-8fb9-4a28-8161-b3560e0c569e")) {                    Plotly.newPlot(                        "b6489411-8fb9-4a28-8161-b3560e0c569e",                        [{"hovertemplate":"Predicted Probability=%{x}<br>Fraction of Positives Captured=%{y}<extra></extra>","legendgroup":"","line":{"color":"#636efa","dash":"dash"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"","orientation":"v","showlegend":false,"x":[0.0,0.1,0.2,0.30000000000000004,0.4,0.5,0.6000000000000001,0.7000000000000001,0.8,0.9,1.0],"xaxis":"x","y":[0.0,0.1,0.2,0.30000000000000004,0.4,0.5,0.6000000000000001,0.7000000000000001,0.8,0.9,1.0],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Predicted Probability"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Actual Probability"}},"legend":{"tracegroupgap":0},"margin":{"t":60},"title":{"text":"Perfect calibration","y":0.95,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
+<div>                            <div id="d14dceb3-8358-49d1-bb51-f476a13c2811" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("d14dceb3-8358-49d1-bb51-f476a13c2811")) {                    Plotly.newPlot(                        "d14dceb3-8358-49d1-bb51-f476a13c2811",                        [{"hovertemplate":"variable=Calibrated<br>actual_prob=%{x}<br>value=%{y}<extra></extra>","legendgroup":"Calibrated","line":{"color":"#636efa","dash":"dash"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"Calibrated","orientation":"v","showlegend":true,"x":[0.0,0.1,0.2,0.30000000000000004,0.4,0.5,0.6000000000000001,0.7000000000000001,0.8,0.9,1.0],"xaxis":"x","y":[0.0,0.1,0.2,0.30000000000000004,0.4,0.5,0.6000000000000001,0.7000000000000001,0.8,0.9,1.0],"yaxis":"y","type":"scatter"},{"hovertemplate":"variable=Non-Calibrated<br>actual_prob=%{x}<br>value=%{y}<extra></extra>","legendgroup":"Non-Calibrated","line":{"color":"#EF553B","dash":"dash"},"marker":{"symbol":"circle"},"mode":"markers+lines","name":"Non-Calibrated","orientation":"v","showlegend":true,"x":[0.0,0.1,0.2,0.30000000000000004,0.4,0.5,0.6000000000000001,0.7000000000000001,0.8,0.9,1.0],"xaxis":"x","y":[0.004578200982692116,0.1,0.15939112154075558,0.23261701475345561,0.4477187533329021,0.6740241152596382,0.35057730565165823,0.5970987180081104,1.072519142762574,1.1030518615995324,1.1599539256471223],"yaxis":"y","type":"scatter"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#f2f5fa"},"error_y":{"color":"#f2f5fa"},"marker":{"line":{"color":"rgb(17,17,17)","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"baxis":{"endlinecolor":"#A2B1C6","gridcolor":"#506784","linecolor":"#506784","minorgridcolor":"#506784","startlinecolor":"#A2B1C6"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmapgl":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmapgl"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"line":{"color":"#283442"}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"marker":{"line":{"color":"#283442"}},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#506784"},"line":{"color":"rgb(17,17,17)"}},"header":{"fill":{"color":"#2a3f5f"},"line":{"color":"rgb(17,17,17)"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#f2f5fa","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#f2f5fa"},"geo":{"bgcolor":"rgb(17,17,17)","lakecolor":"rgb(17,17,17)","landcolor":"rgb(17,17,17)","showlakes":true,"showland":true,"subunitcolor":"#506784"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"dark"},"paper_bgcolor":"rgb(17,17,17)","plot_bgcolor":"rgb(17,17,17)","polar":{"angularaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","radialaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"yaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"},"zaxis":{"backgroundcolor":"rgb(17,17,17)","gridcolor":"#506784","gridwidth":2,"linecolor":"#506784","showbackground":true,"ticks":"","zerolinecolor":"#C8D4E3"}},"shapedefaults":{"line":{"color":"#f2f5fa"}},"sliderdefaults":{"bgcolor":"#C8D4E3","bordercolor":"rgb(17,17,17)","borderwidth":1,"tickwidth":0},"ternary":{"aaxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"baxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""},"bgcolor":"rgb(17,17,17)","caxis":{"gridcolor":"#506784","linecolor":"#506784","ticks":""}},"title":{"x":0.05},"updatemenudefaults":{"bgcolor":"#506784","borderwidth":0},"xaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#283442","linecolor":"#506784","ticks":"","title":{"standoff":15},"zerolinecolor":"#283442","zerolinewidth":2}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Predicted Probability"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"Actual Probability"}},"legend":{"title":{"text":"variable"},"tracegroupgap":0,"yanchor":"bottom","y":0.95,"orientation":"h"},"margin":{"t":60},"title":{"text":"Calibrated vs Non-calibrated model","y":0.98,"x":0.5},"font":{"size":15}},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('b6489411-8fb9-4a28-8161-b3560e0c569e');
+var gd = document.getElementById('d14dceb3-8358-49d1-bb51-f476a13c2811');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -2302,49 +2303,43 @@ if (outputEl) {{
 }}
 
                         })                };                });            </script>        </div>
-<p>Fig 1 - A perfectly calibrated classifier</p>
+<p>Fig 1 - A visualization of calibrated and non-calibrated curve.</p>
 </div>
 </div>
 <p>On the x-axis, we have model output <code>p</code> which is between 0 and 1 and on the y-axis, we have fractions of positive captured within the predicted probability bin. We expect a linear relationship with slope 1.</p>
 </section>
-<section id="why-do-we-need-model-calibration" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="why-do-we-need-model-calibration"><span class="header-section-number">2</span> Why do we need Model calibration?</h2>
-<p>There are many cases where model calibration is not required like in the case of ranking or selecting the top 20% for some targeting campaign. Let’s focus on cases where calibrated models can add a lot of value -</p>
-<section id="case-1-calibrated-models-provide-flexibility" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="case-1-calibrated-models-provide-flexibility"><span class="header-section-number">2.1</span> Case 1: Calibrated models provide flexibility</h3>
-<p>Consider the following example - <br> A data scientist built an ML model to estimate the probability of a customer churning. Let’s say you want to prioritize b/w the following two customers-</p>
-<figure class="figure">
-<img src="https://aayushmnit.com/posts/2022-10-26-Model_Calibration/churn_example.png" style="width:100%" class="figure-img">
-<figcaption align="center" class="figure-caption">
-Fig. 2: Churn probability
-</figcaption>
-</figure>
-<p>In this case, Customer 1 has an 80% probability of churn but the revenue generated by them is \$100 and Customer 2 has a 60% chance of churn, and the revenue generated is about $1000. As a business, you might want to save Customer 2. To make such probability to revenue impact conversion or any cost-benefit analysis you need model calibration.</p>
-</section>
-<section id="case-2-model-modularity" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="case-2-model-modularity"><span class="header-section-number">2.2</span> Case 2: Model modularity</h3>
-<p>In complex machine-learning decision engines, a machine-learning model might be used in conjunction with other machine-learning models. Consider the following example - <br> A data scientist built two ML models to estimate the probability of a customer upselling two different products. Let’s say you want to prioritize which recommendation to act on looking at the following case -</p>
+<section id="why-do-we-need-model-calibration" class="level2">
+<h2 class="anchored" data-anchor-id="why-do-we-need-model-calibration">Why do we need Model calibration?</h2>
+<p>There are many cases where model calibration is not required like in the case of ranking or selecting the top 20% for some targeting campaign. Calibrated models are especially important in making decision between multiple options of different magnitude or sizes, like expected value problems. In complex machine-learning decision engines, a machine-learning model might be used in conjunction with other machine-learning models. For example, the business would like to prioritize upselling customer an additional product. So, a data scientist builds two ML models to estimate the probability of a customer buying two different products in addition to the products they are already purchasing.</p>
 <figure class="figure">
 <img src="https://aayushmnit.com/posts/2022-10-26-Model_Calibration/upsell_example.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig. 3: Upsell probability
+Fig. 2: Upsell probability
 </figcaption>
 </figure>
-<p>In this case, Product 1 has an 80% probability of upselling but the revenue generated by this product is $10 per SKU and Product 2 has a 60% chance of upselling and revenue generated is about $100 per SKU. As a business, you might want to recommend Product 2 to the customer. To make such probability to revenue impact conversion b/w models, you need your models to be calibrated.</p>
+<p>In this case, Product 1 with $10 in revenue has an 80% probability of upselling, while Product 2 with $100 in revenue has a 60% chance of upselling. As a business, you might want to recommend Product 2 to the customer because of the higher expected value.</p>
+<p>To do this expected value comparison between models, you need your models to be calibrated to output accurate probabilities.</p>
 </section>
-</section>
-<section id="various-methods-for-calibration" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="various-methods-for-calibration"><span class="header-section-number">3</span> Various Methods for Calibration</h2>
-<section id="data-overview" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="data-overview"><span class="header-section-number">3.1</span> Data overview</h3>
-<p>For this blog, we will use <a href="https://archive.ics.uci.edu/ml/datasets/Adult">Adult Income Dataset</a> from the <strong>UCI machine learning Repository</strong><sup>1</sup>. The problem in this dataset is set up as a binary classification problem to predict if a certain individual income based on various census information (education level, age, gender, occupation, etc.) exceeds $50K/year. For sake of simplicity, we are only going to use observations of individuals in the United States and the following predictors -</p>
+<section id="case-study-three-methods-for-calibration" class="level2">
+<h2 class="anchored" data-anchor-id="case-study-three-methods-for-calibration">Case study: Three methods for calibration</h2>
+<p>For demonstration in this article, we will be solving a binary classification problem using the <a href="https://archive.ics.uci.edu/ml/datasets/Adult">Adult Income Dataset</a> from the <strong>UCI machine learning Repository</strong><sup>1</sup> to predict if a certain individual income based on various census information (education level, age, gender, occupation, and more) exceeds $50K/year. For this example, we will limit our scope to the United States and the following predictors:</p>
 <ul>
 <li><code>Age</code>: <code>continuous</code> variable, individuals’ age</li>
 <li><code>Occupation</code>: <code>categorical</code> variable, Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces.</li>
 <li><code>HoursPerWeek</code>: <code>continuous</code> variable, amount of hours spent in a job per week</li>
 <li><code>Education</code>: <code>categorical</code> variable, Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool.</li>
 </ul>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:00.711774Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:00.702718Z&quot;}" data-execution_count="18">
+<p>In the below code we:</p>
+<ul>
+<li>Import the libraries needed for this project</li>
+<li>Load the data from our source</li>
+<li>Label our columns</li>
+<li>Filter data to only our desired columns, and limit our scope just to the United States for simplicity</li>
+<li>Label encode our categorical columns</li>
+<li>Set our random seed (for reproducibility)</li>
+<li>Split our dataset into test and train</li>
+</ul>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-15T22:06:30.228416Z&quot;,&quot;start_time&quot;:&quot;2022-12-15T22:06:28.930101Z&quot;}" data-execution_count="27">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;">## Importing required libraries</span></span>
@@ -2384,7 +2379,7 @@ Fig. 3: Upsell probability
 <span id="cb3-35">    <span class="cf" style="color: #003B4F;">return</span> df, le_dict</span></code></pre></div>
 </details>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:01.432794Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:00.713308Z&quot;}" data-execution_count="19">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-15T22:06:32.400479Z&quot;,&quot;start_time&quot;:&quot;2022-12-15T22:06:31.774190Z&quot;}" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">df <span class="op" style="color: #5E5E5E;">=</span> pd.read_csv( <span class="st" style="color: #20794D;">"https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data"</span>, header<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>)</span>
 <span id="cb4-2">df.columns <span class="op" style="color: #5E5E5E;">=</span> [</span>
 <span id="cb4-3">    <span class="st" style="color: #20794D;">"Age"</span>, <span class="st" style="color: #20794D;">"WorkClass"</span>, <span class="st" style="color: #20794D;">"fnlwgt"</span>, <span class="st" style="color: #20794D;">"Education"</span>, <span class="st" style="color: #20794D;">"EducationNum"</span>,</span>
@@ -2399,51 +2394,51 @@ Fig. 3: Upsell probability
 <span id="cb4-12">df <span class="op" style="color: #5E5E5E;">=</span> df.loc[:,[<span class="st" style="color: #20794D;">"Education"</span>, <span class="st" style="color: #20794D;">"Age"</span>,<span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"HoursPerWeek"</span>, <span class="st" style="color: #20794D;">"Income"</span>]]</span>
 <span id="cb4-13">df, _ <span class="op" style="color: #5E5E5E;">=</span> label_encoder(df, columns <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"Education"</span>, <span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"Income"</span>])</span>
 <span id="cb4-14">X <span class="op" style="color: #5E5E5E;">=</span> df.loc[:,[<span class="st" style="color: #20794D;">"Education"</span>,<span class="st" style="color: #20794D;">"Age"</span>, <span class="st" style="color: #20794D;">"Occupation"</span>, <span class="st" style="color: #20794D;">"HoursPerWeek"</span>]]</span>
-<span id="cb4-15">y <span class="op" style="color: #5E5E5E;">=</span> df.Income</span></code></pre></div>
+<span id="cb4-15">y <span class="op" style="color: #5E5E5E;">=</span> df.Income</span>
+<span id="cb4-16"></span>
+<span id="cb4-17">seed <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">42</span></span>
+<span id="cb4-18">X_train, X_test, y_train, y_test <span class="op" style="color: #5E5E5E;">=</span> train_test_split(X, y, test_size<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.20</span>, random_state<span class="op" style="color: #5E5E5E;">=</span>seed)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Label encoding column - Education
 Label encoding column - Occupation
 Label encoding column - Income</code></pre>
 </div>
 </div>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:01.439799Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:01.434174Z&quot;}" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1">seed <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">42</span></span>
-<span id="cb6-2">X_train, X_test, y_train, y_test <span class="op" style="color: #5E5E5E;">=</span> train_test_split(X, y, test_size<span class="op" style="color: #5E5E5E;">=</span><span class="fl" style="color: #AD0000;">0.20</span>, random_state<span class="op" style="color: #5E5E5E;">=</span>seed)</span></code></pre></div>
-</div>
-</section>
-<section id="visualizing-the-calibration-issue" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="visualizing-the-calibration-issue"><span class="header-section-number">3.2</span> Visualizing the calibration issue</h3>
-<p>Let’s fit a random forest classifier on this data and visualize the calibration plot.</p>
+<p>Next, we:</p>
+<ul>
+<li>Fit a random forest classifier on this data</li>
+<li>Visualize the calibration plot</li>
+</ul>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:02.692220Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:01.441406Z&quot;}" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;">## Fitting the model on training data</span></span>
-<span id="cb7-2">rf_model <span class="op" style="color: #5E5E5E;">=</span> RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed)</span>
-<span id="cb7-3">rf_model.fit(X_train, y_train)</span>
-<span id="cb7-4"></span>
-<span id="cb7-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
-<span id="cb7-6">prob_true, prob_pred  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_true <span class="op" style="color: #5E5E5E;">=</span> y_test, </span>
-<span id="cb7-7">                                          y_pred <span class="op" style="color: #5E5E5E;">=</span> rf_model.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="co" style="color: #5E5E5E;">## Fitting the model on training data</span></span>
+<span id="cb6-2">rf_model <span class="op" style="color: #5E5E5E;">=</span> RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed)</span>
+<span id="cb6-3">rf_model.fit(X_train, y_train)</span>
+<span id="cb6-4"></span>
+<span id="cb6-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
+<span id="cb6-6">prob_true, prob_pred  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_true <span class="op" style="color: #5E5E5E;">=</span> y_test, </span>
+<span id="cb6-7">                                          y_pred <span class="op" style="color: #5E5E5E;">=</span> rf_model.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
 </div>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:02.775885Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:02.694384Z&quot;}" data-execution_count="22">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
-<span id="cb8-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true,</span>
-<span id="cb8-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred,</span>
-<span id="cb8-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred</span>
-<span id="cb8-5">})</span>
-<span id="cb8-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
-<span id="cb8-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
-<span id="cb8-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
-<span id="cb8-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
-<span id="cb8-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
-<span id="cb8-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
-<span id="cb8-12">fig.update_layout(</span>
-<span id="cb8-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Without calibration"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
-<span id="cb8-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
-<span id="cb8-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
-<span id="cb8-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
-<span id="cb8-17">)</span>
-<span id="cb8-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb7-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true,</span>
+<span id="cb7-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred,</span>
+<span id="cb7-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred</span>
+<span id="cb7-5">})</span>
+<span id="cb7-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb7-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb7-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb7-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
+<span id="cb7-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
+<span id="cb7-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb7-12">fig.update_layout(</span>
+<span id="cb7-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Without calibration"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb7-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb7-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
+<span id="cb7-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb7-17">)</span>
+<span id="cb7-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 
@@ -2472,7 +2467,7 @@ if (outputEl) {{
 }}
 
                         })                };                });            </script>        </div>
-<p>Fig 4 - An example of non-calibrated classifier</p>
+<p>Fig 3 - An example of non-calibrated classifier</p>
 </div>
 </div>
 <div class="callout-note callout callout-style-default callout-captioned">
@@ -2485,42 +2480,50 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>As we can see above, the model seems to be over-predicting in lower deciles and under-predicting in higher deciles.</p>
+<p>As we can see above, the model is over-predicting in lower deciles and under-predicting in higher deciles.</p>
 </div>
 </div>
-</section>
-<section id="isotonic-regression" class="level3" data-number="3.3">
-<h3 data-number="3.3" class="anchored" data-anchor-id="isotonic-regression"><span class="header-section-number">3.3</span> Isotonic Regression</h3>
+<section id="calibration-method-1-isotonic-regression" class="level3">
+<h3 class="anchored" data-anchor-id="calibration-method-1-isotonic-regression">Calibration method 1: Isotonic Regression</h3>
+<p>Isotonic regression is a variation of ordinary least squares regression, but it has the added constraint that the predicted values must always be increasing or decreasing, and it has to lie as close to the observation as possible. Isotonic regression is often used in situations where the relationship between the input and output variables is known to be monotonic, but the exact form of the relationship is not known. In our case, we want a monotonic behavior where the actual probabilities must always be increasing with increasing predicted probability.</p>
+<p>Mathematically, we can write the Isotonic regression as following - <img src="https://latex.codecogs.com/png.latex?p_%7Bcalib%7D%20=%20%5Coperatorname%7Biso%7D(f(x))%20+%20%5Cepsilon_i"> Where-</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?%5Coperatorname%7Biso%7D"> is the isotonic function</li>
+<li><img src="https://latex.codecogs.com/png.latex?f(x)"> is the predicted probability from the original classifier f</li>
+<li><img src="https://latex.codecogs.com/png.latex?p_%7Bcalib%7D"> is the calibrated probability</li>
+</ul>
+<p>and we want to optimize the following function - <img src="https://latex.codecogs.com/png.latex?%5Coperatorname%7Bargmin%7D%20%5Csum(p_%7Bactual%7D-p_%7Bcalib%7D)%5E2"></p>
+<p>Isotonic regressions is prone to overfitting, hence it works better when there is enough training data available.</p>
 <p>We will be using <a href="https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibratedClassifierCV.html"><code>CalibratedClassifierCV</code></a>to calibrate our classifier. The <code>isotonic</code> method fits a non-parametric isotonic regressor, which outputs a step-wise non-decreasing function. <sup>2</sup></p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:08.333224Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:02.777629Z&quot;}" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="co" style="color: #5E5E5E;">## training model using random forest and isotonic regression for calibration</span></span>
-<span id="cb9-2">calibrated_rf <span class="op" style="color: #5E5E5E;">=</span> CalibratedClassifierCV(RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed), method <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'isotonic'</span>)</span>
-<span id="cb9-3">calibrated_rf.fit(X_train, y_train)</span>
-<span id="cb9-4"></span>
-<span id="cb9-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
-<span id="cb9-6">prob_true_calib, prob_pred_calib  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_test, calibrated_rf.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="co" style="color: #5E5E5E;">## training model using random forest and isotonic regression for calibration</span></span>
+<span id="cb8-2">calibrated_rf <span class="op" style="color: #5E5E5E;">=</span> CalibratedClassifierCV(RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed), method <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'isotonic'</span>)</span>
+<span id="cb8-3">calibrated_rf.fit(X_train, y_train)</span>
+<span id="cb8-4"></span>
+<span id="cb8-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
+<span id="cb8-6">prob_true_calib, prob_pred_calib  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_test, calibrated_rf.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
 </div>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:08.412195Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:08.335092Z&quot;}" data-execution_count="24">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
-<span id="cb10-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true_calib,</span>
-<span id="cb10-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred_calib,</span>
-<span id="cb10-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred_calib</span>
-<span id="cb10-5">})</span>
-<span id="cb10-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
-<span id="cb10-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
-<span id="cb10-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
-<span id="cb10-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
-<span id="cb10-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
-<span id="cb10-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
-<span id="cb10-12">fig.update_layout(</span>
-<span id="cb10-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Isotonic"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
-<span id="cb10-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
-<span id="cb10-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
-<span id="cb10-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
-<span id="cb10-17">)</span>
-<span id="cb10-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb9-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true_calib,</span>
+<span id="cb9-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred_calib,</span>
+<span id="cb9-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred_calib</span>
+<span id="cb9-5">})</span>
+<span id="cb9-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb9-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb9-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb9-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
+<span id="cb9-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
+<span id="cb9-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb9-12">fig.update_layout(</span>
+<span id="cb9-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Isotonic"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb9-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb9-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
+<span id="cb9-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb9-17">)</span>
+<span id="cb9-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 
@@ -2549,7 +2552,7 @@ if (outputEl) {{
 }}
 
                         })                };                });            </script>        </div>
-<p>Fig 5 - An example of calibration using Isotonic regression</p>
+<p>Fig 4 - An example of calibration using Isotonic regression</p>
 </div>
 </div>
 <div class="callout-note callout callout-style-default callout-captioned">
@@ -2562,42 +2565,51 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>As we can see above, the model seems to be well calibrated once Isotonic regression is used.</p>
+<p>As we can see above, the model is well calibrated once Isotonic regression is used because the actual probability lies much closer to the expected probability.</p>
 </div>
 </div>
 </section>
-<section id="sigmoid-method" class="level3" data-number="3.4">
-<h3 data-number="3.4" class="anchored" data-anchor-id="sigmoid-method"><span class="header-section-number">3.4</span> Sigmoid Method</h3>
+<section id="calibration-method-2-sigmoid-method-platt-scaling" class="level3">
+<h3 class="anchored" data-anchor-id="calibration-method-2-sigmoid-method-platt-scaling">Calibration method 2: Sigmoid method / Platt scaling</h3>
+<p>The sigmoid method, also known as Platt scaling, works by transforming the outputs of the classifier using a sigmoid function. The calibrated probabilities are obtained using the following sigmoid function - <img src="https://latex.codecogs.com/png.latex?p_%7Bcalib%7D%20=%20%5Cfrac%7B1%7D%7B1+e%5E%7B(Af(x)%20+%20B)%7D%7D"></p>
+<p>Where -</p>
+<ul>
+<li><img src="https://latex.codecogs.com/png.latex?p_%7Bcalib%7D"> is the calibrated probability</li>
+<li><img src="https://latex.codecogs.com/png.latex?f(x)"> is the predicted probability from the original classifier f</li>
+<li>A and B are scalar parameters that learned by the algorithm</li>
+</ul>
+<p>The parameters A and B are estimated using a maximum likelihood method that optimizes on the same training set as that for the original classifier f.&nbsp;</p>
+<p>Sigmoid/Platt scaling was originally invented for SVMs and it works well for other methods as well. This method is less prone to overfitting and should be preferred over Isotonic regression if you have less training data.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:13.990346Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:08.413969Z&quot;}" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;">## training model using random forest and sigmoid method for calibration</span></span>
-<span id="cb11-2">calibrated_sigmoid <span class="op" style="color: #5E5E5E;">=</span> CalibratedClassifierCV(</span>
-<span id="cb11-3">     RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed), method <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'sigmoid'</span>)</span>
-<span id="cb11-4">calibrated_sigmoid.fit(X_train, y_train)</span>
-<span id="cb11-5"></span>
-<span id="cb11-6"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
-<span id="cb11-7">prob_true_calib, prob_pred_calib  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_test, calibrated_sigmoid.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="co" style="color: #5E5E5E;">## training model using random forest and sigmoid method for calibration</span></span>
+<span id="cb10-2">calibrated_sigmoid <span class="op" style="color: #5E5E5E;">=</span> CalibratedClassifierCV(</span>
+<span id="cb10-3">     RandomForestClassifier(random_state<span class="op" style="color: #5E5E5E;">=</span>seed), method <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">'sigmoid'</span>)</span>
+<span id="cb10-4">calibrated_sigmoid.fit(X_train, y_train)</span>
+<span id="cb10-5"></span>
+<span id="cb10-6"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
+<span id="cb10-7">prob_true_calib, prob_pred_calib  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_test, calibrated_sigmoid.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
 </div>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:14.072678Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:13.991712Z&quot;}" data-execution_count="26">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
-<span id="cb12-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true_calib,</span>
-<span id="cb12-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred_calib,</span>
-<span id="cb12-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred_calib</span>
-<span id="cb12-5">})</span>
-<span id="cb12-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
-<span id="cb12-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
-<span id="cb12-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
-<span id="cb12-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
-<span id="cb12-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
-<span id="cb12-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
-<span id="cb12-12">fig.update_layout(</span>
-<span id="cb12-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot : Sigmoid"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
-<span id="cb12-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
-<span id="cb12-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
-<span id="cb12-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
-<span id="cb12-17">)</span>
-<span id="cb12-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb11-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true_calib,</span>
+<span id="cb11-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred_calib,</span>
+<span id="cb11-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred_calib</span>
+<span id="cb11-5">})</span>
+<span id="cb11-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb11-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb11-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb11-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
+<span id="cb11-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
+<span id="cb11-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb11-12">fig.update_layout(</span>
+<span id="cb11-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot : Sigmoid"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb11-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb11-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
+<span id="cb11-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb11-17">)</span>
+<span id="cb11-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 
@@ -2626,7 +2638,7 @@ if (outputEl) {{
 }}
 
                         })                };                });            </script>        </div>
-<p>Fig 6 - An example of calibration using sigmoid method</p>
+<p>Fig 5 - An example of calibration using sigmoid method</p>
 </div>
 </div>
 <div class="callout-note callout callout-style-default callout-captioned">
@@ -2639,43 +2651,46 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>As we can see above, the model seems to be calibrated but not as well as the <code>isotonic</code> method.</p>
+<p>As we can see above, the model is more calibrated than our default model but not as well as the <code>isotonic</code> method.</p>
 </div>
 </div>
 </section>
-<section id="train-with-logloss-metric" class="level3" data-number="3.5">
-<h3 data-number="3.5" class="anchored" data-anchor-id="train-with-logloss-metric"><span class="header-section-number">3.5</span> Train with “Logloss” metric</h3>
-<p>Many boosting based ensembling classifier models like GradientBoostingClassifier, LightGBM, and Xgboost use <code>log_loss</code> as their default loss function. Training with <code>log_loss</code> helps the output probabilities to be calibrated.</p>
+<section id="calibration-method-3-train-with-logloss-metric" class="level3">
+<h3 class="anchored" data-anchor-id="calibration-method-3-train-with-logloss-metric">Calibration method 3: Train with “Logloss” metric</h3>
+<p>Many boosting based ensembling classifier models like GradientBoostingClassifier, LightGBM, and Xgboost use <code>log_loss</code> as their default loss function. Training with <code>log_loss</code> helps the output probabilities to be calibrated. To explain why log loss helps in calibration, let’s look at binary log loss function -</p>
+<p><img src="https://latex.codecogs.com/png.latex?logloss%20=%20%5Cfrac%7B-1%7D%7BN%7D%5Csum_%7Bi=1%7D%5E%7BN%7Dy_i%5Clog%7B(p(y_i))%7D%20+%20(1-y_i)%5Clog%7B(1-p(y_i)%7D)"></p>
+<p>Now let’s take an instance of observation where the true outcome is 1. Consider two predictions of 0.7 and 0.9 from the model. If we take the cutoff &gt; 0.5 both of these predictions are correct but the logloss for 0.7 and 0.9 prediction is 0.36 and 0.1 respectively. As we can see log loss penalizes uncertainty in prediction forcing the model to predict close to the actual outcome.</p>
+<p>Training with logloss is preferred over fitting a calibration function as model is already calibrated and reduces overhead of training and maintaining an extra model for calibration.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:14.965372Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:14.074086Z&quot;}" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="co" style="color: #5E5E5E;">## Fitting the model on training data</span></span>
-<span id="cb13-2">gb_model <span class="op" style="color: #5E5E5E;">=</span> GradientBoostingClassifier()</span>
-<span id="cb13-3">gb_model.fit(X_train, y_train)</span>
-<span id="cb13-4"></span>
-<span id="cb13-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
-<span id="cb13-6">prob_true, prob_pred  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_true <span class="op" style="color: #5E5E5E;">=</span> y_test, </span>
-<span id="cb13-7">                                          y_pred <span class="op" style="color: #5E5E5E;">=</span> gb_model.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="co" style="color: #5E5E5E;">## Fitting the model on training data</span></span>
+<span id="cb12-2">gb_model <span class="op" style="color: #5E5E5E;">=</span> GradientBoostingClassifier()</span>
+<span id="cb12-3">gb_model.fit(X_train, y_train)</span>
+<span id="cb12-4"></span>
+<span id="cb12-5"><span class="co" style="color: #5E5E5E;">## getting the output to visualize on test data</span></span>
+<span id="cb12-6">prob_true, prob_pred  <span class="op" style="color: #5E5E5E;">=</span> calibration_data(y_true <span class="op" style="color: #5E5E5E;">=</span> y_test, </span>
+<span id="cb12-7">                                          y_pred <span class="op" style="color: #5E5E5E;">=</span> gb_model.predict_proba(X_test)[:,<span class="dv" style="color: #AD0000;">1</span>])</span></code></pre></div>
 </div>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-10-28T18:26:15.048313Z&quot;,&quot;start_time&quot;:&quot;2022-10-28T18:26:14.967372Z&quot;}" data-execution_count="28">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
-<span id="cb14-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true,</span>
-<span id="cb14-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred,</span>
-<span id="cb14-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred</span>
-<span id="cb14-5">})</span>
-<span id="cb14-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
-<span id="cb14-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
-<span id="cb14-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
-<span id="cb14-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
-<span id="cb14-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
-<span id="cb14-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
-<span id="cb14-12">fig.update_layout(</span>
-<span id="cb14-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Using boosting method"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
-<span id="cb14-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
-<span id="cb14-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
-<span id="cb14-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
-<span id="cb14-17">)</span>
-<span id="cb14-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1">chart_df <span class="op" style="color: #5E5E5E;">=</span> pd.DataFrame({</span>
+<span id="cb13-2">    <span class="st" style="color: #20794D;">"actuals"</span>: prob_true,</span>
+<span id="cb13-3">    <span class="st" style="color: #20794D;">"predicted"</span>: prob_pred,</span>
+<span id="cb13-4">    <span class="st" style="color: #20794D;">"expected"</span>: prob_pred</span>
+<span id="cb13-5">})</span>
+<span id="cb13-6">fig <span class="op" style="color: #5E5E5E;">=</span> px.line(</span>
+<span id="cb13-7">        data_frame <span class="op" style="color: #5E5E5E;">=</span> chart_df, </span>
+<span id="cb13-8">        markers <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span>,</span>
+<span id="cb13-9">        x <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"predicted"</span>, </span>
+<span id="cb13-10">        y <span class="op" style="color: #5E5E5E;">=</span> [<span class="st" style="color: #20794D;">"actuals"</span>, <span class="st" style="color: #20794D;">"expected"</span>], </span>
+<span id="cb13-11">        template <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"plotly_dark"</span>)</span>
+<span id="cb13-12">fig.update_layout(</span>
+<span id="cb13-13">        title  <span class="op" style="color: #5E5E5E;">=</span> {<span class="st" style="color: #20794D;">"text"</span>: <span class="st" style="color: #20794D;">"Calibration Plot: Using boosting method"</span>, <span class="st" style="color: #20794D;">"y"</span>: <span class="fl" style="color: #AD0000;">0.95</span>, <span class="st" style="color: #20794D;">"x"</span>: <span class="fl" style="color: #AD0000;">0.5</span>},</span>
+<span id="cb13-14">        xaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Predicted Probability"</span>,</span>
+<span id="cb13-15">        yaxis_title<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">"Actual Probability"</span>,</span>
+<span id="cb13-16">        font <span class="op" style="color: #5E5E5E;">=</span> <span class="bu" style="color: null;">dict</span>(size<span class="op" style="color: #5E5E5E;">=</span><span class="dv" style="color: #AD0000;">15</span>)</span>
+<span id="cb13-17">)</span>
+<span id="cb13-18">fig.show(renderer<span class="op" style="color: #5E5E5E;">=</span><span class="st" style="color: #20794D;">'notebook'</span>)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 
@@ -2704,7 +2719,7 @@ if (outputEl) {{
 }}
 
                         })                };                });            </script>        </div>
-<p>Fig 7 - An example of calibration using boosting method</p>
+<p>Fig 6 - An example of calibration using boosting method</p>
 </div>
 </div>
 <div class="callout-note callout callout-style-default callout-captioned">
@@ -2722,9 +2737,12 @@ Note
 </div>
 </section>
 </section>
-<section id="conclusion-and-practical-guidance" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="conclusion-and-practical-guidance"><span class="header-section-number">4</span> Conclusion and Practical Guidance</h2>
-<p>In practice, using boosting methods tends to be better calibrated and if you are using some other classifiers try using isotonic regression with cross-validation to calibrate. I will try to add more in a follow-up blog post, as I research further into this topic.</p>
+<section id="conclusion-and-practical-guidance" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-and-practical-guidance">Conclusion and Practical Guidance</h2>
+<p>In this article, we discussed what calibration is, in which applications it is important and why, and three different methods for calibration.</p>
+<p>We demonstrated isotonic regression which can be used when there is enough training data available and model is not pre-calibrated.</p>
+<p>We also demonstrated the Sigmoid method of calibration which works better when there is not enough training data and model is not pre-calibrated.</p>
+<p>And finally, we demonstrated the Logloss metric for calibration which is the default in boosting methods and is our preferred method since the generated model is pre-calibrated and doesn’t require training and maintaining an extra model for calibration.</p>
 
 
 </section>
