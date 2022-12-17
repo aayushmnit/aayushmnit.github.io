@@ -10,7 +10,137 @@
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush's personal website</description>
 <generator>quarto-1.2.124</generator>
-<lastBuildDate>Thu, 17 Nov 2022 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 20 Dec 2022 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>Python OOPs fundamentals</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.com/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html</link>
+  <description><![CDATA[ 
+
+
+
+<blockquote class="blockquote">
+<p>An introduction to Object Oriented programming using Python.</p>
+</blockquote>
+<p>Increasingly it’s becoming important for Data professionals to become better at programming and mordern programming is centered around Object Oriented programming paradigm. This articles helps in explaining some important programming concepts which are mostly language agnostic but we will be using Python in this article.</p>
+<p>Object-oriented programming (OOPs) is a programming paradigm which relies on the concept of classes and objects. The basic idea of OOP is to divide a sophisticated program into a number of objects that interact with each other to achieve the desired functionality.</p>
+<section id="what-are-objects-and-classes" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="what-are-objects-and-classes"><span class="header-section-number">1</span> What are <code>Objects</code> and <code>Classes</code>?</h2>
+<p><code>Classes</code> are the blue print of defining an <code>Object</code>. While <code>Object</code> are a collection of data/properties and their behaviors/methods.</p>
+<p>For example- Think of a class <code>Bulb</code> which will have a state (On/Off) and methods to turnOn and turnoff the bulb.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T21:45:27.374096Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T21:45:27.370947Z&quot;}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="kw" style="color: #003B4F;">class</span> Bulb():</span>
+<span id="cb1-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, onOff<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>): <span class="va" style="color: #111111;">self</span>.onOff <span class="op" style="color: #5E5E5E;">=</span> onOff    </span>
+<span id="cb1-3">    <span class="kw" style="color: #003B4F;">def</span> turnOn(<span class="va" style="color: #111111;">self</span>): <span class="va" style="color: #111111;">self</span>.onOff <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span></span>
+<span id="cb1-4">    <span class="kw" style="color: #003B4F;">def</span> turnOff(<span class="va" style="color: #111111;">self</span>): <span class="va" style="color: #111111;">self</span>.onOff <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">False</span></span></code></pre></div>
+</div>
+<p>Now we can create multiple bulb objects from this <code>Bulb</code> class.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T22:47:16.342258Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T22:47:16.338097Z&quot;}" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">b1 <span class="op" style="color: #5E5E5E;">=</span> Bulb(onOff<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>)</span>
+<span id="cb2-2">b2 <span class="op" style="color: #5E5E5E;">=</span> Bulb()</span>
+<span id="cb2-3"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Bulb 1 state is :</span><span class="sc" style="color: #5E5E5E;">{</span>b1<span class="sc" style="color: #5E5E5E;">.</span>onOff<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">, Bulb 2 state is :</span><span class="sc" style="color: #5E5E5E;">{</span>b2<span class="sc" style="color: #5E5E5E;">.</span>onOff<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bulb 1 state is :True, Bulb 2 state is :False</code></pre>
+</div>
+</div>
+<p>b1 and b2 are objects of class <code>Bulb</code>. Let’s use the turnOn and turnOff <code>methods</code> to update the bulb <code>properties</code>.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T22:47:17.563648Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T22:47:17.560081Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">b1.turnOff()<span class="op" style="color: #5E5E5E;">;</span> b2.turnOn()</span>
+<span id="cb4-2"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Bulb 1 state is :</span><span class="sc" style="color: #5E5E5E;">{</span>b1<span class="sc" style="color: #5E5E5E;">.</span>onOff<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">, Bulb 2 state is :</span><span class="sc" style="color: #5E5E5E;">{</span>b2<span class="sc" style="color: #5E5E5E;">.</span>onOff<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Bulb 1 state is :False, Bulb 2 state is :True</code></pre>
+</div>
+</div>
+<p>As we can see from the example above, a <code>Bulb</code> object contains of <code>onOff</code> property. <code>Properties</code> are variables that contain information regarding the object of a class and <code>Methods</code> like turnOn and turnOff in our <code>Bulb</code> class are functions that have access to <code>properties</code> of a class. <code>Methods</code> can accept additional parameters, modify properties and return values.</p>
+</section>
+<section id="class-and-instance-variables" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="class-and-instance-variables"><span class="header-section-number">2</span> Class and Instance variables</h2>
+<p>In Python, properties can be defined in two ways -</p>
+<ul>
+<li><strong>Class Variables</strong> - Class variables are shared by all objects of the class. A change in the class variable will change the value of that property in <strong>all the objects of the class</strong>.</li>
+<li><strong>Instance Varaibles</strong> - Instance variables are unique to each instance or object of the class. A change in instance variable will change the value of the property in that specific object only.</li>
+</ul>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:45:54.362708Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:45:54.358328Z&quot;}" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
+<span id="cb6-2">    <span class="co" style="color: #5E5E5E;"># Creating a class variable</span></span>
+<span id="cb6-3">    companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Microsoft"</span></span>
+<span id="cb6-4">    </span>
+<span id="cb6-5">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
+<span id="cb6-6">        <span class="co" style="color: #5E5E5E;"># creating a instance variable</span></span>
+<span id="cb6-7">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name</span>
+<span id="cb6-8">    </span>
+<span id="cb6-9">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">'Aayush'</span>)</span>
+<span id="cb6-10">e2 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">'John'</span>)</span>
+<span id="cb6-11"></span>
+<span id="cb6-12"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f'Name :</span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>name<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'</span>)</span>
+<span id="cb6-13"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f'Company Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>companyName<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'</span>)</span>
+<span id="cb6-14"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f'Name :</span><span class="sc" style="color: #5E5E5E;">{</span>e2<span class="sc" style="color: #5E5E5E;">.</span>name<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'</span>)</span>
+<span id="cb6-15"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f'Company Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e2<span class="sc" style="color: #5E5E5E;">.</span>companyName<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Name :Aayush
+Company Name: Microsoft
+Name :John
+Company Name: Microsoft</code></pre>
+</div>
+</div>
+<p>As we can see above, class variable are defined outside of the initializer and instance variable are defined inside the initializer.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:45:55.562597Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:45:55.559445Z&quot;}" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">Employee.companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Amazon"</span></span>
+<span id="cb8-2"><span class="bu" style="color: null;">print</span>(e1.companyName, e2.companyName)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Amazon Amazon</code></pre>
+</div>
+</div>
+<p>As we can see above changing a class variable in the Employee class changes class variable in all objects objects of the class. Most of the times we will be using instance variable but knowledge about class variables can come handy. Let’s look at a interesting use of class variable -</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:51:13.987851Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:51:13.983102Z&quot;}" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
+<span id="cb10-2">    <span class="co" style="color: #5E5E5E;"># Creating a class variable</span></span>
+<span id="cb10-3">    companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Microsoft"</span></span>
+<span id="cb10-4">    companyEmployees <span class="op" style="color: #5E5E5E;">=</span> []</span>
+<span id="cb10-5">    </span>
+<span id="cb10-6">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
+<span id="cb10-7">        <span class="co" style="color: #5E5E5E;"># creating a instance variable</span></span>
+<span id="cb10-8">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name</span>
+<span id="cb10-9">        <span class="va" style="color: #111111;">self</span>.companyEmployees.append(<span class="va" style="color: #111111;">self</span>.name)</span>
+<span id="cb10-10">    </span>
+<span id="cb10-11">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">'Aayush'</span>)</span>
+<span id="cb10-12">e2 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">'John'</span>)</span>
+<span id="cb10-13"></span>
+<span id="cb10-14"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f'Name :</span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>name<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'</span>)</span>
+<span id="cb10-15"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f'Team Members: </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>companyEmployees<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'</span>)</span>
+<span id="cb10-16"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f'Name :</span><span class="sc" style="color: #5E5E5E;">{</span>e2<span class="sc" style="color: #5E5E5E;">.</span>name<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'</span>)</span>
+<span id="cb10-17"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f'Company Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e2<span class="sc" style="color: #5E5E5E;">.</span>companyEmployees<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">'</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Name :Aayush
+Team Members: ['Aayush', 'John']
+Name :John
+Company Name: ['Aayush', 'John']</code></pre>
+</div>
+</div>
+<p>As we can see above, we are saving all objects of <code>Employee</code> class in <code>companyEmployees</code> which is a list shared by all objects of the class <code>Employee</code>.</p>
+</section>
+<section id="class-static-and-instance-methods" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="class-static-and-instance-methods"><span class="header-section-number">3</span> Class, Static and Instance methods</h2>
+<p>In Python classes, we have three types of methods -</p>
+<ul>
+<li><strong>Class Methods</strong> - Class methods works with class variables and are accessible using the class name rather than its object.</li>
+<li><strong>Static Methods</strong> - Static methods are methods</li>
+<li><strong>Instance Methods</strong> -</li>
+</ul>
+</section>
+<section id="tbc.." class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="tbc.."><span class="header-section-number">4</span> TBC..</h2>
+
+
+</section>
+
+ ]]></description>
+  <category>Python</category>
+  <category>Programming</category>
+  <guid>https://aayushmnit.com/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html</guid>
+  <pubDate>Tue, 20 Dec 2022 08:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.com/posts/2022-12-20-PythonFundamentals/Python-logo.png" medium="image" type="image/png" height="158" width="144"/>
+</item>
 <item>
   <title>Stable diffusion using 🤗 Hugging Face - DiffEdit paper implementation</title>
   <dc:creator>Aayush Agrawal</dc:creator>

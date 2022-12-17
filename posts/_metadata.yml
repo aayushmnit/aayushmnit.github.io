@@ -2,4 +2,8 @@ freeze: true
 
 comments: 
   utterances: 
-    repo: aayushmnit/blogComments 
+    repo: aayushmnit/blogComments     
+
+format:
+  html:
+    highlight-style: github

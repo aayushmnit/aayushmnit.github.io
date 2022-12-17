@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html",
       "/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html",
       "/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html",
       "/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html",
@@ -23,6 +24,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html",
       "/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html",
       "/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html",
       "/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html",
