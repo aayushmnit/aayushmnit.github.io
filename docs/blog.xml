@@ -8,8 +8,8 @@
 <title>Aayush Agrawal</title>
 <link>https://aayushmnit.com/blog.html</link>
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
-<description>Aayush's personal website</description>
-<generator>quarto-1.2.124</generator>
+<description>Aayush&#39;s personal website</description>
+<generator>quarto-1.2.226</generator>
 <lastBuildDate>Tue, 20 Dec 2022 08:00:00 GMT</lastBuildDate>
 <item>
   <title>Python OOPs fundamentals</title>
@@ -124,14 +124,151 @@ Company Name: ['Aayush', 'John']</code></pre>
 <p>In Python classes, we have three types of methods -</p>
 <ul>
 <li><strong>Class Methods</strong> - Class methods works with class variables and are accessible using the class name rather than its object.</li>
-<li><strong>Static Methods</strong> - Static methods are methods</li>
-<li><strong>Instance Methods</strong> -</li>
+<li><strong>Static Methods</strong> - Static methods are methods that are usually limited to class only and not their objects. They don’t typically modify or access class and instance variable. They are used as utility functions inside the class and we don’t want the inherited class to modify them.</li>
+<li><strong>Instance Methods</strong> - Instance methods are the most used methods and have access to instance variables within the class. They can also take new parameters to perform desired operations.</li>
 </ul>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:20:29.445420Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:20:29.442115Z&quot;}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
+<span id="cb12-2">    <span class="co" style="color: #5E5E5E;"># Creating a class variable</span></span>
+<span id="cb12-3">    companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Microsoft"</span></span>
+<span id="cb12-4">    companyEmployees <span class="op" style="color: #5E5E5E;">=</span> []</span>
+<span id="cb12-5">    </span>
+<span id="cb12-6">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
+<span id="cb12-7">        <span class="co" style="color: #5E5E5E;"># creating a instance variable</span></span>
+<span id="cb12-8">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name</span>
+<span id="cb12-9">        <span class="va" style="color: #111111;">self</span>.companyEmployees.append(<span class="va" style="color: #111111;">self</span>.name)</span>
+<span id="cb12-10">    </span>
+<span id="cb12-11">    <span class="at" style="color: #657422;">@classmethod</span></span>
+<span id="cb12-12">    <span class="kw" style="color: #003B4F;">def</span> getCompanyName(cls): <span class="co" style="color: #5E5E5E;"># This is a class method</span></span>
+<span id="cb12-13">         <span class="cf" style="color: #003B4F;">return</span> cls.companyName</span>
+<span id="cb12-14">    </span>
+<span id="cb12-15">    <span class="at" style="color: #657422;">@staticmethod</span></span>
+<span id="cb12-16">    <span class="kw" style="color: #003B4F;">def</span> plusTwo(x): <span class="co" style="color: #5E5E5E;"># This is a static method</span></span>
+<span id="cb12-17">        <span class="cf" style="color: #003B4F;">return</span> x<span class="op" style="color: #5E5E5E;">+</span><span class="dv" style="color: #AD0000;">2</span></span>
+<span id="cb12-18">    </span>
+<span id="cb12-19">    <span class="kw" style="color: #003B4F;">def</span> getName(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;"># This is a instance method</span></span>
+<span id="cb12-20">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>.name</span>
+<span id="cb12-21">    </span>
+<span id="cb12-22">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">'Aayush'</span>)</span>
+<span id="cb12-23"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Calling class method. Company name is </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>getCompanyName()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span>
+<span id="cb12-24"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Calling Static method. </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>plusTwo(<span class="dv" style="color: #AD0000;">2</span>)<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span>
+<span id="cb12-25"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Calling instance method. Employee name is </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>getName()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Calling class method. Company name is Microsoft
+Calling Static method. 4
+Calling instance method. Employee name is Aayush</code></pre>
+</div>
+</div>
+<p>As we can see above we use <code>@classmethod</code> decorator to define class method. <code>cls</code> is used to refer to the class just as <code>self</code> is used to refer to the object of the class. Class method atleast takes one argument <code>cls</code>.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We can use any other name instead of <code>cls</code> but <code>cls</code> is used as a convention.</p>
+</div>
+</div>
+<p>We use <code>@staticmethod</code> decorator to define static class <code>plusTwo</code>. We can see that static methods don’t take any argument like <code>self</code> and <code>cls</code>.</p>
+<p>Most commonly used methods are instance methods and they can be defined without a decorator within the class. Just like class method they take atleast one argument which is <code>self</code> by convention.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We can use any other name instead of <code>self</code> but <code>self</code> is used as a convention.</p>
+</div>
+</div>
 </section>
-<section id="tbc.." class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="tbc.."><span class="header-section-number">4</span> TBC..</h2>
+<section id="access-modifiers" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="access-modifiers"><span class="header-section-number">4</span> Access Modifiers</h2>
+<p>Access modifiers limit access to the variables and functions of a class. There are three types of access modifiers - public, protected and private.</p>
+<section id="public-attributes" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="public-attributes"><span class="header-section-number">4.1</span> Public Attributes</h3>
+<p>Public attributes are those methods and properties which can be access anywhere inside and outside of the class. By default, all the member variables and functions are public.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:44:02.728790Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:44:02.725726Z&quot;}" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
+<span id="cb14-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
+<span id="cb14-3">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name <span class="co" style="color: #5E5E5E;">## Public variable</span></span>
+<span id="cb14-4">        </span>
+<span id="cb14-5">    <span class="kw" style="color: #003B4F;">def</span> getName(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;">## Public method</span></span>
+<span id="cb14-6">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>.name</span>
+<span id="cb14-7"></span>
+<span id="cb14-8">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">"Aayush"</span>)</span>
+<span id="cb14-9"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Employee Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>getName()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Employee Name: Aayush</code></pre>
+</div>
+</div>
+<p>In the case above, both property <code>name</code> and method <code>getName</code> are public attributes.</p>
+</section>
+<section id="protected-attributes" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="protected-attributes"><span class="header-section-number">4.2</span> Protected Attributes</h3>
+<p>Protected attributes are similar to public attributes which can be accessed within the class and also available to sub classes. The only difference is the convention, which is to define each protected member with a <em>single underscore “_”</em>.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:50:51.009175Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:50:51.005784Z&quot;}" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
+<span id="cb16-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name, project):</span>
+<span id="cb16-3">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name <span class="co" style="color: #5E5E5E;">## Public variable</span></span>
+<span id="cb16-4">        <span class="va" style="color: #111111;">self</span>._project <span class="op" style="color: #5E5E5E;">=</span> project <span class="co" style="color: #5E5E5E;">## Protected variable</span></span>
+<span id="cb16-5">        </span>
+<span id="cb16-6">    <span class="kw" style="color: #003B4F;">def</span> getName(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;">## Public method</span></span>
+<span id="cb16-7">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>.name</span>
+<span id="cb16-8">    </span>
+<span id="cb16-9">    <span class="kw" style="color: #003B4F;">def</span> _getProject(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;">## Protected method</span></span>
+<span id="cb16-10">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>._project</span>
+<span id="cb16-11">    </span>
+<span id="cb16-12">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">"Aayush"</span>, <span class="st" style="color: #20794D;">"Project Orland"</span>)</span>
+<span id="cb16-13"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Employee Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>getName()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span>
+<span id="cb16-14"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Project Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>_getProject()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Employee Name: Aayush
+Project Name: Project Orland</code></pre>
+</div>
+</div>
+<p>In the case above, both property <code>_project</code> and method <code>_getProject</code> are protected attributes.</p>
+</section>
+<section id="private-attributes" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="private-attributes"><span class="header-section-number">4.3</span> Private Attributes</h3>
+<p>Private attributes are accessible within the class but not outside of the class. To define a private attribute, prefix the method or property with <em>double underscore”_“</em>.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T02:05:42.643814Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T02:05:42.633066Z&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
+<span id="cb18-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name, project, salary):</span>
+<span id="cb18-3">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name <span class="co" style="color: #5E5E5E;">## Public variable</span></span>
+<span id="cb18-4">        <span class="va" style="color: #111111;">self</span>._project <span class="op" style="color: #5E5E5E;">=</span> project <span class="co" style="color: #5E5E5E;">## Protected variable</span></span>
+<span id="cb18-5">        <span class="va" style="color: #111111;">self</span>.__salary <span class="op" style="color: #5E5E5E;">=</span> salary</span>
+<span id="cb18-6">        </span>
+<span id="cb18-7">    <span class="kw" style="color: #003B4F;">def</span> getName(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;">## Public method</span></span>
+<span id="cb18-8">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>.name</span>
+<span id="cb18-9">    </span>
+<span id="cb18-10">    <span class="kw" style="color: #003B4F;">def</span> _getProject(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;">## Protected method</span></span>
+<span id="cb18-11">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>._project</span>
+<span id="cb18-12">    </span>
+<span id="cb18-13">    <span class="kw" style="color: #003B4F;">def</span> __getSalary(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;">## Protected method</span></span>
+<span id="cb18-14">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>.__salary</span>
+<span id="cb18-15">    </span>
+<span id="cb18-16">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">"Aayush"</span>, <span class="st" style="color: #20794D;">"Project Orland"</span>, <span class="st" style="color: #20794D;">"3500"</span>)</span>
+<span id="cb18-17"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Employee Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>getName()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span>
+<span id="cb18-18"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Project Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>__getSalary()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>) </span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Employee Name: Aayush</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>AttributeError: 'Employee' object has no attribute '__getSalary'</code></pre>
+</div>
+</div>
+<p>As we can see above, <code>__salary</code> propery and <code>__getSalary</code> method are both private attributes and when we call them outside of the class they throw an error that <code>'Employee' object has no attribute '__getSalary'</code>.</p>
 
 
+</section>
 </section>
 
  ]]></description>
