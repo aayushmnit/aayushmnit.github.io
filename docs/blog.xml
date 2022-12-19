@@ -28,14 +28,14 @@
 <h2 data-number="1" class="anchored" data-anchor-id="what-are-objects-and-classes"><span class="header-section-number">1</span> What are <code>Objects</code> and <code>Classes</code>?</h2>
 <p><code>Classes</code> are the blue print of defining an <code>Object</code>. While <code>Object</code> are a collection of data/properties and their behaviors/methods.</p>
 <p>For example- Think of a class <code>Bulb</code> which will have a state (On/Off) and methods to turnOn and turnoff the bulb.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T21:45:27.374096Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T21:45:27.370947Z&quot;}" data-execution_count="6">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T21:45:27.374096Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T21:45:27.370947Z&quot;}" hidden="true" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="kw" style="color: #003B4F;">class</span> Bulb():</span>
 <span id="cb1-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, onOff<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">False</span>): <span class="va" style="color: #111111;">self</span>.onOff <span class="op" style="color: #5E5E5E;">=</span> onOff    </span>
 <span id="cb1-3">    <span class="kw" style="color: #003B4F;">def</span> turnOn(<span class="va" style="color: #111111;">self</span>): <span class="va" style="color: #111111;">self</span>.onOff <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">True</span></span>
 <span id="cb1-4">    <span class="kw" style="color: #003B4F;">def</span> turnOff(<span class="va" style="color: #111111;">self</span>): <span class="va" style="color: #111111;">self</span>.onOff <span class="op" style="color: #5E5E5E;">=</span> <span class="va" style="color: #111111;">False</span></span></code></pre></div>
 </div>
 <p>Now we can create multiple bulb objects from this <code>Bulb</code> class.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T22:47:16.342258Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T22:47:16.338097Z&quot;}" data-execution_count="13">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T22:47:16.342258Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T22:47:16.338097Z&quot;}" hidden="true" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">b1 <span class="op" style="color: #5E5E5E;">=</span> Bulb(onOff<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">True</span>)</span>
 <span id="cb2-2">b2 <span class="op" style="color: #5E5E5E;">=</span> Bulb()</span>
 <span id="cb2-3"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Bulb 1 state is :</span><span class="sc" style="color: #5E5E5E;">{</span>b1<span class="sc" style="color: #5E5E5E;">.</span>onOff<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">, Bulb 2 state is :</span><span class="sc" style="color: #5E5E5E;">{</span>b2<span class="sc" style="color: #5E5E5E;">.</span>onOff<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
@@ -44,7 +44,7 @@
 </div>
 </div>
 <p>b1 and b2 are objects of class <code>Bulb</code>. Let’s use the turnOn and turnOff <code>methods</code> to update the bulb <code>properties</code>.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T22:47:17.563648Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T22:47:17.560081Z&quot;}" data-execution_count="14">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T22:47:17.563648Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T22:47:17.560081Z&quot;}" hidden="true" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">b1.turnOff()<span class="op" style="color: #5E5E5E;">;</span> b2.turnOn()</span>
 <span id="cb4-2"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Bulb 1 state is :</span><span class="sc" style="color: #5E5E5E;">{</span>b1<span class="sc" style="color: #5E5E5E;">.</span>onOff<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">, Bulb 2 state is :</span><span class="sc" style="color: #5E5E5E;">{</span>b2<span class="sc" style="color: #5E5E5E;">.</span>onOff<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -60,7 +60,7 @@
 <li><strong>Class Variables</strong> - Class variables are shared by all objects of the class. A change in the class variable will change the value of that property in <strong>all the objects of the class</strong>.</li>
 <li><strong>Instance Varaibles</strong> - Instance variables are unique to each instance or object of the class. A change in instance variable will change the value of the property in that specific object only.</li>
 </ul>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:45:54.362708Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:45:54.358328Z&quot;}" data-execution_count="27">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:45:54.362708Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:45:54.358328Z&quot;}" hidden="true" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
 <span id="cb6-2">    <span class="co" style="color: #5E5E5E;"># Creating a class variable</span></span>
 <span id="cb6-3">    companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Microsoft"</span></span>
@@ -84,7 +84,7 @@ Company Name: Microsoft</code></pre>
 </div>
 </div>
 <p>As we can see above, class variable are defined outside of the initializer and instance variable are defined inside the initializer.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:45:55.562597Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:45:55.559445Z&quot;}" data-execution_count="28">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:45:55.562597Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:45:55.559445Z&quot;}" hidden="true" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">Employee.companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Amazon"</span></span>
 <span id="cb8-2"><span class="bu" style="color: null;">print</span>(e1.companyName, e2.companyName)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -92,7 +92,7 @@ Company Name: Microsoft</code></pre>
 </div>
 </div>
 <p>As we can see above changing a class variable in the Employee class changes class variable in all objects objects of the class. Most of the times we will be using instance variable but knowledge about class variables can come handy. Let’s look at a interesting use of class variable -</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:51:13.987851Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:51:13.983102Z&quot;}" data-execution_count="30">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-16T23:51:13.987851Z&quot;,&quot;start_time&quot;:&quot;2022-12-16T23:51:13.983102Z&quot;}" hidden="true" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
 <span id="cb10-2">    <span class="co" style="color: #5E5E5E;"># Creating a class variable</span></span>
 <span id="cb10-3">    companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Microsoft"</span></span>
@@ -127,7 +127,7 @@ Company Name: ['Aayush', 'John']</code></pre>
 <li><strong>Static Methods</strong> - Static methods are methods that are usually limited to class only and not their objects. They don’t typically modify or access class and instance variable. They are used as utility functions inside the class and we don’t want the inherited class to modify them.</li>
 <li><strong>Instance Methods</strong> - Instance methods are the most used methods and have access to instance variables within the class. They can also take new parameters to perform desired operations.</li>
 </ul>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:20:29.445420Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:20:29.442115Z&quot;}" data-execution_count="5">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:20:29.445420Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:20:29.442115Z&quot;}" hidden="true" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
 <span id="cb12-2">    <span class="co" style="color: #5E5E5E;"># Creating a class variable</span></span>
 <span id="cb12-3">    companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Microsoft"</span></span>
@@ -195,7 +195,7 @@ Note
 <section id="public-attributes" class="level3" data-number="4.1">
 <h3 data-number="4.1" class="anchored" data-anchor-id="public-attributes"><span class="header-section-number">4.1</span> Public Attributes</h3>
 <p>Public attributes are those methods and properties which can be access anywhere inside and outside of the class. By default, all the member variables and functions are public.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:44:02.728790Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:44:02.725726Z&quot;}" data-execution_count="8">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:44:02.728790Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:44:02.725726Z&quot;}" hidden="true" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
 <span id="cb14-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
 <span id="cb14-3">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name <span class="co" style="color: #5E5E5E;">## Public variable</span></span>
@@ -214,7 +214,7 @@ Note
 <section id="protected-attributes" class="level3" data-number="4.2">
 <h3 data-number="4.2" class="anchored" data-anchor-id="protected-attributes"><span class="header-section-number">4.2</span> Protected Attributes</h3>
 <p>Protected attributes are similar to public attributes which can be accessed within the class and also available to sub classes. The only difference is the convention, which is to define each protected member with a <em>single underscore “_”</em>.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:50:51.009175Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:50:51.005784Z&quot;}" data-execution_count="10">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T01:50:51.009175Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T01:50:51.005784Z&quot;}" hidden="true" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
 <span id="cb16-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name, project):</span>
 <span id="cb16-3">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name <span class="co" style="color: #5E5E5E;">## Public variable</span></span>
@@ -239,7 +239,7 @@ Project Name: Project Orland</code></pre>
 <section id="private-attributes" class="level3" data-number="4.3">
 <h3 data-number="4.3" class="anchored" data-anchor-id="private-attributes"><span class="header-section-number">4.3</span> Private Attributes</h3>
 <p>Private attributes are accessible within the class but not outside of the class. To define a private attribute, prefix the method or property with <em>double underscore”_“</em>.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T02:05:42.643814Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T02:05:42.633066Z&quot;}" data-execution_count="14">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-18T02:05:42.643814Z&quot;,&quot;start_time&quot;:&quot;2022-12-18T02:05:42.633066Z&quot;}" hidden="true" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
 <span id="cb18-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name, project, salary):</span>
 <span id="cb18-3">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name <span class="co" style="color: #5E5E5E;">## Public variable</span></span>
@@ -266,9 +266,109 @@ Project Name: Project Orland</code></pre>
 </div>
 </div>
 <p>As we can see above, <code>__salary</code> propery and <code>__getSalary</code> method are both private attributes and when we call them outside of the class they throw an error that <code>'Employee' object has no attribute '__getSalary'</code>.</p>
-
-
 </section>
+</section>
+<section id="encapsulation" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="encapsulation"><span class="header-section-number">5</span> Encapsulation</h2>
+<p>Encapsulation in OOP refers to binding data and the methods to manipulate that data together in a single unit, that is, class. Encapsulation is usually used to hide the state and representation of the object from outside. A good use of encapsulation is to make all properties private of a class to prevent direct access from outside and use public methods to let the outside world communicate with the class.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-19T00:16:38.148831Z&quot;,&quot;start_time&quot;:&quot;2022-12-19T00:16:38.145703Z&quot;}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><span class="kw" style="color: #003B4F;">class</span> Employee:</span>
+<span id="cb21-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name, project, salary):</span>
+<span id="cb21-3">        <span class="va" style="color: #111111;">self</span>.__name <span class="op" style="color: #5E5E5E;">=</span> name <span class="co" style="color: #5E5E5E;">## Public variable</span></span>
+<span id="cb21-4">        <span class="va" style="color: #111111;">self</span>.__project <span class="op" style="color: #5E5E5E;">=</span> project <span class="co" style="color: #5E5E5E;">## Protected variable</span></span>
+<span id="cb21-5">        <span class="va" style="color: #111111;">self</span>.__salary <span class="op" style="color: #5E5E5E;">=</span> salary</span>
+<span id="cb21-6">        </span>
+<span id="cb21-7">    <span class="kw" style="color: #003B4F;">def</span> getName(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;">## Public method</span></span>
+<span id="cb21-8">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>.__name</span>
+<span id="cb21-9">    </span>
+<span id="cb21-10">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">"Aayush"</span>, <span class="st" style="color: #20794D;">"Project Orland"</span>, <span class="st" style="color: #20794D;">"3500"</span>)</span>
+<span id="cb21-11"><span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Employee Name: </span><span class="sc" style="color: #5E5E5E;">{</span>e1<span class="sc" style="color: #5E5E5E;">.</span>getName()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Employee Name: Aayush</code></pre>
+</div>
+</div>
+<p>Encapsulation have several advantage -</p>
+<ul>
+<li>Properties of the class can be hidden from the outside world</li>
+<li>More control over what the outside world can access from the class</li>
+</ul>
+<p>A good example of encapsulation would be a access control class based on username and password.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-19T00:25:18.106050Z&quot;,&quot;start_time&quot;:&quot;2022-12-19T00:25:18.095247Z&quot;}" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><span class="kw" style="color: #003B4F;">class</span> Auth:</span>
+<span id="cb23-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, userName<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>, password<span class="op" style="color: #5E5E5E;">=</span><span class="va" style="color: #111111;">None</span>):</span>
+<span id="cb23-3">        <span class="va" style="color: #111111;">self</span>.__userName <span class="op" style="color: #5E5E5E;">=</span> userName</span>
+<span id="cb23-4">        <span class="va" style="color: #111111;">self</span>.__password <span class="op" style="color: #5E5E5E;">=</span> password</span>
+<span id="cb23-5">        </span>
+<span id="cb23-6">    <span class="kw" style="color: #003B4F;">def</span> login(<span class="va" style="color: #111111;">self</span>, userName, password):</span>
+<span id="cb23-7">        <span class="cf" style="color: #003B4F;">if</span> (<span class="va" style="color: #111111;">self</span>.__userName <span class="op" style="color: #5E5E5E;">==</span> userName) <span class="kw" style="color: #003B4F;">and</span> (<span class="va" style="color: #111111;">self</span>.__password <span class="op" style="color: #5E5E5E;">==</span> password):</span>
+<span id="cb23-8">            <span class="bu" style="color: null;">print</span> (<span class="ss" style="color: #20794D;">f"Access granted to </span><span class="sc" style="color: #5E5E5E;">{</span>userName<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span>
+<span id="cb23-9">        <span class="cf" style="color: #003B4F;">else</span>:</span>
+<span id="cb23-10">            <span class="bu" style="color: null;">print</span>(<span class="st" style="color: #20794D;">"Invalid credentials"</span>)</span>
+<span id="cb23-11">            </span>
+<span id="cb23-12">e1 <span class="op" style="color: #5E5E5E;">=</span> Auth(<span class="st" style="color: #20794D;">"Aayush"</span>, <span class="st" style="color: #20794D;">"whatever"</span>)</span>
+<span id="cb23-13">e1.login(<span class="st" style="color: #20794D;">"Aayush"</span>, <span class="st" style="color: #20794D;">"whatever"</span>) <span class="co" style="color: #5E5E5E;">## This will grant access</span></span>
+<span id="cb23-14"></span>
+<span id="cb23-15">e1.login(<span class="st" style="color: #20794D;">"Aayush"</span>, <span class="st" style="color: #20794D;">"aasdasd"</span>) <span class="co" style="color: #5E5E5E;">## This will say invalid creds</span></span>
+<span id="cb23-16">e1.__password <span class="co" style="color: #5E5E5E;">## This will raise an error as private properties can't be accessed from outside.</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Access granted to Aayush
+Invalid credentials</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>AttributeError: 'Auth' object has no attribute '__password'</code></pre>
+</div>
+</div>
+<p>As we can see above <code>__username</code> and <code>__password</code> are protected properties and can only be used by the class to grand or reject access request.</p>
+</section>
+<section id="inheritance" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="inheritance"><span class="header-section-number">6</span> Inheritance</h2>
+<p>Inheritance provides a way to create new classes from the existing classes. The new class will inherit all the non-private attributes(properties and method) from the existing class. The new class can be called a child class and existing class can be called a parent class.</p>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-19T00:56:57.821464Z&quot;,&quot;start_time&quot;:&quot;2022-12-19T00:56:57.819310Z&quot;}" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><span class="im" style="color: #00769E;">import</span> math</span></code></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-19T00:57:58.502485Z&quot;,&quot;start_time&quot;:&quot;2022-12-19T00:57:58.498491Z&quot;}" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><span class="kw" style="color: #003B4F;">class</span> Shape:</span>
+<span id="cb27-2">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
+<span id="cb27-3">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name</span>
+<span id="cb27-4">        </span>
+<span id="cb27-5">    <span class="kw" style="color: #003B4F;">def</span> getArea(<span class="va" style="color: #111111;">self</span>):</span>
+<span id="cb27-6">        <span class="cf" style="color: #003B4F;">pass</span></span>
+<span id="cb27-7">    </span>
+<span id="cb27-8">    <span class="kw" style="color: #003B4F;">def</span> printDetails(<span class="va" style="color: #111111;">self</span>):</span>
+<span id="cb27-9">        <span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"This shape is called </span><span class="sc" style="color: #5E5E5E;">{</span><span class="va" style="color: #111111;">self</span><span class="sc" style="color: #5E5E5E;">.</span>name<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;"> and area is </span><span class="sc" style="color: #5E5E5E;">{</span><span class="va" style="color: #111111;">self</span><span class="sc" style="color: #5E5E5E;">.</span>getArea()<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">."</span>)</span>
+<span id="cb27-10">        </span>
+<span id="cb27-11"><span class="kw" style="color: #003B4F;">class</span> Square(Shape):</span>
+<span id="cb27-12">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, edge):</span>
+<span id="cb27-13">        <span class="co" style="color: #5E5E5E;">## calling the constructor from parent class Shape</span></span>
+<span id="cb27-14">        Shape.<span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Square"</span>)</span>
+<span id="cb27-15">        <span class="va" style="color: #111111;">self</span>.edge <span class="op" style="color: #5E5E5E;">=</span> edge</span>
+<span id="cb27-16">    </span>
+<span id="cb27-17">    <span class="co" style="color: #5E5E5E;">## Overiding the getArea function</span></span>
+<span id="cb27-18">    <span class="kw" style="color: #003B4F;">def</span> getArea(<span class="va" style="color: #111111;">self</span>):</span>
+<span id="cb27-19">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>.edge<span class="op" style="color: #5E5E5E;">**</span><span class="dv" style="color: #AD0000;">2</span></span>
+<span id="cb27-20">    </span>
+<span id="cb27-21"><span class="kw" style="color: #003B4F;">class</span> Circle(Shape):</span>
+<span id="cb27-22">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, radius):</span>
+<span id="cb27-23">        <span class="co" style="color: #5E5E5E;">## calling the constructor from parent class Shape</span></span>
+<span id="cb27-24">        Shape.<span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Circle"</span>)</span>
+<span id="cb27-25">        <span class="va" style="color: #111111;">self</span>.radius <span class="op" style="color: #5E5E5E;">=</span> radius</span>
+<span id="cb27-26">    <span class="co" style="color: #5E5E5E;">## Overiding the getArea function</span></span>
+<span id="cb27-27">    <span class="kw" style="color: #003B4F;">def</span> getArea(<span class="va" style="color: #111111;">self</span>):</span>
+<span id="cb27-28">        <span class="cf" style="color: #003B4F;">return</span> math.pi <span class="op" style="color: #5E5E5E;">*</span> (<span class="va" style="color: #111111;">self</span>.radius<span class="op" style="color: #5E5E5E;">**</span><span class="dv" style="color: #AD0000;">2</span>)</span>
+<span id="cb27-29">    </span>
+<span id="cb27-30">obj1 <span class="op" style="color: #5E5E5E;">=</span> Square(<span class="dv" style="color: #AD0000;">4</span>)</span>
+<span id="cb27-31">obj1.printDetails()</span>
+<span id="cb27-32"></span>
+<span id="cb27-33">obj2 <span class="op" style="color: #5E5E5E;">=</span> Circle(<span class="dv" style="color: #AD0000;">3</span>)</span>
+<span id="cb27-34">obj2.printDetails()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>This shape is called Square and area is 16.
+This shape is called Circle and area is 28.274333882308138.</code></pre>
+</div>
+</div>
+<p>As we can see above we defined a parent class <code>Shape</code> and then we inherited it to create <code>Square</code> and <code>Circle</code> child class. While defining <code>Square</code> and <code>Circle</code> class we overwrote the <code>getArea</code> function pertinent to the class but we used the <code>printDetails</code> function from the parent class to print details about child classes. The more common example in machine learning world would be create your own models in Pytorch where we inherit from <code>nn.Module</code> class to create a new model.</p>
+
+
 </section>
 
  ]]></description>
