@@ -8,8 +8,8 @@
 <title>Aayush Agrawal</title>
 <link>https://aayushmnit.com/blog.html</link>
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
-<description>Aayush's personal website</description>
-<generator>quarto-1.2.124</generator>
+<description>Aayush&#39;s personal website</description>
+<generator>quarto-1.2.226</generator>
 <lastBuildDate>Tue, 20 Dec 2022 08:00:00 GMT</lastBuildDate>
 <item>
   <title>Python OOPs fundamentals</title>
@@ -375,7 +375,7 @@ This shape is called Circle and area is 28.274333882308138.</code></pre>
 <section id="use-of-super-function" class="level3" data-number="6.1">
 <h3 data-number="6.1" class="anchored" data-anchor-id="use-of-super-function"><span class="header-section-number">6.1</span> Use of <code>super()</code> Function</h3>
 <p><code>super()</code> function comes into play when we implement inheritance. The <code>super()</code> function is used to refer to the parent class without explicitly naming the class. <code>super()</code> function can be used to access parent class properties, calling the parent class, and can be used as initializers. Let’s look at the example above and see how we can modify the <code>Square</code> class to use <code>super()</code> function.</p>
-<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2022-12-19T19:58:19.958825Z&quot;,&quot;start_time&quot;:&quot;2022-12-19T19:58:19.953758Z&quot;}" data-execution_count="6">
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-01-07T16:08:07.343599Z&quot;,&quot;start_time&quot;:&quot;2023-01-07T16:08:07.339935Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><span class="kw" style="color: #003B4F;">class</span> Shape:</span>
 <span id="cb28-2">    maxArea <span class="op" style="color: #5E5E5E;">=</span> <span class="dv" style="color: #AD0000;">100</span></span>
 <span id="cb28-3">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name): <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name</span>
@@ -398,16 +398,16 @@ This shape is called Circle and area is 28.274333882308138.</code></pre>
 <span id="cb28-20">    </span>
 <span id="cb28-21">    <span class="kw" style="color: #003B4F;">def</span> printDetails(<span class="va" style="color: #111111;">self</span>):</span>
 <span id="cb28-22">        <span class="bu" style="color: null;">super</span>().printDetails() <span class="co" style="color: #5E5E5E;">## Calling a parent class function</span></span>
-<span id="cb28-23">        <span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Max are from Shape class: </span><span class="sc" style="color: #5E5E5E;">{</span><span class="bu" style="color: null;">super</span>()<span class="sc" style="color: #5E5E5E;">.</span>maxArea<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>) <span class="co" style="color: #5E5E5E;">## Accessing parent class property</span></span>
-<span id="cb28-24">        <span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Max are from Square class: </span><span class="sc" style="color: #5E5E5E;">{</span><span class="va" style="color: #111111;">self</span><span class="sc" style="color: #5E5E5E;">.</span>maxArea<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span>
+<span id="cb28-23">        <span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Max area from Shape class: </span><span class="sc" style="color: #5E5E5E;">{</span><span class="bu" style="color: null;">super</span>()<span class="sc" style="color: #5E5E5E;">.</span>maxArea<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>) <span class="co" style="color: #5E5E5E;">## Accessing parent class property</span></span>
+<span id="cb28-24">        <span class="bu" style="color: null;">print</span>(<span class="ss" style="color: #20794D;">f"Max area from Square class: </span><span class="sc" style="color: #5E5E5E;">{</span><span class="va" style="color: #111111;">self</span><span class="sc" style="color: #5E5E5E;">.</span>maxArea<span class="sc" style="color: #5E5E5E;">}</span><span class="ss" style="color: #20794D;">"</span>)</span>
 <span id="cb28-25"></span>
 <span id="cb28-26">obj1 <span class="op" style="color: #5E5E5E;">=</span> Square(<span class="dv" style="color: #AD0000;">4</span>)</span>
 <span id="cb28-27">obj1.getName()</span>
 <span id="cb28-28">obj1.printDetails()</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>This shape is called Square and area is 16.
-Max are from Shape class: 100
-Max are from Square class: 50</code></pre>
+Max area from Shape class: 100
+Max area from Square class: 50</code></pre>
 </div>
 </div>
 <p>As we can see in the example above we have used -</p>
