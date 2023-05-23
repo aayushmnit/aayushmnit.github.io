@@ -592,7 +592,7 @@
     "href": "posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",
     "title": "privateGPT Walkthrough",
     "section": "",
-    "text": "An code walkthrough of privateGPT repo.\nLarge Language Models (LLMs) have surged in popularity, pushing the boundaries of natural language processing. OpenAI’s GPT-3.5 is a prime example, revolutionizing our technology interactions and sparking innovation. Particularly, LLMs excel in building Question Answering applications on knowledge bases. In this blog, we delve into the top trending GitHub repository for this week: the PrivateGPT repository and do a code walkthrough."
+    "text": "An code walkthrough of privateGPT repo on how to build your own offline GPT Q&A system.\nLarge Language Models (LLMs) have surged in popularity, pushing the boundaries of natural language processing. OpenAI’s GPT-3.5 is a prime example, revolutionizing our technology interactions and sparking innovation. Particularly, LLMs excel in building Question Answering applications on knowledge bases. In this blog, we delve into the top trending GitHub repository for this week: the PrivateGPT repository and do a code walkthrough."
   },
   {
     "objectID": "posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html#ingestion-pipeline",
