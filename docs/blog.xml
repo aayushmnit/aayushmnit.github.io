@@ -20,13 +20,13 @@
 
 
 <blockquote class="blockquote">
-<p>An code walkthrough of <a href="https://github.com/imartinez/privateGPT">privateGPT</a> repo on how to build your own offline GPT Q&amp;A system.</p>
+<p>A code walkthrough of <a href="https://github.com/imartinez/privateGPT">privateGPT</a> repo on how to build your own offline GPT Q&amp;A system.</p>
 </blockquote>
 <p>Large Language Models (LLMs) have surged in popularity, pushing the boundaries of natural language processing. OpenAI’s GPT-3.5 is a prime example, revolutionizing our technology interactions and sparking innovation. Particularly, LLMs excel in building Question Answering applications on knowledge bases. In this blog, we delve into the top trending GitHub repository for this week: the <a href="https://github.com/imartinez/privateGPT">PrivateGPT repository</a> and do a code walkthrough.</p>
 <figure align="center" class="figure">
 <img src="https://aayushmnit.com/posts/2023-05-22-PrivateGPTWalkthrough/privateGPT_trending.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig. 1: Private GPT on Github top trending chart
+Fig. 1: Private GPT on GitHub’s top trending chart
 </figcaption>
 </figure>
 <section id="what-is-privategpt" class="level1" data-number="1">
@@ -35,13 +35,13 @@ Fig. 1: Private GPT on Github top trending chart
 <figure align="center" class="figure">
 <img src="https://aayushmnit.com/posts/2023-05-22-PrivateGPTWalkthrough/privateGPT_githubSnapshot.png" style="width:80%" class="figure-img">
 <figcaption align="center" class="figure-caption">
-Fig.2: <a href="https://github.com/imartinez/privateGPT">privateGPT</a> on Github. At the time of writing repo had 19K+ stars and 2k+ forks.
+Fig.2: <a href="https://github.com/imartinez/privateGPT">privateGPT</a> on GitHub. At the time of writing repo had 19K+ stars and 2k+ forks.
 </figcaption>
 </figure>
 </section>
 <section id="running-privategpt-locally" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Running privateGPT locally</h1>
-<p>To run privateGPT locally, users need to install the necessary packages, configure specific variables, and provide their own knowledge base for question-answering purposes. Additional information on the installation process and usage can be found in the repository documentation or by referring to a <a href="https://www.codingthesmartway.com/privategpt-the-ultimate-solution-for-offline-secure-language-processing-that-turns-your-pdfs-into-interactive-ai-dialogues/">dedicated blog post on the topic</a>.</p>
+<p>To run privateGPT locally, users need to install the necessary packages, configure specific variables, and provide their knowledge base for question-answering purposes. Additional information on the installation process and usage can be found in the repository documentation or by referring to a <a href="https://www.codingthesmartway.com/privategpt-the-ultimate-solution-for-offline-secure-language-processing-that-turns-your-pdfs-into-interactive-ai-dialogues/">dedicated blog post on the topic</a>.</p>
 <p>Essentially you can run it by calling the <code>privateGPT.py</code> file like -</p>
 <pre><code>python privateGPT.py</code></pre>
 <figure align="center" class="figure">
@@ -49,7 +49,7 @@ Fig.2: <a href="https://github.com/imartinez/privateGPT">privateGPT</a> on Githu
 <figcaption align="center" class="figure-caption">
 Fig.3: Invoking <a href="https://github.com/imartinez/privateGPT">privateGPT</a> locally and asking a question.
 </figcaption></figure>
-<p>And get response which also mention the sources it looked up for context.</p>
+<p>And get a response that also mention the sources it looked up for context.</p>
 <figure align="center" class="figure">
 <img src="https://aayushmnit.com/posts/2023-05-22-PrivateGPTWalkthrough/demo_response.png" style="width:100%" class="figure-img">
 <figcaption align="center" class="figure-caption">
@@ -58,7 +58,7 @@ Fig.4: <a href="https://github.com/imartinez/privateGPT">privateGPT</a> response
 </section>
 <section id="code-walkthrough" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Code Walkthrough</h1>
-<p><a href="https://github.com/imartinez/privateGPT/blob/main/ingest.py">privateGPT</a> code comprises of two pipelines:</p>
+<p><a href="https://github.com/imartinez/privateGPT/blob/main/ingest.py">privateGPT</a> code comprises two pipelines:</p>
 <ol type="1">
 <li><p><strong>Ingestion Pipeline:</strong> This pipeline is responsible for converting and storing your documents, as well as generating embeddings for them. The documents are stored in a suitable format, and their embeddings are stored in an embedding database.</p></li>
 <li><p><strong>Q&amp;A Interface:</strong> This interface accepts user prompts, the embedding database, and an open-source Language Model (LM) model as inputs. It utilizes these inputs to generate responses to the user’s queries.</p></li>
@@ -70,7 +70,7 @@ Fig.4: <a href="https://github.com/imartinez/privateGPT">privateGPT</a> response
 <li><p>Identifying files with various extensions and retrieving all the knowledge base from the source directory.</p></li>
 <li><p>Splitting the documents into smaller chunks based on the parameters of chunk_size and chunk_overlap.</p></li>
 <li><p>Initializing the <code>Huggingfaceembeddings</code> module of <code>langchain</code>. This involves loading a pre-trained language model from the sentence_transformers library.</p></li>
-<li><p>Initializing the Chroma database from <code>langchain.vectorstores</code>. This step involves taking the chunked text and the initialized embedding model, and saving it in the embedding database on disk.</p></li>
+<li><p>Initializing the Chroma database from <code>langchain.vectorstores</code>. This step involves taking the chunked text and the initialized embedding model and saving it in the embedding database on disk.</p></li>
 </ol>
 <figure align="center" class="figure">
 <img src="https://aayushmnit.com/posts/2023-05-22-PrivateGPTWalkthrough/ingest_pipeline.png" style="width:100%" class="figure-img">
@@ -78,9 +78,9 @@ Fig.4: <a href="https://github.com/imartinez/privateGPT">privateGPT</a> response
 Fig.5: Ingestion Pipeline
 </figcaption></figure>
 <p>Let’s look at these steps one by one.</p>
-<section id="identifying-and-load-files-from-source-directory" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="identifying-and-load-files-from-source-directory"><span class="header-section-number">3.1.1</span> Identifying and load files from source directory</h3>
-<p>First we import the required libraries and various text loaders from <code>langchain.document_loaders</code>.</p>
+<section id="identifying-and-loading-files-from-the-source-directory" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="identifying-and-loading-files-from-the-source-directory"><span class="header-section-number">3.1.1</span> Identifying and loading files from the source directory</h3>
+<p>First, we import the required libraries and various text loaders from <code>langchain.document_loaders</code>.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-05-23T06:24:55.545221Z&quot;,&quot;start_time&quot;:&quot;2023-05-23T06:24:54.963284Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="im" style="color: #00769E;">import</span> os</span>
 <span id="cb2-2"><span class="im" style="color: #00769E;">import</span> glob</span>
@@ -102,7 +102,7 @@ Fig.5: Ingestion Pipeline
 <span id="cb2-18">)</span>
 <span id="cb2-19"><span class="im" style="color: #00769E;">from</span> langchain.docstore.document <span class="im" style="color: #00769E;">import</span> Document</span></code></pre></div>
 </div>
-<p>Next we define the mapping b/w each extension and their respective <code>langchain</code> document loader. You can read document loader <a href="https://python.langchain.com/en/latest/modules/indexes/document_loaders.html">documentation</a> for more available loaders.</p>
+<p>Next, we define the mapping b/w each extension and their respective <code>langchain</code> document loader. You can read document loader <a href="https://python.langchain.com/en/latest/modules/indexes/document_loaders.html">documentation</a> for more available loaders.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-05-23T06:24:56.641854Z&quot;,&quot;start_time&quot;:&quot;2023-05-23T06:24:56.638964Z&quot;}" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="co" style="color: #5E5E5E;"># Map file extensions to document loaders and their arguments</span></span>
 <span id="cb3-2">LOADER_MAPPING <span class="op" style="color: #5E5E5E;">=</span> {</span>
@@ -120,7 +120,7 @@ Fig.5: Ingestion Pipeline
 <span id="cb3-14">    <span class="st" style="color: #20794D;">".txt"</span>: (TextLoader, {<span class="st" style="color: #20794D;">"encoding"</span>: <span class="st" style="color: #20794D;">"utf8"</span>}),</span>
 <span id="cb3-15">}</span></code></pre></div>
 </div>
-<p>Next we define our single document loader.</p>
+<p>Next, we define our single document loader.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-05-23T06:24:58.247375Z&quot;,&quot;start_time&quot;:&quot;2023-05-23T06:24:58.238139Z&quot;}" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="kw" style="color: #003B4F;">def</span> load_single_document(file_path: <span class="bu" style="color: null;">str</span>) <span class="op" style="color: #5E5E5E;">-&gt;</span> Document:</span>
 <span id="cb4-2">    <span class="co" style="color: #5E5E5E;">## Find extension of the file</span></span>
@@ -202,7 +202,7 @@ Fig.5: Ingestion Pipeline
 </section>
 <section id="splitting-the-documents-into-smaller-chunks" class="level3" data-number="3.1.2">
 <h3 data-number="3.1.2" class="anchored" data-anchor-id="splitting-the-documents-into-smaller-chunks"><span class="header-section-number">3.1.2</span> Splitting the documents into smaller chunks</h3>
-<p>Now we have seen how we can load multiple documents of different extensions using the <code>load_documents</code> function. Next step is to look at <code>process_document</code> function which loads and splits large documents into smaller chunk.</p>
+<p>Now we have seen how we can load multiple documents of different extensions using the <code>load_documents</code> function. The next step is to look at <code>process_document</code> function which loads and splits large documents into smaller chunks.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-05-23T06:25:07.069431Z&quot;,&quot;start_time&quot;:&quot;2023-05-23T06:25:06.942522Z&quot;}" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><span class="im" style="color: #00769E;">from</span> langchain.text_splitter <span class="im" style="color: #00769E;">import</span> RecursiveCharacterTextSplitter</span>
 <span id="cb13-2"></span>
@@ -251,7 +251,7 @@ Split into 90 chunks of text (max. 500 tokens each)</code></pre>
 </section>
 <section id="initializing-the-embedding-model" class="level3" data-number="3.1.3">
 <h3 data-number="3.1.3" class="anchored" data-anchor-id="initializing-the-embedding-model"><span class="header-section-number">3.1.3</span> Initializing the embedding model</h3>
-<p>Next we load our embedding module which converts the smaller document chunks from previous steps to embeddings.</p>
+<p>Next, we load our embedding module which converts the smaller document chunks from previous steps to embeddings.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-05-23T06:25:17.524405Z&quot;,&quot;start_time&quot;:&quot;2023-05-23T06:25:14.090181Z&quot;}" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="im" style="color: #00769E;">from</span> langchain.embeddings <span class="im" style="color: #00769E;">import</span> HuggingFaceEmbeddings</span>
 <span id="cb18-2">EMBEDDINGS_MODEL_NAME <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"all-MiniLM-L6-v2"</span></span>
@@ -272,8 +272,8 @@ Size of embedded vector: 384</code></pre>
 </ol>
 <p>We can see that our embedded vector on a sample query returns a 384 dimension vector.</p>
 </section>
-<section id="embed-smaller-text-and-save-it-in-vector-database" class="level3" data-number="3.1.4">
-<h3 data-number="3.1.4" class="anchored" data-anchor-id="embed-smaller-text-and-save-it-in-vector-database"><span class="header-section-number">3.1.4</span> Embed smaller text and save it in vector database</h3>
+<section id="embed-smaller-text-and-save-it-in-the-vector-database" class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="embed-smaller-text-and-save-it-in-the-vector-database"><span class="header-section-number">3.1.4</span> Embed smaller text and save it in the vector database</h3>
 <p>The next step involves utilizing the document chunks and the embedding model to store the documents and their corresponding embeddings in a vector database.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-05-23T06:25:22.787761Z&quot;,&quot;start_time&quot;:&quot;2023-05-23T06:25:22.402477Z&quot;}" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="im" style="color: #00769E;">from</span> chromadb.config <span class="im" style="color: #00769E;">import</span> Settings</span>
@@ -343,7 +343,7 @@ Fig.6: Question Answering Pipeline
 <p>Let’s look at these steps one by one.</p>
 <section id="load-the-vector-database" class="level3" data-number="3.2.1">
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="load-the-vector-database"><span class="header-section-number">3.2.1</span> Load the vector database</h3>
-<p>First we import the required libraries.</p>
+<p>First, we import the required libraries.</p>
 <div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-05-23T06:33:13.670888Z&quot;,&quot;start_time&quot;:&quot;2023-05-23T06:33:10.836276Z&quot;}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><span class="im" style="color: #00769E;">from</span> langchain.embeddings <span class="im" style="color: #00769E;">import</span> HuggingFaceEmbeddings</span>
 <span id="cb25-2"><span class="im" style="color: #00769E;">from</span> langchain.vectorstores <span class="im" style="color: #00769E;">import</span> Chroma</span>
@@ -466,7 +466,7 @@ That’s why the Justice Department required body cameras, banned chokeholds, an
 That’s why the American Rescue Plan provided $350 Billion that cities, states, and counties can use to hire more police and invest in proven strategies like community violence interruption—trusted messengers breaking the cycle of violence and trauma and giving young people hope.</code></pre>
 </div>
 </div>
-<p>Firstly, an instance of the <code>RetrievalQA</code> class named <code>qa</code> is created using the <code>from_chain_type</code> method. The <code>RetrievalQA</code> class is a chain specifically designed for question answering tasks over an index. Please refer to the <a href="https://python.langchain.com/en/latest/modules/chains/index_examples/vector_db_qa.html">documentation</a> for further details. The <code>from_chain_type</code> method takes the following arguments:</p>
+<p>Firstly, an instance of the <code>RetrievalQA</code> class named <code>qa</code> is created using the <code>from_chain_type</code> method. The <code>RetrievalQA</code> class is a chain specifically designed for question-answering tasks over an index. Please refer to the <a href="https://python.langchain.com/en/latest/modules/chains/index_examples/vector_db_qa.html">documentation</a> for further details. The <code>from_chain_type</code> method takes the following arguments:</p>
 <ul>
 <li><code>llm</code>: The Language Model instance (<code>llm</code>) that was created previously.</li>
 <li><code>chain_type</code>: A string representing the type of chain to be used. In this case, it is set to <code>"stuff"</code>. There may be other available chain types specific to the question-answering scenario. Please consult the <a href="https://python.langchain.com/en/latest/modules/chains/index_examples/question_answering.html">documentation</a> for more information.</li>
