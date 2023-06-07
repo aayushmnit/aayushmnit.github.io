@@ -556,7 +556,7 @@ That’s why the American Rescue Plan provided $350 Billion that cities, states,
 <span id="cb6-3">    companyName <span class="op" style="color: #5E5E5E;">=</span> <span class="st" style="color: #20794D;">"Microsoft"</span></span>
 <span id="cb6-4">    </span>
 <span id="cb6-5">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
-<span id="cb6-6">        <span class="co" style="color: #5E5E5E;"># creating a instance variable</span></span>
+<span id="cb6-6">        <span class="co" style="color: #5E5E5E;"># creating an instance variable</span></span>
 <span id="cb6-7">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name</span>
 <span id="cb6-8">    </span>
 <span id="cb6-9">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">'Aayush'</span>)</span>
@@ -589,7 +589,7 @@ Company Name: Microsoft</code></pre>
 <span id="cb10-4">    companyEmployees <span class="op" style="color: #5E5E5E;">=</span> []</span>
 <span id="cb10-5">    </span>
 <span id="cb10-6">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
-<span id="cb10-7">        <span class="co" style="color: #5E5E5E;"># creating a instance variable</span></span>
+<span id="cb10-7">        <span class="co" style="color: #5E5E5E;"># creating an instance variable</span></span>
 <span id="cb10-8">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name</span>
 <span id="cb10-9">        <span class="va" style="color: #111111;">self</span>.companyEmployees.append(<span class="va" style="color: #111111;">self</span>.name)</span>
 <span id="cb10-10">    </span>
@@ -624,7 +624,7 @@ Company Name: ['Aayush', 'John']</code></pre>
 <span id="cb12-4">    companyEmployees <span class="op" style="color: #5E5E5E;">=</span> []</span>
 <span id="cb12-5">    </span>
 <span id="cb12-6">    <span class="kw" style="color: #003B4F;">def</span> <span class="fu" style="color: #4758AB;">__init__</span>(<span class="va" style="color: #111111;">self</span>, name):</span>
-<span id="cb12-7">        <span class="co" style="color: #5E5E5E;"># creating a instance variable</span></span>
+<span id="cb12-7">        <span class="co" style="color: #5E5E5E;"># creating an instance variable</span></span>
 <span id="cb12-8">        <span class="va" style="color: #111111;">self</span>.name <span class="op" style="color: #5E5E5E;">=</span> name</span>
 <span id="cb12-9">        <span class="va" style="color: #111111;">self</span>.companyEmployees.append(<span class="va" style="color: #111111;">self</span>.name)</span>
 <span id="cb12-10">    </span>
@@ -636,7 +636,7 @@ Company Name: ['Aayush', 'John']</code></pre>
 <span id="cb12-16">    <span class="kw" style="color: #003B4F;">def</span> plusTwo(x): <span class="co" style="color: #5E5E5E;"># This is a static method</span></span>
 <span id="cb12-17">        <span class="cf" style="color: #003B4F;">return</span> x<span class="op" style="color: #5E5E5E;">+</span><span class="dv" style="color: #AD0000;">2</span></span>
 <span id="cb12-18">    </span>
-<span id="cb12-19">    <span class="kw" style="color: #003B4F;">def</span> getName(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;"># This is a instance method</span></span>
+<span id="cb12-19">    <span class="kw" style="color: #003B4F;">def</span> getName(<span class="va" style="color: #111111;">self</span>): <span class="co" style="color: #5E5E5E;"># This is an instance method</span></span>
 <span id="cb12-20">        <span class="cf" style="color: #003B4F;">return</span> <span class="va" style="color: #111111;">self</span>.name</span>
 <span id="cb12-21">    </span>
 <span id="cb12-22">e1 <span class="op" style="color: #5E5E5E;">=</span> Employee(<span class="st" style="color: #20794D;">'Aayush'</span>)</span>
