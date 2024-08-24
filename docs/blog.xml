@@ -10,7 +10,204 @@
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush&#39;s personal website</description>
 <generator>quarto-1.2.226</generator>
-<lastBuildDate>Mon, 22 May 2023 07:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 24 Aug 2024 07:00:00 GMT</lastBuildDate>
+<item>
+  <title>ML Interview Prepration Guide (Draft)</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.com/posts/2024-08-24-MLInterviewPrep/MLInterviewPrep.html</link>
+  <description><![CDATA[ 
+
+
+
+<blockquote class="blockquote">
+<p>A collection of resources while preparing for MLE interviews at Meta or other big tech companies.</p>
+</blockquote>
+<p>Not long ago, I transitioned from a Senior ML Scientist role at Microsoft to a Machine Learning Engineer position at Meta, and the journey was anything but quick. The preparation process was extensive, especially since it was my first experience with LeetCode-style coding interviews and ML system design interviews. While there are many resources available for preparation, I’ll be sharing the ones that helped me navigate and succeed in this challenging process.</p>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2024-08-24-MLInterviewPrep/ml_interview_guide.jpg" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+</figcaption>
+</figure>
+<p>I will try to cover the following -</p>
+<ol type="1">
+<li><p><strong>Interview Process Overview:</strong> Break down the entire interview process, from initial screenings to the final onsite interviews, and share tips on what to expect at each stage.</p></li>
+<li><p><strong>Coding Interviews:</strong> Dive into the LeetCode-style coding interviews,how I prepared for them, and the strategies that worked best for me.</p></li>
+<li><p><strong>ML System Design Interviews:</strong> Explore the ML system design interviews, offering insights into the key concepts you need to know, how to approach open-ended design problems, and the resources that helped me build a strong foundation.</p></li>
+<li><p><strong>Behavioral Interviews:</strong> Finally, I’ll talk about the behavioral interviews, and how I prepared to effectively communicate my past work and problem-solving approach.</p></li>
+</ol>
+<section id="interview-process-overview" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Interview Process Overview</h1>
+<p>The interview process typically starts with a screening round, followed by a more extensive onsite round.</p>
+<p>For the phone screen, the format varies depending on the level you’re interviewing for:</p>
+<ul>
+<li><strong>E4/E5:</strong>
+<ul>
+<li>5 min: Introduction</li>
+<li>35 mins: Two leetcode coding problems (Easy/Medium)</li>
+<li>5 mins: Questions for interviewer</li>
+</ul></li>
+<li><strong>E6:</strong>
+<ul>
+<li>2 min: Introduction</li>
+<li>25 mins: One or Two leetcode coding problems</li>
+<li>15 mins: Behavioral interview</li>
+<li>3 mins: Question for interviewer</li>
+</ul></li>
+</ul>
+<p>Once you clear the phone screen you will be invited for on-site interviews which includes coding round, ML system design round and behavioral round. Again the composition varies depending on the level you’re interviewing for:</p>
+<ul>
+<li><strong>E4/E5:</strong>
+<ul>
+<li>2 coding rounds</li>
+<li>1 ML system design</li>
+<li>1 Behavioral</li>
+</ul></li>
+<li><strong>E6</strong>
+<ul>
+<li>2 coding rounds</li>
+<li>2 ML system design</li>
+<li>1 Behavioral</li>
+</ul></li>
+</ul>
+<p>The level of preparation required for both phone interviews and onsite rounds is similar.</p>
+<p>While performance in coding round are bare minimum you need to pass the loop, leveling is decided by how well you do in system design and behavioral round.</p>
+<p>Next, we’ll dive deeper into each type of interview and explore how to best prepare for them.</p>
+</section>
+<section id="coding-interviews" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Coding Interviews</h1>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Preparing for this was the most time-consuming part for me, especially since I don’t come from a CS background. Although I worked as an ML Scientist at Microsoft, I had limited exposure to these types of problems in the real world. However, mastering these concepts is essential for entry in high-tech software/ML roles, so it’s important to invest time in thorough preparation.</p>
+</div>
+</div>
+</div>
+<p>Coding round interviews unsurprisingly focus heavily on coding. A typical Interview structure looks like the following -</p>
+<ul>
+<li>5 min: Introduction</li>
+<li>35 mins: Two leetcode coding problems</li>
+<li>5 mins: Questions for interviewer</li>
+</ul>
+<p>You are mostly expected to code on a plain text notepad with execution disabled. To get a more realistic idea of how a coding interview environment look like watch this mock interview by interviewing.io -</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mDYOy7k8kOQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
+</iframe>
+<figure class="figure">
+<figcaption class="figure-caption">
+<a href="https://www.youtube.com/watch?v=mDYOy7k8kOQ">Python interview with an interviewing.io engineer: Print k largest elements</a>
+</figcaption>
+</figure>
+</center>
+<section id="a-structured-approach-to-solving-coding-problems-in-interviews" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="a-structured-approach-to-solving-coding-problems-in-interviews"><span class="header-section-number">2.1</span> A Structured Approach to Solving Coding Problems in Interviews</h2>
+<p>When tackling a coding problem, following this structured approach can be very helpful:</p>
+<ol type="1">
+<li><p><strong>Ask Clarifying Questions(~3mins)</strong>: When the problem is presented, read it aloud to ensure you fully understand the requirements before jumping to a solution. Ask follow-up questions to clarify any ambiguities. This might involve discussing test cases, considering edge cases, and understanding the expected input range or type. For example, think about how the solution should handle null inputs or extreme values. Ideal state is to get an alignment with your interviewer by writing out some test cases and expected output for the same.</p></li>
+<li><p><strong>Plan Your Approach(~5 mins)</strong>: Outline your solution strategy and explain it to your interviewer while typing it out in the shared text window. Break down the problem into smaller parts if possible, and decide on the most appropriate algorithm or data structure and discuss any trade-offs you are making and write down potential time and space complexity of the solution you are proposing. Once your interview agree with your approach and then ask permission to code it out.</p></li>
+<li><p><strong>Write the code(~5 mins)</strong>: Implement your solution, keeping your code clean and well-organized. As you code, ensure that you handle edge cases. Make sure to name your functions, classes and variables appropriately so anybody reading your code can follow.</p></li>
+<li><p><strong>Pseudo run your solution(~2 mins)</strong>: Manually run your code against various test cases while explaining it to your interviewer, including both typical and edge cases, to ensure it behaves as expected. This will help you find potential bugs and an opportunity to correct them before your interviewer points it out.</p></li>
+<li><p><strong>Close(~2 mins)</strong>: Explain time and space complexity of the solution and answer any followup questions your interviewer might have.</p></li>
+</ol>
+<p>By following these steps, you can effectively navigate coding problems and demonstrate a clear, methodical problem-solving approach.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Keep your introduction breif (~30 seconds) to have more time for solving the problem. For example - “Hey I am <code>[Your Name]</code>, I currently work as <code>[Title]</code> at <code>[Employer Name]</code>. I have been working here from past <code>[N]</code> years. I’m now seeking new opportunities, which brings me here today.”</li>
+<li>If you’re running out of time, it’s acceptable to manually walk through one or two test cases with your interviewer. You can then suggest moving on to the next question to ensure you cover everything within the allotted time.</li>
+<li>Its okay to ask for help from interviewer if you are stuck on a problem</li>
+</ol>
+</div>
+</div>
+</div>
+<p>As you can see from above, coding rounds are really fast paced and you need to be well prepared to get through it. That brings us to prepration.</p>
+</section>
+<section id="how-to-prepare-for-coding-interviews" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="how-to-prepare-for-coding-interviews"><span class="header-section-number">2.2</span> How to prepare for coding interviews</h2>
+<p>Here is a simple guide on how to prepare -</p>
+<ol type="1">
+<li><p><strong>Purchase a <a href="https://leetcode.com/">leetcode subscription</a></strong> - This website is the only paid resource you need to prepare for coding interviews.</p></li>
+<li><p><strong>Getting started with <a href="https://leetcode.com/explore/learn/">Leetcode learn</a></strong> - If you are like me who doesn’t come from a CS degree then going through Leetcode learn cards is a good starting point. Here is the structure I followed-</p></li>
+</ol>
+<ul>
+<li>Array</li>
+<li>Linked List</li>
+<li>Stack &amp; Queue</li>
+<li>Array &amp; Strings</li>
+<li>Binary Tree</li>
+<li>Binary Search</li>
+<li>Binary Search Tree</li>
+<li>Heap</li>
+<li>Graph</li>
+<li>Sorting</li>
+<li>Dynamic Programming</li>
+</ul>
+<ol start="3" type="1">
+<li><p><strong>Following <a href="https://neetcode.io/roadmap">Neetcode.io Roadmap</a></strong>- This roadmap contains 75 leetcode questions which will familiarize you with common coding patterns useful in coding interviews</p></li>
+<li><p><strong><a href="https://leetcode.com/company/facebook/?favoriteSlug=facebook-six-months">Solving company tagged questions</a></strong> - On leetcode.com you can filter for the company you are interviewing and see top tagged question for the same. I would recommend solving top 100 tagged questions based on frequency which are asked in last six months.</p></li>
+<li><p><strong>Practice</strong> - Once you are done with the above then you can practice timed assessment on <a href="(https://leetcode.com/assessment/)">leetcode.com</a> for your specific employer or generic ones if not listed. If you want more realistic practice then you can buy some mock interviews on <a href="https://interviewing.io/">interviewing.io</a> where an engineer from top tech company will take your mock and provide feedback on your performance.</p></li>
+</ol>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>The more you practice in conditions similar to the actual interview—such as using a text editor and working within timed constraints—the better you will perform</li>
+<li>When practicing, attempt to solve the problem on your own for 20-30 minutes before consulting the solution.</li>
+<li>If you find a problem challenging to understand, search for <code>[LeetCode Problem #XYZ]</code> on YouTube; you’ll likely find a video with a clearer explanation.</li>
+<li><a href="https://1drv.ms/x/s!Auv3QGqB_NJSgqU4LhOUJtTcV44WjQ">Keeping an Excel sheet</a> to track the problems you’ve solved during practice, along with notes such as ‘needs revision’, time/space complexity and a brief summary of the solution, can be very helpful for review later. You can use this <a href="https://1drv.ms/x/s!Auv3QGqB_NJSgqU4LhOUJtTcV44WjQ">Conding Tracking Sheet Tab</a> as a template.</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="machine-learning-system-design" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Machine learning System Design</h1>
+</section>
+<section id="behavioral-interviews" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Behavioral Interviews</h1>
+</section>
+<section id="conclusion" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Conclusion</h1>
+<p>Preparing for this was the most time-consuming part for me, especially since I don’t come from a CS background. Even though I was working as an ML scientist at Microsoft, I had not encountered these types of problems in the real world. Nonetheless, mastering these concepts is essential for high-tech roles, so it’s worth investing the time to prepare thoroughly.</p>
+<p>I hope you enjoyed reading it. If there is any feedback on the code or just the blog post, feel free to comment below or reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a>.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>ML Interview Guide</category>
+  <guid>https://aayushmnit.com/posts/2024-08-24-MLInterviewPrep/MLInterviewPrep.html</guid>
+  <pubDate>Sat, 24 Aug 2024 07:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.com/posts/2024-08-24-MLInterviewPrep/ml_interview_guide.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>privateGPT Walkthrough</title>
   <dc:creator>Aayush Agrawal</dc:creator>

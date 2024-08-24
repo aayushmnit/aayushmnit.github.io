@@ -28,11 +28,22 @@ comments: false
 page-layout: full
 ---
 
-I'm an experienced Data Scientist with specialized skills in machine learning-based solutions. I enjoy staying on top of cutting-edge data technologies, including big data platforms, deep learning, optimization methods, and business analytics. My current work involves building data-driven products to enable smarter recommendations for Microsoft Partners, M365 service administrators and end-users to ensure the best usage of M365 services. Before that, I have experience working in various verticals like agricultural technology, pharmaceuticals, retail, e-commerce, and ride-sharing business model.
+I'm an experienced Machine learning engineer with specialized skills in machine learning-based solutions. I thrive on staying at the forefront of cutting-edge data technologies, including big data platforms, deep learning, optimization methods, and business analytics. Currently, I am part of the MLE team at Meta, where I focus on enhancing exploration strategies for the interest-oriented recommendation system in FB Reels. My previous work at Microsoft involved building data-driven products to enable smart recommendations for Microsoft Partners, M365 administrators, and end-users to optimize the usage of M365 services. I also have experience across various verticals, including agricultural technology, pharmaceuticals, retail, e-commerce, and the ride-sharing business model.
 
 ::::{.panel-tabset}
 
 # Experience
+::: {.d-flex .justify-content-between}
+::: {}
+**Meta, Bellevue, WA, USA**  
+*Machine learning engineer, Video CoreML and Ranking Foundations (FB Reels)*
+:::
+::: {.text-end}
+February 2024 - Present
+:::
+:::
+- Contribute to the interest-oriented recommendation team, focusing on efficient exploration strategies to help users discover new interests and diversify their content experience.
+- Tackle the challenges of integrating costly exploration processes into an already optimized recommendation system.
 
 ::: {.d-flex .justify-content-between}
 ::: {}
@@ -40,7 +51,7 @@ I'm an experienced Data Scientist with specialized skills in machine learning-ba
 *Senior ML Scientist*
 :::
 ::: {.text-end}
-June 2019 - Present
+June 2019 - January 2024
 :::
 :::
 - Worked with cross-functional teams to build data product (Project Orland) for customer life cycle management for M365

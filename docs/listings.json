@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/2024-08-24-MLInterviewPrep/MLInterviewPrep.html",
       "/posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",
       "/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html",
       "/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html",
@@ -25,6 +26,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2024-08-24-MLInterviewPrep/MLInterviewPrep.html",
       "/posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",
       "/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html",
       "/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html",
