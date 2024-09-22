@@ -108,7 +108,7 @@ Note
 </figure>
 </center>
 <section id="a-structured-approach-to-solving-coding-problems-in-interviews" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="a-structured-approach-to-solving-coding-problems-in-interviews"><span class="header-section-number">2.1</span> A Structured Approach to Solving Coding Problems in Interviews</h2>
+<h2 data-number="2.1" class="anchored" data-anchor-id="a-structured-approach-to-solving-coding-problems-in-interviews"><span class="header-section-number">2.1</span> A structured approach to solving coding problems in interviews</h2>
 <p>When tackling a coding problem, following this structured approach can be very helpful:</p>
 <ol type="1">
 <li><p><strong>Ask Clarifying Questions(~3mins)</strong>: When the problem is presented, read it aloud to ensure you fully understand the requirements before jumping to a solution. Ask follow-up questions to clarify any ambiguities. This might involve discussing test cases, considering edge cases, and understanding the expected input range or type. For example, think about how the solution should handle null inputs or extreme values. Ideal state is to get an alignment with your interviewer by writing out some test cases and expected output for the same.</p></li>
@@ -145,8 +145,7 @@ Tip
 <p>Here is a simple guide on how to prepare -</p>
 <ol type="1">
 <li><p><strong>Purchase a <a href="https://leetcode.com/">leetcode subscription</a></strong> - This website is the only paid resource you need to prepare for coding interviews.</p></li>
-<li><p><strong>Getting started with <a href="https://leetcode.com/explore/learn/">Leetcode learn</a></strong> - If you are like me who doesn’t come from a CS degree then going through Leetcode learn cards is a good starting point. Here is the structure I followed-</p></li>
-</ol>
+<li><p><strong>Getting started with <a href="https://leetcode.com/explore/learn/">Leetcode learn</a></strong> - If you are like me who doesn’t come from a CS degree then going through Leetcode learn cards is a good starting point. Here is the structure I followed-</p>
 <ul>
 <li>Array</li>
 <li>Linked List</li>
@@ -159,11 +158,21 @@ Tip
 <li>Graph</li>
 <li>Sorting</li>
 <li>Dynamic Programming</li>
-</ul>
-<ol start="3" type="1">
+</ul></li>
 <li><p><strong>Following <a href="https://neetcode.io/roadmap">Neetcode.io Roadmap</a></strong>- This roadmap contains 75 leetcode questions which will familiarize you with common coding patterns useful in coding interviews</p></li>
 <li><p><strong><a href="https://leetcode.com/company/facebook/?favoriteSlug=facebook-six-months">Solving company tagged questions</a></strong> - On leetcode.com you can filter for the company you are interviewing and see top tagged question for the same. I would recommend solving top 100 tagged questions based on frequency which are asked in last six months.</p></li>
-<li><p><strong>Practice</strong> - Once you are done with the above then you can practice timed assessment on <a href="(https://leetcode.com/assessment/)">leetcode.com</a> for your specific employer or generic ones if not listed. If you want more realistic practice then you can buy some mock interviews on <a href="https://interviewing.io/">interviewing.io</a> where an engineer from top tech company will take your mock and provide feedback on your performance.</p></li>
+<li><p><strong>Pay attention to design questions</strong> -While I recommend focusing on the top 100 questions tagged by the company of interest, interviews often place special emphasis on design-related questions. In these cases, you may be asked to design a class to solve a specific use case. I will go beyond the top 100 questions to find every relevant design question asked in the past year. Here are some top design questions tagged for Meta on Leetcode at the time of writing -</p>
+<ul>
+<li><a href="https://leetcode.com/problems/random-pick-with-weight/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Random Pick with Weight - LeetCode</a></li>
+<li><a href="https://leetcode.com/problems/dot-product-of-two-sparse-vectors/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Dot Product of Two Sparse Vectors - LeetCode</a></li>
+<li><a href="https://leetcode.com/problems/lru-cache/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">LRU Cache</a></li>
+<li><a href="https://leetcode.com/problems/moving-average-from-data-stream/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Moving Average from Data Stream</a></li>
+<li><a href="https://leetcode.com/problems/insert-delete-getrandom-o1/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Insert Delete GetRandom O(1) - Leetcode</a></li>
+<li><a href="https://leetcode.com/problems/product-of-two-run-length-encoded-arrays/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Product of two run length encoded arrays</a></li>
+</ul></li>
+</ol>
+<ol start="6" type="1">
+<li><strong>Practice</strong> - Once you are done with the above then you can practice timed assessment on <a href="(https://leetcode.com/assessment/)">leetcode.com</a> for your specific employer or generic ones if not listed. If you want more realistic practice then you can buy some mock interviews on <a href="https://interviewing.io/">interviewing.io</a> where an engineer from top tech company will take your mock and provide feedback on your performance.</li>
 </ol>
 <div class="callout-tip callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
@@ -190,6 +199,33 @@ Tip
 </section>
 <section id="machine-learning-system-design" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Machine learning System Design</h1>
+<p>The Machine Learning System Design interview typically lasts 45 minutes and assesses your ability to solve an abstract ML problem from start to finish. Depending on the level you’re aiming for, you may encounter 1-2 rounds of these interviews. <a href="https://excalidraw.com/">Excalidraw</a> is what is typically used as the platform, but you are just supposed to write / talk about the problem instead of drawing block diagrams in this one.</p>
+<section id="a-structured-approach-to-solving-machine-learning-system-design-problem-in-interviews" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="a-structured-approach-to-solving-machine-learning-system-design-problem-in-interviews"><span class="header-section-number">3.1</span> A structured approach to solving machine learning system design problem in interviews</h2>
+<p>In an ML System Design interview, it’s crucial for the interviewee to take the lead in the discussion and ensure all aspects of the ML design are covered. The interviews are fast paced and following a structured method can be highly beneficial:</p>
+<ol type="1">
+<li><p><strong>Clarifying Requirements:</strong> In every ML system design interview, you’re typically presented with an abstract problem. For example, you might be asked to “Design a ‘People You May Follow’ recommendation system for Threads or Twitter.” It’s essential to clarify the scope of the problem, ensuring it can be managed within the 45-minute timeframe. Asking the right clarifying questions not only helps you gain clarity but also demonstrates your product awareness. For instance, in the case of a “People You May Follow” recommendation system, you might ask:</p>
+<ul>
+<li>“Can I assume the purpose of this feature is to help users find influencers or people aligned with their interests?”</li>
+<li>“On Threads/Twitter, following is unidirectional—one user can follow another without reciprocation. Is that correct?”</li>
+<li>“What is the estimated total number of users on the platform?</li>
+<li>What is the current count of daily active users (DAUs)?”</li>
+<li>“What’s the average number of people each user follows?”</li>
+<li>“Since this is a mature platform, can we assume that the user-follow graph is relatively stable and doesn’t change drastically over short periods?”</li>
+</ul>
+<p>Once you’ve clarified the requirements, it’s important to summarize them back to the interviewer, for example: “Okay, we are designing a ‘People You May Follow’ recommendation system for the Threads/Twitter platform. We have around XYZ million daily active users, and we’re assuming that the followership graph remains relatively stable over time.” This helps ensure alignment before diving into the design process.</p></li>
+<li><p><strong>Frame the problem as an ML task:</strong> Once you’ve clarified the requirements, the next step is to map the problem to a known ML task. This could be something like binary classification, learning to rank, edge prediction, or even visual object detection. Often, a problem can be framed using multiple objectives, and it’s important to explain what each objective aims to achieve and the pros and cons of each approach. For example, in the case of a recommendation system, you could frame it as a learning-to-rank problem or as edge prediction in a user graph. The key is to pick the objective that best aligns with the problem at hand.</p></li>
+<li><p><strong>Data sources for training labels:</strong> Next, brainstorm potential data sources for defining training labels. There could be various options, each with its own trade-offs. For instance, if you’re working on a video recommendation system, you might need to decide between implicit and explicit feedback. Explicit feedback (such as likes, shares, or subscriptions) tends to be high quality but sparse, as not all users provide these signals. On the other hand, implicit feedback (like watch time or time spent) is lower quality but available for every user interaction. It’s essential to highlight these trade-offs and choose the best data source for your model’s needs.</p></li>
+<li><p><strong>Data prep and Feature Engineering</strong> -</p></li>
+<li><p><strong>Loss function-</strong></p></li>
+<li><p><strong>Evaluation-</strong> Online / Offline</p></li>
+<li><p><strong>Serving-</strong></p></li>
+</ol>
+</section>
+<section id="how-to-prepare-for-ml-system-design-interviews" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="how-to-prepare-for-ml-system-design-interviews"><span class="header-section-number">3.2</span> How to prepare for ML system design interviews</h2>
+<p>For ML Sytem Design, I recommend ByteByteGo <a href="https://bytebytego.com/intro/machine-learning-system-design-interview">Machine Learning System Design Interview</a> as the only resource apart from company blogs to read.</p>
+</section>
 </section>
 <section id="behavioral-interviews" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Behavioral Interviews</h1>
