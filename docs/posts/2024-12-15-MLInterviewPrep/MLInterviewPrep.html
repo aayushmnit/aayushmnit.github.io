@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.226">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Aayush Agrawal">
+<meta name="dcterms.date" content="2024-12-15">
+
+<title>Aayush Agrawal - Meta MLE Interview Preparation Guide</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-7QN8N70N41"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="Aayush Agrawal - Meta MLE Interview Preparation Guide">
+<meta property="og:description" content="Blog Resources: MLE Interview Prep Template. This resource contains a template to track your coding questions, ML system design notes, and a list of questions to prepare for behavioral interviews.">
+<meta property="og:image" content="https://aayushmnit.com/posts/2024-12-15-MLInterviewPrep/ml_interview_guide.jpg">
+<meta property="og:site-name" content="Aayush Agrawal">
+<meta name="twitter:title" content="Aayush Agrawal - Meta MLE Interview Preparation Guide">
+<meta name="twitter:description" content="Blog Resources: MLE Interview Prep Template. This resource contains a template to track your coding questions, ML system design notes, and a list of questions to prepare for behavioral interviews.">
+<meta name="twitter:image" content="https://aayushmnit.com/posts/2024-12-15-MLInterviewPrep/ml_interview_guide.jpg">
+<meta name="twitter:creator" content="@aayushmnit">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Aayush Agrawal</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"><i class="bi bi-house" role="img">
+</i> 
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"><i class="bi bi-newspaper" role="img">
+</i> 
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../talks.html"><i class="bi bi-megaphone" role="img">
+</i> 
+ <span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"><i class="bi bi-file-person" role="img">
+</i> 
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-other" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-stack" role="img">
+</i> 
+ <span class="menu-text">Other</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-other">    
+        <li>
+    <a class="dropdown-item" href="../../other/carlson.html"><i class="bi bi-box-arrow-up-right" role="img">
+</i> 
+ <span class="dropdown-text">Carlson Q&amp;A</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://aayushmnit.com/pytorch_book/"><i class="bi bi-box-arrow-up-right" role="img">
+</i> 
+ <span class="dropdown-text">Pytorch Book</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/aayushmnit/"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/aayushmnit/"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://medium.com/@aayushmnit"><i class="bi bi-medium" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://sigmoid.social/@aayushmnit"><i class="bi bi-mastodon" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/aayushmnit"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:aayushmnit@gmail.com"><i class="bi bi-envelope" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../blog.xml"><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#interview-process-overview" id="toc-interview-process-overview" class="nav-link active" data-scroll-target="#interview-process-overview"><span class="toc-section-number">1</span>  Interview Process Overview</a></li>
+  <li><a href="#coding-interviews" id="toc-coding-interviews" class="nav-link" data-scroll-target="#coding-interviews"><span class="toc-section-number">2</span>  Coding Interviews</a>
+  <ul class="collapse">
+  <li><a href="#a-structured-approach-to-solving-coding-problems-in-interview" id="toc-a-structured-approach-to-solving-coding-problems-in-interview" class="nav-link" data-scroll-target="#a-structured-approach-to-solving-coding-problems-in-interview"><span class="toc-section-number">2.1</span>  A structured approach to solving coding problems in interview</a></li>
+  <li><a href="#how-to-prepare-for-coding-interviews" id="toc-how-to-prepare-for-coding-interviews" class="nav-link" data-scroll-target="#how-to-prepare-for-coding-interviews"><span class="toc-section-number">2.2</span>  How to prepare for coding interviews</a></li>
+  </ul></li>
+  <li><a href="#machine-learning-system-design-mlsd" id="toc-machine-learning-system-design-mlsd" class="nav-link" data-scroll-target="#machine-learning-system-design-mlsd"><span class="toc-section-number">3</span>  Machine learning System Design (MLSD)</a>
+  <ul class="collapse">
+  <li><a href="#a-structured-approach-to-solving-machine-learning-system-design-problems-in-interview" id="toc-a-structured-approach-to-solving-machine-learning-system-design-problems-in-interview" class="nav-link" data-scroll-target="#a-structured-approach-to-solving-machine-learning-system-design-problems-in-interview"><span class="toc-section-number">3.1</span>  A structured approach to solving machine learning system design problems in interview</a></li>
+  <li><a href="#how-to-prepare-for-ml-system-design-interview" id="toc-how-to-prepare-for-ml-system-design-interview" class="nav-link" data-scroll-target="#how-to-prepare-for-ml-system-design-interview"><span class="toc-section-number">3.2</span>  How to prepare for ML system design interview</a></li>
+  </ul></li>
+  <li><a href="#behavioral-interviews" id="toc-behavioral-interviews" class="nav-link" data-scroll-target="#behavioral-interviews"><span class="toc-section-number">4</span>  Behavioral Interviews</a>
+  <ul class="collapse">
+  <li><a href="#a-structured-approach-to-answering-behavioral-questions" id="toc-a-structured-approach-to-answering-behavioral-questions" class="nav-link" data-scroll-target="#a-structured-approach-to-answering-behavioral-questions"><span class="toc-section-number">4.1</span>  A Structured Approach to Answering Behavioral Questions</a></li>
+  <li><a href="#how-to-prepare-for-behavioral-interviews" id="toc-how-to-prepare-for-behavioral-interviews" class="nav-link" data-scroll-target="#how-to-prepare-for-behavioral-interviews"><span class="toc-section-number">4.2</span>  How to Prepare for Behavioral Interviews</a></li>
+  </ul></li>
+  <li><a href="#closing-thoughts" id="toc-closing-thoughts" class="nav-link" data-scroll-target="#closing-thoughts"><span class="toc-section-number">5</span>  Closing Thoughts</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.dev/aayushmnit/aayushmnit.github.io/blob/main/posts/2024-12-15-MLInterviewPrep/MLInterviewPrep.ipynb" class="toc-action">Edit this page</a></p><p><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Meta MLE Interview Preparation Guide</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">ML Interview Guide</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aayush Agrawal </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 15, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<blockquote class="blockquote">
+<p>A collection of resources while preparing for MLE interviews at Meta or other big tech companies.</p>
+</blockquote>
+<div class="callout-warning callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Disclaimer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>The views expressed in this blog are solely my own and are not affiliated with my employer in any way. In writing this, I have not utilized any proprietary or confidential information. Instead, I have relied entirely on publicly available resources that were instrumental in my preparation for interviews at Meta.</p>
+</div>
+</div>
+</div>
+<p><strong>Blog Resources:</strong> <a href="https://1drv.ms/x/s!Auv3QGqB_NJSgqU4LhOUJtTcV44WjQ">MLE Interview Prep Template</a>. This resource contains a template to track your coding questions, ML system design notes, and a list of questions to prepare for behavioral interviews.</p>
+<p>Not long ago, I transitioned from a Senior ML Scientist role at Microsoft to a Machine Learning Engineer position at Meta, and the journey was anything but quick. The preparation process was extensive, especially since it was my first experience with LeetCode-style coding interviews and ML system design interviews. While there are many resources available for preparation, I’ll be sharing the ones that helped me navigate and succeed in this challenging process.</p>
+<figure align="center" class="figure">
+<img src="./ml_interview_guide.jpg" style="width:100%" class="figure-img">
+<figcaption align="center" class="figure-caption">
+</figcaption>
+</figure>
+<p>I will try to cover the following -</p>
+<ol type="1">
+<li><p><strong>Interview Process Overview</strong>: Break down the entire interview process, from initial screenings to the final onsite interviews, and share tips on what to expect at each stage.</p></li>
+<li><p><strong>Coding Interviews</strong>: Dive into the LeetCode-style coding interviews, how I prepared for them, and the strategies that worked best for me.</p></li>
+<li><p><strong>ML System Design Interviews</strong>: Explore the ML system design interviews, offering insights into the key concepts you need to know, how to approach open-ended design problems, and the resources that helped me build a strong foundation.</p></li>
+<li><p><strong>Behavioral Interviews</strong>: Finally, I’ll talk about the behavioral interviews, and how I prepared to effectively communicate my past work and problem-solving approach.</p></li>
+</ol>
+<section id="interview-process-overview" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Interview Process Overview</h1>
+<p>The interview process typically starts with a screening round, followed by a more extensive onsite round.</p>
+<p>For the phone screen, the format varies depending on the level you’re interviewing for:</p>
+<ul>
+<li><strong>E4/E5:</strong>
+<ul>
+<li>5 min: Introduction</li>
+<li>35 mins: Two leetcode coding problems (Easy/Medium)</li>
+<li>5 mins: Questions for interviewer</li>
+</ul></li>
+<li><strong>E6:</strong>
+<ul>
+<li>2 min: Introduction</li>
+<li>25 mins: One or two leetcode coding problems</li>
+<li>15 mins: Behavioral interview</li>
+<li>3 mins: Question for interviewer</li>
+</ul></li>
+</ul>
+<p>Once you clear the phone screen you will be invited for on-site interviews which include coding round, ML system design round and behavioral round. Again, the composition varies depending on the level you’re interviewing for:</p>
+<ul>
+<li><strong>E4/E5:</strong>
+<ul>
+<li>2 coding rounds</li>
+<li>1 ML system design</li>
+<li>1 Behavioral</li>
+</ul></li>
+<li><strong>E6</strong>
+<ul>
+<li>2 coding rounds</li>
+<li>2 ML system design</li>
+<li>1 Behavioral</li>
+</ul></li>
+</ul>
+<p>The level of preparation needed for both phone interviews and onsite rounds is similar.</p>
+<p>While good performance in coding round is bare minimum you need to pass the loop, leveling is decided by how well you do in system design and behavioral round.</p>
+<p>Next, we’ll dive deeper into each type of interview and explore how to best prepare for them.</p>
+</section>
+<section id="coding-interviews" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Coding Interviews</h1>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Preparing for this was the most time-consuming part for me, especially since I don’t come from a CS background. Although I worked as an ML Scientist at Microsoft, I had limited exposure to these types of problems in the real world. However, mastering these concepts is essential for entry in high-tech software/ML roles, so it’s important to invest time in thorough preparation.</p>
+</div>
+</div>
+</div>
+<p>Coding round interviews unsurprisingly focus heavily on coding. A typical Interview structure looks like the following -</p>
+<ul>
+<li>5 min: Introduction</li>
+<li>35 mins: Two leetcode coding problems</li>
+<li>5 mins: Questions for interviewer</li>
+</ul>
+<p>You are mostly expected to code on a plain text notepad with execution disabled. To get a more realistic idea of how a coding interview environment looks like watch this mock interview by <a href="https://interviewing.io/">interviewing.io</a> -</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/mDYOy7k8kOQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
+</iframe>
+<figure class="figure">
+<figcaption class="figure-caption">
+<a href="https://www.youtube.com/watch?v=mDYOy7k8kOQ">Python interview with an interviewing.io engineer: Print k largest elements</a>
+</figcaption>
+</figure>
+</center>
+<section id="a-structured-approach-to-solving-coding-problems-in-interview" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="a-structured-approach-to-solving-coding-problems-in-interview"><span class="header-section-number">2.1</span> A structured approach to solving coding problems in interview</h2>
+<p>When tackling a coding problem, following this structured approach can be very helpful:</p>
+<ol type="1">
+<li><p><strong>Ask Clarifying Questions(~3mins)</strong>: When the problem is presented, read it aloud to ensure you fully understand the requirements before jumping to a solution. Ask follow-up questions to clarify any ambiguities. This might involve discussing test cases, considering edge cases, and understanding the expected input range or type. For example, think about how the solution should handle null inputs or extreme values. The ideal state is to get an alignment with your interviewer by writing out some test cases and expected output for the same.</p></li>
+<li><p><strong>Plan Your Approach(~5 mins)</strong>: Outline your solution strategy and explain it to your interviewer while typing it out in the shared text window. Break down the problem into smaller parts if possible and decide on the most appropriate algorithm or data structure and discuss any trade-offs you are making and write down potential time and space complexity of the solution you are proposing. Once your interviewer agrees with your approach and then ask permission to code it out.</p></li>
+<li><p><strong>Write the code(~5 mins)</strong>: Implement your solution, keeping your code clean and well-organized. As you code, ensure that you handle edge cases. Make sure to name your functions, classes and variables appropriately so anybody reading your code can follow.</p></li>
+<li><p><strong>Pseudo run your solution(~2 mins)</strong>: Manually run your code against various test cases while explaining it to your interviewer, including both typical and edge cases, to ensure it behaves as expected. This will help you find potential bugs and an opportunity to correct them before your interviewer points it out.</p></li>
+<li><p><strong>Close(~2 mins)</strong>: Explain time and space complexity of the solution and answer any follow up questions your interviewer might have.</p></li>
+</ol>
+<p>By following these steps, you can effectively navigate coding problems and demonstrate a clear, methodical problem-solving approach.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Useful Tips for Coding Interviews
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Keep your introduction brief (~30 seconds) to have more time for solving the problem. For example - “Hey I am <code>[Your Name]</code>, I currently work as <code>[Title]</code> at <code>[Employer Name]</code>. I have been working here from past <code>[N]</code> years. I’m now seeking new opportunities, which brings me here today.”</p></li>
+<li><p>If you’re running out of time, it’s acceptable to manually walk through one or two test cases with your interviewer. You can then suggest moving on to the next question to ensure you cover everything within the allotted time.</p></li>
+<li><p>It’s okay to ask for help from an interviewer if you are stuck on a problem</p></li>
+</ol>
+</div>
+</div>
+</div>
+<p>As you can see from above, coding rounds are really fast paced and you need to be well prepared to get through it. That brings us to prepration.</p>
+</section>
+<section id="how-to-prepare-for-coding-interviews" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="how-to-prepare-for-coding-interviews"><span class="header-section-number">2.2</span> How to prepare for coding interviews</h2>
+<p>Here is a simple guide on how to prepare -</p>
+<ol type="1">
+<li><p><strong>Purchase a <a href="https://leetcode.com/">leetcode subscription</a></strong>: This website is the only paid resource you need to prepare for coding interviews.</p></li>
+<li><p><strong>Getting started with <a href="https://leetcode.com/explore/learn/">Leetcode learn</a></strong>: If you are like me who doesn’t come from a CS degree then going through leetcode learn cards is a good starting point. Here is the structure I followed-</p>
+<ul>
+<li>Array</li>
+<li>Linked List</li>
+<li>Stack &amp; Queue</li>
+<li>Array &amp; Strings</li>
+<li>Binary Tree</li>
+<li>Binary Search</li>
+<li>Binary Search Tree</li>
+<li>Heap</li>
+<li>Graph</li>
+<li>Sorting</li>
+<li>Dynamic Programming</li>
+</ul></li>
+<li><p><strong>Following <a href="https://neetcode.io/roadmap">Neetcode.io Roadmap</a></strong>: This roadmap contains 75 leetcode questions which will familiarize you with common coding patterns useful in coding interviews</p></li>
+<li><p><strong><a href="https://leetcode.com/company/facebook/?favoriteSlug=facebook-six-months">Solving company tagged questions</a></strong>: On leetcode.com you can filter for the company you are interviewing and see top tagged questions for the same. I would recommend solving the top 100 tagged questions based on frequency which are asked in last six months.</p></li>
+<li><p><strong>Pay attention to design questions</strong>: While I recommend focusing on the top 100 questions tagged by the company of interest, interviews often place special emphasis on design-related questions. In these cases, you may be asked to design a class to solve a specific use case. I will go beyond the top 100 questions to find every relevant design question asked in the past year. Here are some top design questions tagged for Meta on Leetcode at the time of writing -</p>
+<ul>
+<li><a href="https://leetcode.com/problems/random-pick-with-weight/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Random Pick with Weight - LeetCode</a></li>
+<li><a href="https://leetcode.com/problems/dot-product-of-two-sparse-vectors/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Dot Product of Two Sparse Vectors - LeetCode</a></li>
+<li><a href="https://leetcode.com/problems/lru-cache/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">LRU Cache</a></li>
+<li><a href="https://leetcode.com/problems/moving-average-from-data-stream/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Moving Average from Data Stream</a></li>
+<li><a href="https://leetcode.com/problems/insert-delete-getrandom-o1/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Insert Delete GetRandom O(1) - Leetcode</a></li>
+<li><a href="https://leetcode.com/problems/product-of-two-run-length-encoded-arrays/description/?envType=company&amp;envId=facebook&amp;favoriteSlug=facebook-all">Product of two run length encoded arrays</a></li>
+</ul></li>
+</ol>
+<ol start="6" type="1">
+<li><strong>Practice</strong>: Once you are done with the above then you can practice timed assessment on <a href="https://leetcode.com/assessment/">leetcode.com</a> for your specific employer or generic ones if not listed. If you want more realistic practice then you can buy some mock interviews on <a href="https://interviewing.io/">interviewing.io</a> where an engineer from top tech company will take your mock and provide feedback on your performance.</li>
+</ol>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Useful tips for coding interviews preparation
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>The more you practice in conditions like the actual interview—such as using a text editor and working within timed constraints—the better you will perform</li>
+<li>When practicing, try to solve the problem on your own for 20-30 minutes before consulting the solution.</li>
+<li>If you find a problem challenging to understand, search for <code>[LeetCode Problem #XYZ]</code> on YouTube; you’ll likely find a video with a clearer explanation.</li>
+<li><a href="https://1drv.ms/x/s!Auv3QGqB_NJSgqU4LhOUJtTcV44WjQ">Keeping an Excel sheet</a> to track the problems you’ve solved during practice, along with notes such as ’needs revision, time/space complexity and a summary of the solution, can be very helpful for reviewing later. Refer to <code>Coding Tracking Sheet</code> tab for template in <a href="https://1drv.ms/x/s!Auv3QGqB_NJSgqU4LhOUJtTcV44WjQ">MLE Interview Prep Template</a>.</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="machine-learning-system-design-mlsd" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Machine learning System Design (MLSD)</h1>
+<p>The MLSD interview typically lasts 45 minutes and assesses your ability to solve an abstract ML problem from start to finish. Depending on the level you’re aiming for, you may encounter 1-2 rounds of these interviews. <a href="https://excalidraw.com/">Excalidraw</a> is what is typically used as the platform, but you are just supposed to write / talk about the problem instead of drawing block diagrams in this one. To get a more realistic idea of how a coding interview environment looks like watch this mock interview by <a href="https://interviewing.io/">interviewing.io</a> -</p>
+<center>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fVOEYvquKBI?si=jNKchiWQZ9MEwBLK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
+</iframe>
+<figure class="figure">
+<figcaption class="figure-caption">
+<a href="https://youtu.be/fVOEYvquKBI?si=IQOeKGxoYs02Uml4">Harmful Content Removal: Machine Learning (System Design)</a>
+</figcaption>
+</figure>
+</center>
+<section id="a-structured-approach-to-solving-machine-learning-system-design-problems-in-interview" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="a-structured-approach-to-solving-machine-learning-system-design-problems-in-interview"><span class="header-section-number">3.1</span> A structured approach to solving machine learning system design problems in interview</h2>
+<p>In an MLSD interview, it’s crucial for the interviewee to take the lead in the discussion and ensure all aspects of the ML design are covered. The interviews are fast-paced and following a structured method can be highly beneficial:</p>
+<ol type="1">
+<li><p><strong>Clarifying Requirements</strong>: In every MLSD interview, you’re typically presented with an abstract problem. For example, you might be asked to “Design a ‘People You May Follow’ recommendation system for Threads or Twitter.” It’s essential to clarify the scope of the problem, ensuring it can be managed within the 45-minute timeframe. Asking the right clarifying questions not only helps you gain clarity but also shows your product awareness. For instance, in the case of a “People You May Follow” recommendation system, you might ask:</p>
+<ul>
+<li>“Can I assume the purpose of this feature is to help users find influencers or people aligned with their interests?”</li>
+<li>“On Threads/Twitter, following is unidirectional—one user can follow another without reciprocation. Is that correct?”</li>
+<li>“What is the estimated total number of users on the platform?</li>
+<li>“What is the current count of daily active users (DAUs)?”</li>
+<li>“What’s the average number of people each user follows?”</li>
+<li>“Since this is a mature platform, can we assume that the user-follow graph is relatively stable and doesn’t change drastically over short periods?”</li>
+</ul>
+<p>Once you are done with the clarifying questions, it’s important to summarize them back to the interviewer, for example: “Okay, we are designing a ‘People You May Follow’ recommendation system for the Threads/Twitter platform. We have around XYZ million daily active users, and we’re assuming that the followership graph remains relatively stable over time.” This helps ensure alignment before diving into the design process.</p></li>
+<li><p><strong>Frame the problem as an ML task</strong>: Once you’ve clarified the requirements, the next step is to map the problem to a known ML objective. This could be something like binary classification, learning to rank, edge prediction, or even visual object detection. Often, a problem can be framed using multiple objectives, and it’s important to explain what each objective aims to achieve and the pros and cons of each approach. For example, in the case of a recommendation system, you could frame it as a learning-to-rank problem or as edge prediction in a user graph. The key is to pick the objective that best aligns with the problem at hand.</p></li>
+<li><p><strong>Data sources for training labels</strong>: Next, brainstorm potential data sources for defining training labels. There could be various options, each with its own trade-offs. For instance, if you’re working on a video recommendation system, you might need to decide between implicit and explicit feedback. Explicit feedback (such as likes, shares, or subscriptions) tends to be high quality but sparse, as not all users provide these signals. On the other hand, implicit feedback (like user’s dwell time or watch time on a post, time spent in the app etc.) is lower quality but available for every user interaction. It’s essential to highlight these trade-offs and choose the best data source for your model’s needs.</p></li>
+<li><p><strong>Data preparation and Feature Engineering</strong>: Once you have identified some potential data sources, it’s good to talk about what features you will create from this data to feed into your ML model. The typical answer revolves around these three “focus area”-</p>
+<ul>
+<li><strong>Listing entities which are important for the problem</strong>: Entities are concepts around which you want to create model features. Some of the typical entities in Meta are users, authors/creators, pages, posts, images, videos, text, events, connections, advertisements, marketplace listings, groups and most importantly user engagement (with these entities).</li>
+<li><strong>Features we can derive around this entity from the available data sources</strong>: For example, for a “User entity” we can utilize many features readily available in user profile table such as their ID, name, age, gender, city, country, language, time zone etc.</li>
+<li><strong>How to process this data to make it a highly robust and informational feature</strong>: For example, user id is a high cardinality feature, and we can convert it into a embedding which our model can learn while user’s gender is a low cardinality feature and can be processed using one-hot encoding.</li>
+</ul></li>
+<li><p><strong>Model selection</strong>: After finishing the data pre-processing step we can talk about choosing the best ML algorithm and architecture for a predictive modeling problem. A typical approach is to go from simple to more complex solutions while explaining its pros and cons. For example, consider a video recommendation system, we can start by establishing a simple baseline by recommending everyone the most popular content, but we will run into situations like no personalization and a bias towards over-represented groups. You can progressively make it complex by talking about collaborative filtering, content-based filtering or a two-tower deep learning model. It’s important to talk about each of these modelling approaches by briefly explaining the algorithm and discussing the tradeoffs. For example, logistic learning might be a good option for you learning a linear task but if the task is complex, we may need to choose more complex models such as ensemble learners or deep learning models.</p></li>
+<li><p><strong>Model training</strong>: Once you have selected the model and defined features, it’s important to talk about some of the details you will consider while training this model. Here are the things to talk about in this section if pertinent to your problem –</p>
+<ul>
+<li>Splitting data b/w training, testing and evaluation</li>
+<li>Identifying class imbalanced datasets and techniques to rectify</li>
+<li>Choosing the right loss function for the model</li>
+<li>Handling Overfitting and Underfitting</li>
+</ul></li>
+<li><p><strong>Evaluation</strong>: Once you have trained the model, it is important to talk about how you will evaluate the model’s performance. This part can be split into two categories:</p>
+<ul>
+<li><strong>Offline Evaluation</strong>: This is the process of evaluating the model during development phase. An important part here is choosing the right offline metrics to measure how close the predictions are to the ground truth. It’s important to talk about multiple metrics and their pros and cons for the problem in hand. For example, in case of video recommendations there are different metrics to consider like Precision@K, Recall@K, Mean Average Precision(mAP), Normalized Discounted Cumulative Gain (nDCG), Mean Reciprocal Rank (MRR) etc.</li>
+<li><strong>Online Evaluations</strong>: This process involves evaluating the model’s performance in production after deployment. Online metrics, closely aligned with business objectives, typically include multiple measures. As with offline metrics, it is essential to select the appropriate evaluation criteria and provide clear justification for each choice. For instance, in the context of video recommendations, relevant metrics might include the model’s click-through rate (CTR), total watch time, the ratio of completed videos to total views, and the skip rate.</li>
+</ul></li>
+<li><p><strong>Deployment</strong>: Next, if time permits talk about deployment and testing in production. Few things to consider in this section:</p>
+<ul>
+<li>Does the model need to be deployed online or would batch prediction suffice?</li>
+<li>How are we going to roll out this change? Running an experiment, or with a phased rollout?</li>
+<li>How frequently does the model need to be re-trained?</li>
+</ul></li>
+</ol>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tips for MLSD interview:
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p><strong>Time Management is Key</strong>: Aim to allocate time thoughtfully across all sections of the interview. Keep a mental clock to ensure you provide a well-rounded answer that covers all aspects of ML system design. If you find yourself spending too much time on one section, communicate with the interviewer by saying, “We can revisit this section later if time allows, but I’d like to move on to cover other areas as well.” This demonstrates both maturity and effective time management—qualities crucial at higher levels.</p></li>
+<li><p><strong>Prioritize Practicality Over Perfection</strong>: MLSD interviews don’t expect you to design a state-of-the-art (SOTA) solution within 45 minutes. Instead, focus on creating a feasible, well-reasoned solution. Emphasize why you’re choosing specific components and how they contribute to the overall system rather than chasing an ideal but overly complex design.</p></li>
+<li><p><strong>Adapt to Your Interviewer’s Cues</strong>: Pay close attention to suggestions from your interviewer. If they ask to deep-dive into a particular section, focus on providing detailed insights into that area. Conversely, if they signal it is time to move on, gracefully wrap up and proceed to the next section. Flexibility and responsiveness highlight your ability to collaborate effectively.</p></li>
+<li><p><strong>Regularly engage with your interviewer</strong>: Approach the interviewer as a collaborator in solving the problem. After completing each section, ask for feedback and check whether they would like you to elaborate further or proceed to the next part. This fosters dynamic conversation and ensures you align with their expectations.</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="how-to-prepare-for-ml-system-design-interview" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="how-to-prepare-for-ml-system-design-interview"><span class="header-section-number">3.2</span> How to prepare for ML system design interview</h2>
+<p>Preparing for Machine Learning System Design (MLSD) interviews requires a structured approach that combines technical knowledge, system design principles, and practical problem-solving skills. Here’s a step-by-step guide to help you get ready:</p>
+<ol type="1">
+<li><p><strong>Purchase ByteByteGo MLSD Interview book</strong>: This book is the only paid resource you need for preparing for MLSD interview. You can buy it from <a href="https://a.co/d/aFNQ9va">Amazon</a> or you can buy an annual pass on <a href="https://bytebytego.com/intro/machine-learning-system-design-interview">bytebytego website</a>. The first chapter introduces you with ML fundamentals and rest other chapters are focused on ten real ML system design interview questions with detailed solutions. My recommendation is to go thoroughly with the book and read every supplemental links in the reference after every chapter. Once you are done with book, you can refer to these MLSD notes I have created, refer to <code>ML System Design</code> tab in <a href="https://1drv.ms/x/s!Auv3QGqB_NJSgqU4LhOUJtTcV44WjQ">MLE Interview Prep Template</a>.</p></li>
+<li><p><strong>ML interview prep guide</strong>: Meta recruiters provide an interview prep guide which talks about the whole interview experience and MLSD round as well. Its important to read through it and watch the <a href="https://www.metacareers.com/life/how-to-video-applying-machine-learning-to-your-product">Meta field guide to machine learning</a> series to get more perspective on companies approach to ML.</p></li>
+<li><p><strong>Meta engineering blog</strong>: Reading engineering blog can offer you insights on how MLE’s at Meta have designed some of the key components of most notable features in Meta applications and some of the recent frameworks used internally. Here are some of the most notable blogs are –</p>
+<ul>
+<li><a href="https://ai.meta.com/blog/powered-by-ai-instagrams-explore-recommender-system/">Powered by AI: Instagram’s Explore recommender system</a></li>
+<li><a href="https://engineering.fb.com/2023/08/09/ml-applications/scaling-instagram-explore-recommendations-system/">Scaling the Instagram Explore recommendations system - Engineering at Meta</a></li>
+<li><a href="https://engineering.fb.com/2021/01/26/ml-applications/news-feed-ranking/">News Feed ranking, powered by machine learning - Engineering at Meta</a></li>
+<li><a href="https://engineering.fb.com/2024/07/10/data-infrastructure/machine-learning-ml-prediction-robustness-meta/">Meta’s approach to machine learning prediction robustness - Engineering at Meta</a></li>
+</ul></li>
+<li><p><strong>Sweat more in training, bleed less in battle</strong>: This analogy perfectly captures the essence of preparation for MLSD interviews. The more effort you put into practicing beforehand, the less you’ll need to improvise during the interview. Here are some practical ways to prepare effectively:</p>
+<ul>
+<li><strong>Design Random Features</strong>: Open platforms like Instagram, Facebook, or Threads, pick a random feature, and outline how you would design it from an ML Engineer’s perspective. Consider how the design might differ depending on the app’s unique goals and user base. Here are some examples of features to practice:
+<ol type="1">
+<li>Friend suggestions (e.g., “People You May Know”).</li>
+<li>News Feed ranking.</li>
+<li>Group recommendations.</li>
+<li>Short-form video recommendations.</li>
+<li>Explore tab content discovery.</li>
+<li>Integrity filtering for harmful content.</li>
+</ol></li>
+<li><strong>Prepare Features in Advance</strong>: As discussed earlier, feature engineering is a crucial part of MLSD interviews. Create a comprehensive list of:
+<ol type="1">
+<li>Data sources: Identify potential sources of data (e.g., user activity, content metadata, social graphs).</li>
+<li>Entities: Determine key entities like users, items, or sessions.</li>
+<li>Features: Brainstorm features around these entities, such as engagement patterns, temporal trends, or semantic embeddings.</li>
+<li>Processing Steps: Document how you would pre-process and transform these features for your ML models.</li>
+</ol></li>
+</ul>
+<p>Preparing these ahead of time will save valuable mental bandwidth during the interview and elevate the quality of your responses. Pre-built templates and examples can help you focus on tailoring solutions to specific problems rather than scrambling to generate ideas under pressure.</p></li>
+<li><p><strong>Simulate real interview scenarios</strong> : Practice solving MLSD problems under realistic conditions by setting a strict time limit (35–40 minutes) and using tools like <a href="https://excalidraw.com/">Excalidraw</a> to create diagrams and workflows. Work through a complete problem, starting from clarifying requirements to designing the entire system. Prioritize clear structure and ensure you address all critical aspects, such as data flow, model selection, architecture, and trade-offs. Recording your sessions can help you pinpoint areas for improvement, such as pacing, clarity, or the depth of your explanations, enabling you to refine your approach and being comfortable with the tools for actual interviews.</p></li>
+</ol>
+</section>
+</section>
+<section id="behavioral-interviews" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Behavioral Interviews</h1>
+<p>The behavioral interview at Meta usually lasts about 45 minutes and focuses on evaluating how well you align with the company’s core values, such as teamwork, leadership, problem-solving, and adaptability. To prepare effectively, it’s important to understand Meta’s culture and values, as well as how to clearly communicate your past experiences. This interview is particularly crucial at higher levels, as it plays a significant role in deciding your level for the position.</p>
+<section id="a-structured-approach-to-answering-behavioral-questions" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="a-structured-approach-to-answering-behavioral-questions"><span class="header-section-number">4.1</span> A Structured Approach to Answering Behavioral Questions</h2>
+<p>One of the best ways to frame your answers is by using the STAR method, which helps you organize your responses clearly and concisely: - <strong>Situation</strong>: Set the context for your story. Describe the challenge or situation you were in, including the key players and the environment. - <strong>Task</strong>: Outline your specific responsibility or what you were tasked to do in that situation. - <strong>Action</strong>: Explain the steps you took to address the task or solve the problem. Focus on the actions you personally took, rather than what the team did as a whole. - <strong>Result</strong>: Share the outcome of your actions. Quantify the results if possible (e.g., increased efficiency by 20%, reduced costs by 15%) and mention what you learned from the experience.</p>
+<p>Using this structure helps you keep your answers clear, logical, and impactful. For example, when asked about teamwork, describe a scenario where you worked with a cross-functional team, the challenge you faced, the actions you took to collaborate, and the successful outcome.</p>
+</section>
+<section id="how-to-prepare-for-behavioral-interviews" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="how-to-prepare-for-behavioral-interviews"><span class="header-section-number">4.2</span> How to Prepare for Behavioral Interviews</h2>
+<p>Here’s a step-by-step guide to help you get prepared for Behavioral interviews -</p>
+<ol type="1">
+<li><p><strong>Understand Meta’s Values and Culture</strong>: Familiarize yourself with the company’s mission, principle and core values to ensure that your answers reflect how you embody these traits. Think about how your experiences align with Meta’s core values and communicate that through your stories.</p></li>
+<li><p><strong>Interview Jedi Youtube Video series(<a href="https://youtu.be/ObFGBUF-TuQ?si=0T6degst88wIbPkv">Part1</a>, <a href="https://youtu.be/Hr5UJnKxwyg?si=NM27pnV_YozoiP_y">Part2</a>)</strong>: This series contains top questions asked in behavioral rounds at Meta and covers evaluation criteria, response framework, tips and tricks to prepare + answer them effectively. Having answers pre-prepared to these questions will help you setup for a successful behavioral interview. You can use the <code>Behavioral Tab</code> in <a href="https://1drv.ms/x/s!Auv3QGqB_NJSgqU4LhOUJtTcV44WjQ">MLE Interview Prep Template</a> to write your answers to these questions.</p></li>
+<li><p><strong>Practice and Refine Your Stories</strong>: Once you’ve gone through the videos and written your stories, practice delivering them succinctly using the STAR method. Try to frame each story in a way that highlights your skills and accomplishments while demonstrating your alignment with Meta’s values. Mock interviews with peers or mentors can help you fine-tune your answers and gain confidence in presenting your experiences.</p></li>
+<li><p><strong>Striking the right balance b/w abstraction and technicality</strong>: It’s essential to strike the right balance between abstraction and technicality in your responses. You want to prove your problem-solving and leadership abilities without getting bogged down in excessive technical details. While it’s important to avoid unnecessary technical jargon, you should still provide sufficient detail to show the depth of your involvement. For example, instead of providing internal abbreviations like ECR say managed Docker container registry. Watch this section from <a href="https://youtu.be/0Z9RW_hhUT4?t=484">A Life Engineered Video</a> to understand the difference b/w answer to the same behavioral question at different levels.</p></li>
+<li><p><strong>Be Honest and Authentic</strong>: Meta values authenticity and integrity, so avoid overselling yourself. Be honest about your experiences, especially when discussing challenges or failures. What matters most is your ability to reflect on your experiences, learn from them, and demonstrate how you’ve grown.</p></li>
+</ol>
+<p>By following these strategies, you can approach Meta’s behavioral interviews with a structured, thoughtful approach that showcases your qualifications and demonstrates your alignment with the company’s values.</p>
+</section>
+</section>
+<section id="closing-thoughts" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Closing Thoughts</h1>
+<p>Preparing for the Meta MLE interview can feel like a challenging journey, but with the right preparation and resources, you can navigate it successfully. Lastly, remember that the process itself is a learning experience. Each interview is an opportunity to grow, learn from feedback, and refine your skills. Whether you land the job or not, the preparation you put in will enhance your overall growth as a machine learning engineer.</p>
+<p>Stay focused, stay curious, and approach each step with confidence. Good luck!</p>
+<p>I hope you enjoyed reading it. If there is any feedback on the code or just the blog post, feel free to comment below or reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a>.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="aayushmnit/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

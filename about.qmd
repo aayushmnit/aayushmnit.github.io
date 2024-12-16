@@ -28,7 +28,11 @@ comments: false
 page-layout: full
 ---
 
-I'm an experienced Machine learning engineer with specialized skills in machine learning-based solutions. I thrive on staying at the forefront of cutting-edge data technologies, including big data platforms, deep learning, optimization methods, and business analytics. Currently, I am part of the MLE team at Meta, where I focus on enhancing exploration strategies for the interest-oriented recommendation system in FB Reels. My previous work at Microsoft involved building data-driven products to enable smart recommendations for Microsoft Partners, M365 administrators, and end-users to optimize the usage of M365 services. I also have experience across various verticals, including agricultural technology, pharmaceuticals, retail, e-commerce, and the ride-sharing business model.
+I am an experienced Machine Learning Engineer with a strong focus on designing and implementing machine learning-driven solutions. Passionate about cutting-edge data technologies, my expertise spans big data platforms, deep learning, optimization techniques, and business analytics.
+
+Currently, I work as a Machine Learning Engineer on the Video Recommendations team at Meta, where I specialize in improving exploration strategies for the interest-oriented recommendations in Facebook Reels. Previously, at Microsoft, I developed data-driven products to deliver intelligent recommendations, empowering Microsoft Partners, M365 administrators, and end-users to optimize M365 service usage.
+
+My diverse experience includes working across various industries such as agricultural technology, pharmaceuticals, retail, e-commerce, and ride-sharing, contributing innovative solutions to complex challenges.
 
 ::::{.panel-tabset}
 
