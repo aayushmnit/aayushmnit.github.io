@@ -1,53 +1,5 @@
 [
   {
-    "listing": "/blog.html",
-    "items": [
-      "/posts/2024-12-15-MLInterviewPrep/MLInterviewPrep.html",
-      "/posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",
-      "/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html",
-      "/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html",
-      "/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html",
-      "/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html",
-      "/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html",
-      "/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html",
-      "/posts/2022-10-26-Model_Calibration/Model Calibration.html",
-      "/posts/2022-09-23-Explainability/2022-09-23-Explainability.html",
-      "/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html",
-      "/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html",
-      "/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html",
-      "/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html",
-      "/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html",
-      "/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html",
-      "/posts/2018-06-03-Building_neural_network_from_scratch/index.html",
-      "/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html",
-      "/posts/2018-02-19-launch/index.html"
-    ]
-  },
-  {
-    "listing": "/index.html",
-    "items": [
-      "/posts/2024-12-15-MLInterviewPrep/MLInterviewPrep.html",
-      "/posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",
-      "/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html",
-      "/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html",
-      "/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html",
-      "/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html",
-      "/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html",
-      "/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html",
-      "/posts/2022-10-26-Model_Calibration/Model Calibration.html",
-      "/posts/2022-09-23-Explainability/2022-09-23-Explainability.html",
-      "/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html",
-      "/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html",
-      "/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html",
-      "/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html",
-      "/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html",
-      "/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html",
-      "/posts/2018-06-03-Building_neural_network_from_scratch/index.html",
-      "/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html",
-      "/posts/2018-02-19-launch/index.html"
-    ]
-  },
-  {
     "listing": "/talks.html",
     "items": [
       "/talks/2020-12-15-OrcaHello/index.html",
@@ -56,6 +8,56 @@
       "/talks/2017-11-08-Transfer-Learning/index.html",
       "/talks/2017-10-11-deep-dive-in-hierarchichal-clustering/index.html",
       "/talks/2017-09-13-introduction-to-keras/index.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/2025-12-13-WhyYouShouldBlog/WhyYouShouldBlog.html",
+      "/posts/2024-12-15-MLInterviewPrep/MLInterviewPrep.html",
+      "/posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",
+      "/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html",
+      "/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html",
+      "/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html",
+      "/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html",
+      "/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html",
+      "/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html",
+      "/posts/2022-10-26-Model_Calibration/Model Calibration.html",
+      "/posts/2022-09-23-Explainability/2022-09-23-Explainability.html",
+      "/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html",
+      "/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html",
+      "/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html",
+      "/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html",
+      "/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html",
+      "/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html",
+      "/posts/2018-06-03-Building_neural_network_from_scratch/index.html",
+      "/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html",
+      "/posts/2018-02-19-launch/index.html"
+    ]
+  },
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/2025-12-13-WhyYouShouldBlog/WhyYouShouldBlog.html",
+      "/posts/2024-12-15-MLInterviewPrep/MLInterviewPrep.html",
+      "/posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",
+      "/posts/2022-12-20-PythonFundamentals/Python OOPs Fundamentals.html",
+      "/posts/2022-11-17-DiffEdit/2022-11-17-DiffEdit.html",
+      "/posts/2022-11-10-StableDiffusionP4/2022-11-10-StableDiffusionP4.html",
+      "/posts/2022-11-07-StableDiffusionP3/2022-11-07-StableDiffusionP3.html",
+      "/posts/2022-11-05-StableDiffusionP2/2022-11-05-StableDiffusionP2.html",
+      "/posts/2022-11-02-StabeDiffusionP1/2022-11-02-StableDiffusionP1.html",
+      "/posts/2022-10-26-Model_Calibration/Model Calibration.html",
+      "/posts/2022-09-23-Explainability/2022-09-23-Explainability.html",
+      "/posts/2022-09-19-SyntheticControl/2022-09-19_SyntheticControl.html",
+      "/posts/2019-03-17-Finding_similar_images_using_Deep_learning_and_Locality_Sensitive_Hashing/index.html",
+      "/posts/2019-02-17-Multi_Facial_attribute_detection_using_FastAI_and_OpenCV/index.html",
+      "/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/index.html",
+      "/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/index.html",
+      "/posts/2018-09-12-Multi_Layer_perceptron_using_Tensorflow/index.html",
+      "/posts/2018-06-03-Building_neural_network_from_scratch/index.html",
+      "/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html",
+      "/posts/2018-02-19-launch/index.html"
     ]
   }
 ]
