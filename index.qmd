@@ -18,24 +18,15 @@ about:
   image: headshot.png
   image-shape: round
   links:
+    - icon: bell
+      text: Subscribe
+      href: https://docs.google.com/forms/d/e/1FAIpQLSfJq7QcwTn_Dsd4nO-pGMOBZ0HH8cqzuCRZmok1EKlVeHMtZg/viewform
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/in/aayushmnit/
     - icon: github
       text: GitHub
       href: https://github.com/aayushmnit
-    - icon: medium
-      text: Medium
-      href: https://medium.com/@aayushmnit  
-    - icon: mastodon
-      text: Mastodon
-      href: https://sigmoid.social/@aayushmnit
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/aayushmnit
-    - icon: clipboard-data
-      text: Kaggle
-      href: https://www.kaggle.com/aayushmnit
     - icon: envelope
       text: Email
       href: mailto:aayushmnit@gmail.com
@@ -56,7 +47,7 @@ Check out the latest draft of my book - ["The Pytorch Book"](https://aayushmnit.
 
 :::::{.grid}
 ::::{.g-col-12 .g-col-md-12}
-## Latest Blogs
+## Latest Blogs - [Subscribe](https://docs.google.com/forms/d/e/1FAIpQLSfJq7QcwTn_Dsd4nO-pGMOBZ0HH8cqzuCRZmok1EKlVeHMtZg/viewform)
 Click [here](blog.qmd) to check out more blogs.
 
 :::{#landing-posts}

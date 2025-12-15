@@ -12,3 +12,7 @@ listing:
 page-layout: full
 title-block-banner: false
 ---
+::: {.callout-tip}
+## Subscribe to my blog
+Get notified when I publish new posts! [Fill this form.](https://docs.google.com/forms/d/e/1FAIpQLSfJq7QcwTn_Dsd4nO-pGMOBZ0HH8cqzuCRZmok1EKlVeHMtZg/viewform){target="_blank"}
+:::

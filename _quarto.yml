@@ -22,30 +22,31 @@ website:
       - icon: newspaper
         href: blog.qmd
         text: Blog
-      - icon: megaphone
-        href: talks.qmd
-        text: Talks
       - icon: file-person
         href: about.qmd
         text: About
       - text: Other
         icon: stack
         menu:
-          - text: "Carlson Q&A"
-            icon: box-arrow-up-right
-            href: other/carlson.qmd
           - text: "Pytorch Book"
             icon: box-arrow-up-right
             href: https://aayushmnit.com/pytorch_book/
+          - text: "Carlson Q&A"
+            icon: box-arrow-up-right
+            href: other/carlson.qmd
+          - icon: megaphone
+            href: talks.qmd
+            text: Talks
     right:
+      - icon: bell
+        href: https://docs.google.com/forms/d/e/1FAIpQLSfJq7QcwTn_Dsd4nO-pGMOBZ0HH8cqzuCRZmok1EKlVeHMtZg/viewform
+        text: Subscribe
       - icon: github
         href: https://github.com/aayushmnit/
       - icon: linkedin
         href: https://www.linkedin.com/in/aayushmnit/
       - icon: medium
         href: https://medium.com/@aayushmnit
-      - icon: mastodon
-        href: https://sigmoid.social/@aayushmnit
       - icon: twitter
         href: https://twitter.com/aayushmnit
       - icon: envelope
