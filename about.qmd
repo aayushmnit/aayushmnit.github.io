@@ -6,21 +6,15 @@ about:
   image-width: 10em
   image-shape: round
   links:
-    - icon: github
-      text: Github
-      href: https://github.com/aayushmnit
+    - icon: bell
+      text: Subscribe on Medium
+      href: https://medium.com/@aayushmnit
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/in/aayushmnit/
-    - icon: medium
-      text: Medium
-      href: https://medium.com/@aayushmnit
-    - icon: mastodon
-      text: Mastodon
-      href: https://sigmoid.social/@aayushmnit
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/aayushmnit
+    - icon: github
+      text: GitHub
+      href: https://github.com/aayushmnit
     - icon: envelope
       text: Email
       href: mailto:aayushmnit@gmail.com

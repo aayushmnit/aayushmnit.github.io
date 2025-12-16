@@ -19,8 +19,8 @@ about:
   image-shape: round
   links:
     - icon: bell
-      text: Subscribe
-      href: https://docs.google.com/forms/d/e/1FAIpQLSfJq7QcwTn_Dsd4nO-pGMOBZ0HH8cqzuCRZmok1EKlVeHMtZg/viewform
+      text: Subscribe on Medium
+      href: https://medium.com/@aayushmnit
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/in/aayushmnit/
@@ -47,7 +47,7 @@ Check out the latest draft of my book - ["The Pytorch Book"](https://aayushmnit.
 
 :::::{.grid}
 ::::{.g-col-12 .g-col-md-12}
-## Latest Blogs - [Subscribe](https://docs.google.com/forms/d/e/1FAIpQLSfJq7QcwTn_Dsd4nO-pGMOBZ0HH8cqzuCRZmok1EKlVeHMtZg/viewform)
+## Latest Blogs - [Subscribe](https://medium.com/@aayushmnit)
 Click [here](blog.qmd) to check out more blogs.
 
 :::{#landing-posts}
