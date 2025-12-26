@@ -11,8 +11,9 @@
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/blog.html",
     "items": [
+      "/posts/2025-12-25-DiversityMMRPart1/DiversityMMRPart1.html",
       "/posts/2025-12-13-WhyYouShouldBlog/WhyYouShouldBlog.html",
       "/posts/2024-12-15-MLInterviewPrep/MLInterviewPrep.html",
       "/posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",
@@ -36,8 +37,9 @@
     ]
   },
   {
-    "listing": "/blog.html",
+    "listing": "/index.html",
     "items": [
+      "/posts/2025-12-25-DiversityMMRPart1/DiversityMMRPart1.html",
       "/posts/2025-12-13-WhyYouShouldBlog/WhyYouShouldBlog.html",
       "/posts/2024-12-15-MLInterviewPrep/MLInterviewPrep.html",
       "/posts/2023-05-22-PrivateGPTWalkthrough/privateGPTWalkthrough.html",

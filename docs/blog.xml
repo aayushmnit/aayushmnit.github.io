@@ -10,7 +10,684 @@
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush&#39;s personal website</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Sat, 13 Dec 2025 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 25 Dec 2025 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>Diversity in Recommendations - Maximal Marginal Relevance (MMR)</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/DiversityMMRPart1.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<blockquote class="blockquote">
+<p>A practical guide to boosting diversity in recommendation systems using Maximal Marginal Relevance.</p>
+</blockquote>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/diversity.png" style="width:100%" class="figure-img">
+<figcaption align="center">
+Figure 1: Diverse recommendations cover multiple user intents. Credit: <a href="https://gemini.google.com/">Gemini</a>
+</figcaption>
+</figure>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Disclaimer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>The views expressed in this blog are solely my own and are not affiliated with my employer in any way. In writing this, I have not utilized any proprietary or confidential information.</p>
+</div>
+</div>
+</div>
+<p>Picture this: you open YouTube looking for something to watch. The algorithm shows you 10 videos, and they’re all basketball highlights from the same game. Sure, you like basketball, but maybe right now you’re in the mood for that ML lecture you’ve been putting off. Or maybe something else entirely.</p>
+<p>Most recommendation systems score each item independently based on predicted relevance. The result? If your model is confident you like basketball, you get basketball. All basketball. The system optimizes for the single most likely intent while ignoring the possibility that you might have multiple interests, or that its prediction might simply be wrong.</p>
+<p>Diversity addresses this by explicitly penalizing redundancy. Instead of asking “what’s most relevant?”, we ask “what’s most relevant that we haven’t already covered?”</p>
+<p>This isn’t just theoretically appealing. Diversity boosting delivers real results in production systems and can dramatically improve engagement metrics. Nobel laureate Harry Markowitz called diversification <a href="https://www.bizjournals.com/milwaukee/news/2018/10/03/investment-diversification-the-only-free-lunch-in.html">“the only free lunch in finance”</a> when applied to portfolio management. The same principle applies to recommendations: hedge your bets across the user’s possible intents.</p>
+<p>In this post, we’ll:</p>
+<ul>
+<li>Explain why diversity matters and when pointwise scoring fails</li>
+<li>Introduce Maximal Marginal Relevance (MMR), a simple and battle-tested diversity method</li>
+<li>Walk through the algorithm step-by-step with code</li>
+<li>Explore how the λ parameter lets you tune the quality-diversity tradeoff</li>
+</ul>
+<section id="why-diversity-matters" class="level1">
+<h1>Why Diversity Matters</h1>
+<p>Recommendation systems face a fundamental challenge: they don’t know what the user wants right now. They have historical signals, but a user who watched NBA highlights yesterday might be looking for a cooking video today. A user who binges Peppa Pig with their kids on weekends has different needs on a Tuesday night.</p>
+<p>Pointwise ranking models score each candidate independently. If your embedding space clusters similar content together (as it should), similar items receive similar scores. The top-K results end up being variations of the same thing.</p>
+<p>This creates several problems:</p>
+<ul>
+<li><strong>Missed opportunities</strong>: If the user’s current intent doesn’t match your top prediction, you’ve wasted valuable screen real estate</li>
+<li><strong>Filter bubbles</strong>: Users get stuck in narrow content loops, reducing long-term engagement</li>
+<li><strong>Poor fault tolerance</strong>: When your model is wrong about intent, it’s wrong across the entire slate</li>
+</ul>
+<p>Diversity isn’t unique to recommendations. Portfolio managers diversify across asset classes to reduce risk. Autonomous driving systems like <a href="https://www.cs.toronto.edu/~wenjie/papers/intentnet_corl18.pdf">IntentNet</a> diversify over possible agent intents rather than betting on a single predicted trajectory. The core insight is the same: when you’re uncertain about what the environment wants, spread your bets.</p>
+<p>The business case is compelling. Users who see a mix of content that spans their interests are more likely to find something they want right now, and more likely to come back.</p>
+</section>
+<section id="the-problem-setup" class="level1">
+<h1>The Problem Setup</h1>
+<p>Let’s make this concrete with an example. Imagine you have 6 candidate videos for a user:</p>
+<div id="cell-9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T03:01:31.609931Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T03:01:31.602525Z&quot;}}" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> numpy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> np</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> fastcore.utils <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> L</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> sklearn.metrics.pairwise <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> cosine_similarity</span>
+<span id="cb1-5"></span>
+<span id="cb1-6">relevance <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.85</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.6</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>])</span>
+<span id="cb1-7">genre <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> L([<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Action'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Action'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Action'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Comedy'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Documentary'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Mixed comedy/documentary'</span>])</span>
+<span id="cb1-8"></span>
+<span id="cb1-9">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame({</span>
+<span id="cb1-10">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'video_id'</span>: [i <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(relevance))],</span>
+<span id="cb1-11">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'genre'</span>: genre,</span>
+<span id="cb1-12">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'relevance'</span>: relevance</span>
+<span id="cb1-13">})</span>
+<span id="cb1-14">df</span></code></pre></div></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">video_id</th>
+<th data-quarto-table-cell-role="th">genre</th>
+<th data-quarto-table-cell-role="th">relevance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>0</td>
+<td>Action</td>
+<td>0.90</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1</td>
+<td>Action</td>
+<td>0.85</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>2</td>
+<td>Action</td>
+<td>0.80</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>3</td>
+<td>Comedy</td>
+<td>0.70</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>4</td>
+<td>Documentary</td>
+<td>0.60</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>5</td>
+<td>Mixed comedy/documentary</td>
+<td>0.50</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Pure relevance ranking returns: <strong>Action, Action, Action, Comedy, Documentary, Mixed</strong></p>
+<p>The top three slots go to nearly identical content. If the user wanted comedy, they have to scroll past three action videos. If they wanted a documentary, it’s buried at position 5.</p>
+<p>Now consider what happens with diversity-aware ranking: <strong>Action, Comedy, Documentary, Action, Mixed</strong></p>
+<p>The slate now covers three distinct genres in the top three positions. The second action video drops to position 4 since its marginal value is low once we’ve already shown an action video.</p>
+<p>This is the core insight: <strong>marginal relevance</strong> matters more than absolute relevance. The 3rd action video isn’t 3x as valuable as the first. Each additional similar item has diminishing returns.</p>
+<p>We can represent each video as an embedding vector over genres:</p>
+<div id="cell-11" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:56:17.536034Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:56:17.531561Z&quot;}}" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1">embeddings <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([</span>
+<span id="cb2-2">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>],   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># video 0: pure action</span></span>
+<span id="cb2-3">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>],   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># video 1: action (very similar to 0)</span></span>
+<span id="cb2-4">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>],   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># video 2: action (also very similar to 0)</span></span>
+<span id="cb2-5">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>],   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># video 3: comedy</span></span>
+<span id="cb2-6">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>],   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># video 4: documentary</span></span>
+<span id="cb2-7">    [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>],   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># video 5: mixed</span></span>
+<span id="cb2-8">])</span>
+<span id="cb2-9"></span>
+<span id="cb2-10">similarities <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> cosine_similarity(embeddings)</span>
+<span id="cb2-11"></span>
+<span id="cb2-12"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Similarity b/w Video 0 and 1 is </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>similarities[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.2f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb2-13"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Similarity b/w Video 0 and 3 is </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>similarities[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.2f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Similarity b/w Video 0 and 1 is 0.99
+Similarity b/w Video 0 and 3 is 0.00</code></pre>
+</div>
+</div>
+<p>Videos 0 and 1 have cosine similarity near 1.0. Videos 0 and 3 are orthogonal (similarity = 0). This similarity structure is exactly what MMR exploits to rerank results.</p>
+</section>
+<section id="maximal-marginal-relevance-the-algorithm" class="level1">
+<h1>Maximal Marginal Relevance: The Algorithm</h1>
+<p>MMR was introduced by <a href="https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf">Carbonell and Goldstein in 1998 for document retrieval and summarization</a>. The core formula is:</p>
+<pre><code>MMR = ArgMax[λ × Rel(item, user) - (1-λ) × Max(Sim(item, selected_items))]</code></pre>
+<p>Where:</p>
+<ul>
+<li><code>item</code> = candidate video not yet selected</li>
+<li><code>user</code> = user profile </li>
+<li><code>selected_items</code> = set of items already chosen for the slate </li>
+<li><code>λ</code> = trade-off parameter between relevance and diversity (0 to 1)</li>
+</ul>
+<p>You can see the first part <code>λ × Rel(item, user)</code> is just relevance. The second part <code>(1-λ) × Max(Sim(item, selected_items))</code> is the diversity penalty.</p>
+<p>The algorithm is greedy and iterative:</p>
+<ol type="1">
+<li><strong>First pick:</strong> Select the item with highest relevance (the similarity penalty term is zero since nothing has been selected yet)</li>
+<li><strong>Subsequent picks:</strong> For each remaining candidate, compute relevance minus a penalty for similarity to the most similar already-selected item. Pick the candidate with the highest score.</li>
+<li><strong>Repeat</strong> until you’ve filled K slots</li>
+</ol>
+<p>The key insight is the <code>Max</code> in the second term. You’re penalized based on your similarity to whichever selected item you’re most similar to. Being different from 2 out of 3 selected items doesn’t help if you’re a near-duplicate of the third.</p>
+<p><strong>The λ parameter controls the tradeoff:</strong></p>
+<ul>
+<li><code>λ = 1.0</code> → Pure relevance ranking, no diversity</li>
+<li><code>λ = 0.0</code> → Maximum diversity, ignore relevance</li>
+<li><code>λ = 0.5</code> → Equal weight to both</li>
+<li><code>λ = 0.7</code> → The paper’s suggested starting point</li>
+</ul>
+</section>
+<section id="walking-through-mmr-step-by-step" class="level1">
+<h1>Walking Through MMR Step-by-Step</h1>
+<p>Let’s trace through the algorithm by hand before writing any code.</p>
+<p><strong>Step 1: First selection</strong></p>
+<p>With an empty slate, there’s no diversity penalty.</p>
+<div id="cell-17" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:23.926733Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:23.923298Z&quot;}}" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">selected_item <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.argmax(relevance)</span>
+<span id="cb5-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"First selected item: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(selected_item)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">, Relevance: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>relevance[selected_item]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>First selected item: 0, Relevance: 0.9</code></pre>
+</div>
+</div>
+<p>We pick the highest relevance item: Video 0 (Action, relevance = 0.9).</p>
+<p><strong>Step 2: Second selection</strong></p>
+<p>Now we need to choose between the remaining videos. Let’s compare Video 1 (another Action, relevance=0.85) vs Video 3 (Comedy, relevance=0.7)</p>
+<div id="cell-19" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:25.680487Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:25.675358Z&quot;}}" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">lam <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span></span>
+<span id="cb7-2">video_1_mmr_score <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> lam <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> relevance[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>lam) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> cosine_similarity(embeddings[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]], embeddings[[selected_item]])</span>
+<span id="cb7-3">video_3_mmr_score <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> lam <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> relevance[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>lam) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> cosine_similarity(embeddings[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>]], embeddings[[selected_item]])</span>
+<span id="cb7-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"MMR score of Video 1: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>video_1_mmr_score<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>item()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.3f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb7-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"MMR score of Video 3: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>video_3_mmr_score<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>item()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:.3f}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MMR score of Video 1: -0.072
+MMR score of Video 3: 0.350</code></pre>
+</div>
+</div>
+<p>Video 3 wins despite having lower relevance. The similarity penalty makes Video 1’s score negative. This is MMR in action: redundancy is penalized so heavily that a lower-quality diverse item beats a high-quality duplicate.</p>
+<p><strong>The full implementation</strong></p>
+<div id="cell-21" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:28.288593Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:28.275064Z&quot;}}" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> mmr_select(relevance, embeddings, k<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, lam<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>):</span>
+<span id="cb9-2">    n <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(relevance)</span>
+<span id="cb9-3">    selected <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> []</span>
+<span id="cb9-4">    remaining <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">list</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(n))</span>
+<span id="cb9-5"></span>
+<span id="cb9-6">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># First pick: pure relevance (no penalty term)</span></span>
+<span id="cb9-7">    first <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">int</span>(np.argmax(relevance))</span>
+<span id="cb9-8">    selected.append(first)</span>
+<span id="cb9-9">    remaining.remove(first)</span>
+<span id="cb9-10"></span>
+<span id="cb9-11">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Subsequent picks: balance relevance vs redundancy</span></span>
+<span id="cb9-12">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">while</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(selected) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> k:</span>
+<span id="cb9-13">        best_score, best_idx <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">float</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'inf'</span>), <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb9-14"></span>
+<span id="cb9-15">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> i <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> remaining:</span>
+<span id="cb9-16">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Penalty = similarity to most similar already-selected item</span></span>
+<span id="cb9-17">            max_sim <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">max</span>(similarities[i, j] <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> j <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> selected)</span>
+<span id="cb9-18">            mmr_score <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> lam <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> relevance[i] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> lam) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> max_sim</span>
+<span id="cb9-19"></span>
+<span id="cb9-20">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> mmr_score <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> best_score:</span>
+<span id="cb9-21">                best_score, best_idx <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> mmr_score, i</span>
+<span id="cb9-22"></span>
+<span id="cb9-23">        selected.append(best_idx)</span>
+<span id="cb9-24">        remaining.remove(best_idx)</span>
+<span id="cb9-25"></span>
+<span id="cb9-26">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> selected</span></code></pre></div></div>
+</div>
+<div id="cell-22" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:29.631189Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:29.628072Z&quot;}}" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">result <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> mmr_select(relevance, embeddings, k<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, lam<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span>
+<span id="cb10-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(genre[result])</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['Action', 'Comedy', 'Documentary']</code></pre>
+</div>
+</div>
+<p>Pure relevance ranking would give us Action, Action, Action. MMR gives us Action, Comedy, Documentary. Three genres covered in three slots.</p>
+</section>
+<section id="tuning-λ-the-quality-diversity-tradeoff" class="level1">
+<h1>Tuning λ: The Quality-Diversity Tradeoff</h1>
+<p>The λ parameter is your dial between relevance and diversity. Let’s see how it affects the ranking:</p>
+<div id="cell-26" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:32.422779Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:32.419125Z&quot;}}" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> lam <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> [<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.3</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0</span>]:</span>
+<span id="cb12-2">    result <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> mmr_select(relevance, embeddings, k<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>, lam<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>lam)</span>
+<span id="cb12-3">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"λ=</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>lam<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>genre[result]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>λ=0.3: ['Action', 'Comedy', 'Documentary', 'Mixed comedy/documentary', 'Action', 'Action']
+λ=0.5: ['Action', 'Comedy', 'Documentary', 'Action', 'Action', 'Mixed comedy/documentary']
+λ=0.7: ['Action', 'Comedy', 'Documentary', 'Action', 'Action', 'Mixed comedy/documentary']
+λ=0.9: ['Action', 'Action', 'Action', 'Comedy', 'Documentary', 'Mixed comedy/documentary']
+λ=1.0: ['Action', 'Action', 'Action', 'Comedy', 'Documentary', 'Mixed comedy/documentary']</code></pre>
+</div>
+</div>
+<p>At λ=1.0 we recover pure relevance ranking. As λ decreases, diverse items get promoted earlier in the slate.</p>
+<p><strong>Choosing λ in practice:</strong></p>
+<ul>
+<li>Start with λ=0.7 (the original paper’s suggestion)</li>
+<li>A/B test different values against engagement metrics</li>
+</ul>
+</section>
+<section id="system-design-of-diversity-boosting" class="level1">
+<h1>System Design of Diversity Boosting</h1>
+<p>In terms of system design, diversity boosting can be added at various stages by using different techniques, but MMR falls into the class of <strong>re-rank algorithms</strong> which are typically applied after pointwise scoring.</p>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/mmr_pipeline.png" style="width:100%" class="figure-img">
+<figcaption align="center">
+Figure 2: Typical RecSys pipeline showing where MMR fits in the recommendation pipeline
+</figcaption>
+</figure>
+<p>The diagram above shows a typical recsys pipeline :</p>
+<ol type="1">
+<li><strong>Candidate Videos</strong> → Raw pool of items to consider</li>
+<li><strong>Pointwise video scorer</strong> → Takes user features and video features, outputs a relevance score per video independently</li>
+<li><strong>Ranking and Diversity Boosting</strong> (highlighted in green) → This is where MMR lives. It takes the pointwise scores and reorders them to balance relevance with diversity</li>
+<li><strong>Policy</strong> → Business rules layer (e.g., content safety filters, frequency caps)</li>
+<li><strong>User</strong> → Final slate shown</li>
+</ol>
+<p>MMR is a <strong>post-scoring reranker</strong>. The pointwise model does its job first (predicting relevance), then MMR adjusts the ordering to reduce redundancy. This is a clean separation of concerns - you don’t need to retrain your ranking model to add diversity.</p>
+</section>
+<section id="key-takeaways" class="level1">
+<h1>Key Takeaways</h1>
+<ol type="1">
+<li><p><strong>Pointwise ranking has a blind spot.</strong> Scoring items independently leads to redundant results when similar items cluster in your embedding space.</p></li>
+<li><p><strong>Diversity hedges against uncertainty.</strong> When you don’t know the user’s current intent, covering multiple possibilities increases the chance of a hit.</p></li>
+<li><p><strong>MMR is simple and effective.</strong> The algorithm is greedy, easy to implement, and has powered production systems for decades.</p></li>
+</ol>
+<p>I hope you enjoyed reading it. If there is any feedback on the code or just the blog post, feel free to reach out on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a>.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>RecSys</category>
+  <category>ML Algorithms</category>
+  <guid>https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/DiversityMMRPart1.html</guid>
+  <pubDate>Thu, 25 Dec 2025 08:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/diversity.png" medium="image" type="image/png" height="97" width="144"/>
+</item>
 <item>
   <title>Why You Should Write Technical Blogs (and How to Start)</title>
   <dc:creator>Aayush Agrawal</dc:creator>
@@ -15884,30 +16561,6 @@ Item similar to the above item:
   <guid>https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/</guid>
   <pubDate>Tue, 17 Apr 2018 07:00:00 GMT</pubDate>
   <media:content url="https://aayushmnit.com/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/personalization_benefits.PNG" medium="image"/>
-</item>
-<item>
-  <title>Website launch</title>
-  <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.com/posts/2018-02-19-launch/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>Finally got time to build my own website on <a href="https://github.com/">Github</a>. This is my first post and I would like to thank <a href="https://github.com/academicpages/academicpages.github.io">Academic Pages</a> which provided with a wonderful repository to help me get started with building this website.</p>
-<p>I am intending to use this website to publish blogs, workshop and any material which would be releveant in Data science field.</p>
-<p>Will see you guys in next post.</p>
-<p>-Aayush</p>
-
-
-
- ]]></description>
-  <category>launch</category>
-  <category>announcement</category>
-  <guid>https://aayushmnit.com/posts/2018-02-19-launch/</guid>
-  <pubDate>Mon, 19 Feb 2018 08:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.com/posts/2018-02-19-launch/launch.jpg" medium="image" type="image/jpeg"/>
 </item>
 </channel>
 </rss>
