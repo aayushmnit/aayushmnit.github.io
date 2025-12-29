@@ -25,9 +25,9 @@
 <p>Part 2 of the diversity series: Moving from greedy MMR to principled probabilistic frameworks with DPPs</p>
 </blockquote>
 <figure align="center" class="figure">
-<img src="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/diversity.png" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2025-12-28-DiversityDPPPart2/dpp_infographic.png" style="width:100%" class="figure-img">
 <figcaption align="center">
-Figure 1: Diverse recommendations cover multiple user intents. Credit: <a href="https://gemini.google.com/">Gemini</a>
+Figure: DPP infographic. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
 </figcaption>
 </figure>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -59,9 +59,15 @@ Figure 1: Diverse recommendations cover multiple user intents. Credit: <a href="
 </ul>
 <section id="linear-algebra-refresher-determinants-as-volume" class="level1">
 <h1>Linear Algebra Refresher: Determinants as Volume</h1>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2025-12-28-DiversityDPPPart2/dpp_intuition.png" style="width:100%" class="figure-img">
+<figcaption align="center">
+Figure: Mathematical Intuition behind DPP. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
+</figcaption>
+</figure>
 <p>Before diving into DPPs, we need to refresh one key concept: <strong>determinants measure volume</strong>.</p>
 <p>Consider two vectors in 2D space. The determinant of the matrix formed by these vectors equals the area of the parallelogram they span.</p>
-<div id="cell-7" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:11:30.016877Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:11:30.014331Z&quot;}}" data-execution_count="2">
+<div id="cell-8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:11:30.016877Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:11:30.014331Z&quot;}}" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
@@ -76,7 +82,7 @@ background-color: null;
 font-style: inherit;">as</span> plt</span></code></pre></div></div>
 </details>
 </div>
-<div id="cell-8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:11:45.146018Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:11:45.141973Z&quot;}}" data-execution_count="4">
+<div id="cell-9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:11:45.146018Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:11:45.141973Z&quot;}}" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Two similar vectors (small area)</span></span>
@@ -153,7 +159,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 Orthogonal vectors determinant: 1.000</code></pre>
 </div>
 </div>
-<div id="cell-9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:11:43.211051Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:11:42.758865Z&quot;}}" data-execution_count="3">
+<div id="cell-10" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:11:43.211051Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:11:42.758865Z&quot;}}" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1">fig, axes <span class="op" style="color: #5E5E5E;
@@ -387,7 +393,7 @@ font-style: inherit;">'tight'</span>)</span>
 <p>This is the geometric intuition behind DPPs: <strong>diverse sets span more volume, giving them higher determinants</strong>. When vectors point in similar directions, they span a thin, squashed parallelogram. When they’re spread out, the volume is large.</p>
 <p>This extends to higher dimensions. For <em>k</em> vectors in <em>d</em>-dimensional space, the determinant of their Gram matrix (<code>L = VVᵀ</code>) measures the squared volume of the k-dimensional parallelotope they span.</p>
 <p>Note: Gram matrix is also called the “kernel matrix” in <a href="https://arxiv.org/abs/1207.6083">DPP literature</a>.</p>
-<div id="cell-11" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:12:02.317116Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:12:02.302958Z&quot;}}" data-execution_count="5">
+<div id="cell-12" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:12:02.317116Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:12:02.302958Z&quot;}}" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># 3 items in 3D feature space</span></span>
@@ -518,7 +524,7 @@ Similar set det(L): 0.010</code></pre>
 </ul>
 <p>The probability of selecting a set is proportional to the determinant of its kernel submatrix. From our linear algebra refresher, we know determinants measure volume, so <strong>diverse sets that span more volume get higher probability</strong>.</p>
 <p>Let’s use the same video recommendation example from Part 1:</p>
-<div id="cell-15" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:13:10.855574Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:13:10.850690Z&quot;}}" data-execution_count="7">
+<div id="cell-16" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:13:10.855574Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:13:10.850690Z&quot;}}" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">relevance <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> np.array([<span class="fl" style="color: #AD0000;
@@ -703,7 +709,7 @@ Video 5: 0.1 (Mixed comedy/documentary)</code></pre>
 </div>
 </div>
 <p>Notice how videos 0, 1, 2 (all Action) have high similarity (~0.8-0.9), while Action vs Comedy is 0. Now let’s compare the DPP probability of two different 3-video sets:</p>
-<div id="cell-17" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:13:14.485085Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:13:14.480201Z&quot;}}" data-execution_count="8">
+<div id="cell-18" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:13:14.485085Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:13:14.480201Z&quot;}}" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -866,6 +872,12 @@ Diverse set is 10000x more likely under DPP</code></pre>
 </section>
 <section id="quality-vs-diversity-decomposition" class="level1">
 <h1>Quality vs Diversity Decomposition</h1>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2025-12-28-DiversityDPPPart2/quality_diversity_tradeoff.png" style="width:100%" class="figure-img">
+<figcaption align="center">
+Figure: Quality diversity tradeoff in DPP. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
+</figcaption>
+</figure>
 <p>So far our kernel matrix L only captures similarity between items. But in real recommendations, we care about <em>both</em> quality (relevance) and diversity. A diverse set of low-quality items is useless.</p>
 <p>DPPs handle this elegantly through the <strong>quality-diversity decomposition</strong>:</p>
 <p><code>L[i,j] = q_i × q_j × S[i,j]</code></p>
@@ -876,7 +888,7 @@ Diverse set is 10000x more likely under DPP</code></pre>
 </ul>
 <p>This decomposes naturally: diagonal entries <code>L[i,i] = q_i²</code> capture item quality, while off-diagonal entries capture similarity scaled by both items’ quality. High-quality similar items create larger off-diagonal terms, which <em>reduce</em> the determinant (penalizing redundancy among your best items).</p>
 <p>Let’s rebuild our kernel matrix with relevance scores:</p>
-<div id="cell-22" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:19:10.603129Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:19:10.599303Z&quot;}}" data-execution_count="9">
+<div id="cell-24" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:19:10.603129Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:19:10.599303Z&quot;}}" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Similarity matrix from embeddings</span></span>
@@ -931,7 +943,7 @@ font-style: inherit;">3</span>))</span></code></pre></div></div>
 </div>
 </div>
 <p>Let’s compare the two sets again with the new kernel matrix:</p>
-<div id="cell-24" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:19:15.771601Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:19:15.767381Z&quot;}}" data-execution_count="10">
+<div id="cell-26" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:19:15.771601Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:19:15.767381Z&quot;}}" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1">redundant <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [<span class="dv" style="color: #AD0000;
@@ -1081,7 +1093,7 @@ Diverse set is 3815x more likely</code></pre>
 </div>
 <p>Even though the diverse set includes lower-relevance items (0.7, 0.6 vs 0.85, 0.8), the diversity bonus from spanning different genres still makes it far more probable (3815x as compared to 10000x before). The quality weighting ensures we don’t pick diverse but irrelevant items.</p>
 <p><strong>The intuition</strong>: Think of <code>q_i</code> as the “length” of item i’s feature vector. The determinant measures the volume spanned by these vectors. A high-quality item contributes a longer vector, but if two long vectors point in the same direction (similar items), the parallelogram is still flat. You need both length (quality) AND spread (diversity) to maximize volume.</p>
-<div id="cell-26" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:20:43.026376Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:20:42.603316Z&quot;}}" data-execution_count="13">
+<div id="cell-28" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:20:43.026376Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:20:42.603316Z&quot;}}" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1">fig, axes <span class="op" style="color: #5E5E5E;
@@ -1209,7 +1221,7 @@ font-style: inherit;">'tight'</span>)</span>
 <p>Let’s trace through selecting 3 videos from our candidate pool. At each step, we try adding every remaining candidate and pick whoever maximizes <code>det(L_Y)</code>.</p>
 <p><strong>Step 1: First Selection</strong></p>
 <p>With an empty set, we’re just comparing single-item determinants. For a 1×1 matrix, <code>det([L[i,i]]) = L[i,i] = q_i²</code>. So the first pick is simply the highest-quality item:</p>
-<div id="cell-32" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:30:32.148910Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:30:32.144453Z&quot;}}" data-execution_count="25">
+<div id="cell-34" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:30:32.148910Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:30:32.144453Z&quot;}}" data-execution_count="25">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
@@ -1313,7 +1325,7 @@ font-style: inherit;">)"</span>)</span></code></pre></div></div>
 </div>
 <p><strong>Step 2: Second Selection</strong></p>
 <p>Now it gets interesting. We evaluate each remaining candidate by computing <code>det(L_Y)</code> for the 2-item set:</p>
-<div id="cell-34" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:30:34.381727Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:30:34.376166Z&quot;}}" data-execution_count="26">
+<div id="cell-36" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:30:34.381727Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:30:34.376166Z&quot;}}" data-execution_count="26">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1">selected <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> [first_pick]</span>
@@ -1525,7 +1537,7 @@ Evaluating candidates:
 </div>
 </div>
 <p>Notice how adding another Action video (high off-diagonal similarity) leads to a lower determinant, while Comedy or Documentary (zero similarity to Action) leads to a higher determinant. In this case we will pick Video 3 as it has the highest determinant of <code>0.3969</code>.</p>
-<div id="cell-36" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:30:36.288683Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:30:36.284187Z&quot;}}" data-execution_count="27">
+<div id="cell-38" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:30:36.288683Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:30:36.284187Z&quot;}}" data-execution_count="27">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Find second pick</span></span>
@@ -1613,7 +1625,7 @@ font-style: inherit;">"</span>)</span>
 </div>
 <p><strong>Step 3: Third Selection</strong></p>
 <p>Same process with a 3×3 determinant:</p>
-<div id="cell-38" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:30:40.753920Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:30:40.748612Z&quot;}}" data-execution_count="28">
+<div id="cell-40" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:30:40.753920Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:30:40.748612Z&quot;}}" data-execution_count="28">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
@@ -1798,7 +1810,7 @@ Final selection: ['Action', 'Comedy', 'Documentary']</code></pre>
 <section id="the-complete-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="the-complete-implementation">The Complete Implementation</h2>
 <p>Now we can wrap this into a clean function:</p>
-<div id="cell-41" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:26:05.953919Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:26:05.947994Z&quot;}}" data-execution_count="23">
+<div id="cell-43" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:26:05.953919Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:26:05.947994Z&quot;}}" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1926,6 +1938,12 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 </section>
 <section id="tuning-the-quality-diversity-tradeoff" class="level1">
 <h1>Tuning the Quality-Diversity Tradeoff</h1>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2025-12-28-DiversityDPPPart2/dpps_in_production.png" style="width:100%" class="figure-img">
+<figcaption align="center">
+Figure: Youtube’s DPP Implementation. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
+</figcaption>
+</figure>
 <p>In production, you need a way to control how much the system emphasizes relevance versus diversity. YouTube’s approach, described in their <a href="https://dl.acm.org/doi/epdf/10.1145/3269206.3272018">2018 paper on DPPs for recommendations</a>, provides a clean parameterization that’s proven to work at scale.</p>
 <section id="youtubes-kernel-parameterization" class="level2">
 <h2 class="anchored" data-anchor-id="youtubes-kernel-parameterization">YouTube’s Kernel Parameterization</h2>
@@ -1977,7 +1995,7 @@ Note
 <li>Large σ: Even moderately different items are penalized (broad diversity).</li>
 </ul>
 <p>Let’s implement this new kernel building function:</p>
-<div id="cell-51" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:35:50.325644Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:35:50.320650Z&quot;}}" data-execution_count="30">
+<div id="cell-54" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:35:50.325644Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:35:50.320650Z&quot;}}" data-execution_count="30">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2129,7 +2147,7 @@ font-style: inherit;">3</span>))</span></code></pre></div></div>
 <section id="sweeping-the-α-parameter" class="level2">
 <h2 class="anchored" data-anchor-id="sweeping-the-α-parameter">Sweeping the α Parameter</h2>
 <p>Let’s see how α affects the diversity-quality tradeoff:</p>
-<div id="cell-54" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:42:16.571002Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:42:16.561467Z&quot;}}" data-execution_count="34">
+<div id="cell-57" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:42:16.571002Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:42:16.561467Z&quot;}}" data-execution_count="34">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><span class="bu" style="color: null;
@@ -2300,7 +2318,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="sweeping-the-σ-parameter" class="level2">
 <h2 class="anchored" data-anchor-id="sweeping-the-σ-parameter">Sweeping the σ Parameter</h2>
 <p>The σ parameter controls what counts as “similar”. Let’s fix α = 0.75 and vary σ:</p>
-<div id="cell-58" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:42:10.634474Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:42:10.625461Z&quot;}}" data-execution_count="33">
+<div id="cell-61" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:42:10.634474Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:42:10.625461Z&quot;}}" data-execution_count="33">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><span class="bu" style="color: null;
@@ -2472,7 +2490,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <section id="visualizing-the-rbf-kernel" class="level2">
 <h2 class="anchored" data-anchor-id="visualizing-the-rbf-kernel">Visualizing the RBF Kernel</h2>
 <p>The <code>exp(-D_ij / 2σ²)</code> term is an RBF (Radial Basis Function) kernel. Let’s visualize how it maps distances to similarities:</p>
-<div id="cell-62" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:42:26.095856Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:42:25.809480Z&quot;}}" data-execution_count="35">
+<div id="cell-65" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:42:26.095856Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:42:25.809480Z&quot;}}" data-execution_count="35">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1">fig, ax <span class="op" style="color: #5E5E5E;
@@ -2654,7 +2672,7 @@ font-style: inherit;">'tight'</span>)</span>
 Figure 3: Snapshot of DPP algorithm from <a href="https://dl.acm.org/doi/epdf/10.1145/3269206.3272018">YT DPP paper</a>
 </figcaption>
 </figure>
-<div id="cell-71" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:52:10.726285Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:52:10.722300Z&quot;}}" data-execution_count="41">
+<div id="cell-74" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:52:10.726285Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:52:10.722300Z&quot;}}" data-execution_count="41">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2772,7 +2790,7 @@ font-style: inherit;">return</span> R</span></code></pre></div></div>
 <section id="walking-through-the-windowed-algorithm" class="level2">
 <h2 class="anchored" data-anchor-id="walking-through-the-windowed-algorithm">Walking Through the Windowed Algorithm</h2>
 <p>Let’s trace through ranking all 6 videos with window size k=2:</p>
-<div id="cell-74" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:51:58.607255Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:51:58.599040Z&quot;}}" data-execution_count="40">
+<div id="cell-77" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:51:58.607255Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:51:58.599040Z&quot;}}" data-execution_count="40">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><span class="bu" style="color: null;
@@ -3103,7 +3121,7 @@ Genres: ['Action', 'Comedy', 'Action', 'Documentary', 'Action', 'Mixed comedy/do
 <section id="comparing-single-pass-vs-windowed" class="level2">
 <h2 class="anchored" data-anchor-id="comparing-single-pass-vs-windowed">Comparing Single-Pass vs Windowed</h2>
 <p>Let’s compare the two approaches side-by-side:</p>
-<div id="cell-78" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:52:13.994759Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:52:13.987246Z&quot;}}" data-execution_count="42">
+<div id="cell-81" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-29T03:52:13.994759Z&quot;,&quot;start_time&quot;:&quot;2025-12-29T03:52:13.987246Z&quot;}}" data-execution_count="42">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><span class="co" style="color: #5E5E5E;
@@ -3396,12 +3414,12 @@ Figure 4: Typical RecSys pipeline showing where DPP fits in the recommendation p
 </section>
 
  ]]></description>
-  <category>Recommender Systems</category>
+  <category>Recommender System</category>
   <category>Machine Learning</category>
   <category>Diversity</category>
   <guid>https://aayushmnit.com/posts/2025-12-28-DiversityDPPPart2/DiversityDPPPart2.html</guid>
   <pubDate>Sun, 28 Dec 2025 08:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/diversity.png" medium="image" type="image/png" height="97" width="144"/>
+  <media:content url="https://aayushmnit.com/posts/2025-12-28-DiversityDPPPart2/dpp_infographic.png" medium="image" type="image/png" height="80" width="144"/>
 </item>
 <item>
   <title>Diversity in Recommendations - Maximal Marginal Relevance (MMR)</title>
@@ -3710,6 +3728,12 @@ Similarity b/w Video 0 and 3 is 0.00</code></pre>
 </section>
 <section id="maximal-marginal-relevance-the-algorithm" class="level1">
 <h1>Maximal Marginal Relevance: The Algorithm</h1>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/mmr_infographics.png" style="width:100%" class="figure-img">
+<figcaption align="center">
+Figure 2: MMR infographic. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
+</figcaption>
+</figure>
 <p>MMR was introduced by <a href="https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf">Carbonell and Goldstein in 1998 for document retrieval and summarization</a>. The core formula is:</p>
 <pre><code>MMR = ArgMax[λ × Rel(item, user) - (1-λ) × Max(Sim(item, selected_items))]</code></pre>
 <p>Where:</p>
@@ -3740,7 +3764,7 @@ Similarity b/w Video 0 and 3 is 0.00</code></pre>
 <p>Let’s trace through the algorithm by hand before writing any code.</p>
 <p><strong>Step 1: First selection</strong></p>
 <p>With an empty slate, there’s no diversity penalty.</p>
-<div id="cell-17" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:23.926733Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:23.923298Z&quot;}}" data-execution_count="4">
+<div id="cell-18" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:23.926733Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:23.923298Z&quot;}}" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1">selected_item <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> np.argmax(relevance)</span>
@@ -3770,7 +3794,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <p>We pick the highest relevance item: Video 0 (Action, relevance = 0.9).</p>
 <p><strong>Step 2: Second selection</strong></p>
 <p>Now we need to choose between the remaining videos. Let’s compare Video 1 (another Action, relevance=0.85) vs Video 3 (Comedy, relevance=0.7)</p>
-<div id="cell-19" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:25.680487Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:25.675358Z&quot;}}" data-execution_count="5">
+<div id="cell-20" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:25.680487Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:25.675358Z&quot;}}" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1">lam <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="fl" style="color: #AD0000;
@@ -3843,7 +3867,7 @@ MMR score of Video 3: 0.350</code></pre>
 </div>
 <p>Video 3 wins despite having lower relevance. The similarity penalty makes Video 1’s score negative. This is MMR in action: redundancy is penalized so heavily that a lower-quality diverse item beats a high-quality duplicate.</p>
 <p><strong>The full implementation</strong></p>
-<div id="cell-21" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:28.288593Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:28.275064Z&quot;}}" data-execution_count="6">
+<div id="cell-22" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:28.288593Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:28.275064Z&quot;}}" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -3959,7 +3983,7 @@ background-color: null;
 font-weight: bold;
 font-style: inherit;">return</span> selected</span></code></pre></div></div>
 </div>
-<div id="cell-22" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:29.631189Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:29.628072Z&quot;}}" data-execution_count="7">
+<div id="cell-23" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:29.631189Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:29.628072Z&quot;}}" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">result <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> mmr_select(relevance, embeddings, k<span class="op" style="color: #5E5E5E;
@@ -3983,7 +4007,7 @@ font-style: inherit;">print</span>(genre[result])</span></code></pre></div></div
 <section id="tuning-λ-the-quality-diversity-tradeoff" class="level1">
 <h1>Tuning λ: The Quality-Diversity Tradeoff</h1>
 <p>The λ parameter is your dial between relevance and diversity. Let’s see how it affects the ranking:</p>
-<div id="cell-26" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:32.422779Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:32.419125Z&quot;}}" data-execution_count="8">
+<div id="cell-27" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:32.422779Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:32.419125Z&quot;}}" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -4048,7 +4072,7 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
 <figure align="center" class="figure">
 <img src="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/mmr_pipeline.png" style="width:100%" class="figure-img">
 <figcaption align="center">
-Figure 2: Typical RecSys pipeline showing where MMR fits in the recommendation pipeline
+Figure 3: Typical RecSys pipeline showing where MMR fits in the recommendation pipeline
 </figcaption>
 </figure>
 <p>The diagram above shows a typical recsys pipeline :</p>
@@ -4074,8 +4098,9 @@ Figure 2: Typical RecSys pipeline showing where MMR fits in the recommendation p
 </section>
 
  ]]></description>
-  <category>RecSys</category>
-  <category>ML Algorithms</category>
+  <category>Recommender System</category>
+  <category>Machine Learning</category>
+  <category>Diversity</category>
   <guid>https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/DiversityMMRPart1.html</guid>
   <pubDate>Thu, 25 Dec 2025 08:00:00 GMT</pubDate>
   <media:content url="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/diversity.png" medium="image" type="image/png" height="97" width="144"/>

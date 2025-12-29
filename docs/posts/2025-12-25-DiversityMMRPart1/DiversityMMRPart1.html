@@ -428,8 +428,9 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 <div class="quarto-title">
 <h1 class="title">Diversity in Recommendations - Maximal Marginal Relevance (MMR)</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">RecSys</div>
-    <div class="quarto-category">ML Algorithms</div>
+    <div class="quarto-category">Recommender System</div>
+    <div class="quarto-category">Machine Learning</div>
+    <div class="quarto-category">Diversity</div>
   </div>
   </div>
 
@@ -614,6 +615,12 @@ Similarity b/w Video 0 and 3 is 0.00</code></pre>
 </section>
 <section id="maximal-marginal-relevance-the-algorithm" class="level1">
 <h1>Maximal Marginal Relevance: The Algorithm</h1>
+<figure align="center" class="figure">
+<img src="./mmr_infographics.png" style="width:100%" class="figure-img">
+<figcaption align="center">
+Figure 2: MMR infographic. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
+</figcaption>
+</figure>
 <p>MMR was introduced by <a href="https://www.cs.cmu.edu/~jgc/publication/The_Use_MMR_Diversity_Based_LTMIR_1998.pdf">Carbonell and Goldstein in 1998 for document retrieval and summarization</a>. The core formula is:</p>
 <pre><code>MMR = ArgMax[λ × Rel(item, user) - (1-λ) × Max(Sim(item, selected_items))]</code></pre>
 <p>Where:</p>
@@ -644,7 +651,7 @@ Similarity b/w Video 0 and 3 is 0.00</code></pre>
 <p>Let’s trace through the algorithm by hand before writing any code.</p>
 <p><strong>Step 1: First selection</strong></p>
 <p>With an empty slate, there’s no diversity penalty.</p>
-<div id="cell-17" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:23.926733Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:23.923298Z&quot;}}" data-execution_count="4">
+<div id="cell-18" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:23.926733Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:23.923298Z&quot;}}" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>selected_item <span class="op">=</span> np.argmax(relevance)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"First selected item: </span><span class="sc">{</span><span class="bu">int</span>(selected_item)<span class="sc">}</span><span class="ss">, Relevance: </span><span class="sc">{</span>relevance[selected_item]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -654,7 +661,7 @@ Similarity b/w Video 0 and 3 is 0.00</code></pre>
 <p>We pick the highest relevance item: Video 0 (Action, relevance = 0.9).</p>
 <p><strong>Step 2: Second selection</strong></p>
 <p>Now we need to choose between the remaining videos. Let’s compare Video 1 (another Action, relevance=0.85) vs Video 3 (Comedy, relevance=0.7)</p>
-<div id="cell-19" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:25.680487Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:25.675358Z&quot;}}" data-execution_count="5">
+<div id="cell-20" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:25.680487Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:25.675358Z&quot;}}" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lam <span class="op">=</span> <span class="fl">0.5</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>video_1_mmr_score <span class="op">=</span> lam <span class="op">*</span> relevance[<span class="dv">1</span>] <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>lam) <span class="op">*</span> cosine_similarity(embeddings[[<span class="dv">1</span>]], embeddings[[selected_item]])</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>video_3_mmr_score <span class="op">=</span> lam <span class="op">*</span> relevance[<span class="dv">3</span>] <span class="op">-</span> (<span class="dv">1</span><span class="op">-</span>lam) <span class="op">*</span> cosine_similarity(embeddings[[<span class="dv">3</span>]], embeddings[[selected_item]])</span>
@@ -667,7 +674,7 @@ MMR score of Video 3: 0.350</code></pre>
 </div>
 <p>Video 3 wins despite having lower relevance. The similarity penalty makes Video 1’s score negative. This is MMR in action: redundancy is penalized so heavily that a lower-quality diverse item beats a high-quality duplicate.</p>
 <p><strong>The full implementation</strong></p>
-<div id="cell-21" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:28.288593Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:28.275064Z&quot;}}" data-execution_count="6">
+<div id="cell-22" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:28.288593Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:28.275064Z&quot;}}" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mmr_select(relevance, embeddings, k<span class="op">=</span><span class="dv">3</span>, lam<span class="op">=</span><span class="fl">0.5</span>):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(relevance)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    selected <span class="op">=</span> []</span>
@@ -695,7 +702,7 @@ MMR score of Video 3: 0.350</code></pre>
 <span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> selected</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="cell-22" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:29.631189Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:29.628072Z&quot;}}" data-execution_count="7">
+<div id="cell-23" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:29.631189Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:29.628072Z&quot;}}" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> mmr_select(relevance, embeddings, k<span class="op">=</span><span class="dv">3</span>, lam<span class="op">=</span><span class="fl">0.5</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(genre[result])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -707,7 +714,7 @@ MMR score of Video 3: 0.350</code></pre>
 <section id="tuning-λ-the-quality-diversity-tradeoff" class="level1">
 <h1>Tuning λ: The Quality-Diversity Tradeoff</h1>
 <p>The λ parameter is your dial between relevance and diversity. Let’s see how it affects the ranking:</p>
-<div id="cell-26" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:32.422779Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:32.419125Z&quot;}}" data-execution_count="8">
+<div id="cell-27" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2025-12-26T02:42:32.422779Z&quot;,&quot;start_time&quot;:&quot;2025-12-26T02:42:32.419125Z&quot;}}" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> lam <span class="kw">in</span> [<span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="fl">1.0</span>]:</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> mmr_select(relevance, embeddings, k<span class="op">=</span><span class="dv">6</span>, lam<span class="op">=</span>lam)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"λ=</span><span class="sc">{</span>lam<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>genre[result]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -732,7 +739,7 @@ MMR score of Video 3: 0.350</code></pre>
 <figure align="center" class="figure">
 <img src="./mmr_pipeline.png" style="width:100%" class="figure-img">
 <figcaption align="center">
-Figure 2: Typical RecSys pipeline showing where MMR fits in the recommendation pipeline
+Figure 3: Typical RecSys pipeline showing where MMR fits in the recommendation pipeline
 </figcaption>
 </figure>
 <p>The diagram above shows a typical recsys pipeline :</p>
