@@ -3401,7 +3401,7 @@ Figure 4: Typical RecSys pipeline showing where DPP fits in the recommendation p
   <category>Diversity</category>
   <guid>https://aayushmnit.com/posts/2025-12-28-DiversityDPPPart2/DiversityDPPPart2.html</guid>
   <pubDate>Sun, 28 Dec 2025 08:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.com/posts/2025-12-28-DiversityDPPPart2/dpp_cover.png" medium="image" type="image/png"/>
+  <media:content url="https://aayushmnit.com/posts/2025-12-25-DiversityMMRPart1/diversity.png" medium="image" type="image/png" height="97" width="144"/>
 </item>
 <item>
   <title>Diversity in Recommendations - Maximal Marginal Relevance (MMR)</title>
