@@ -89,7 +89,11 @@ Figure: pDPP infographic. Credit: <a href="https://notebooklm.google.com/">Noteb
 <h1>The Math: Computing User Entropy</h1>
 <p>Let’s formalize the intuition from the previous section. For a user <code>u</code>, we compute Shannon entropy over their genre distribution:</p>
 <p><code>H(u) = -Σ P(g|u) × log(P(g|u))</code></p>
-<p>Where: - <code>P(g|u)</code> is the probability of genre <code>g</code> in user <code>u</code>’s interaction history - The sum is over all genres the user has interacted with</p>
+<p>Where:</p>
+<ul>
+<li><code>P(g|u)</code> is the probability of genre <code>g</code> in user <code>u</code>’s interaction history</li>
+<li>The sum is over all genres the user has interacted with</li>
+</ul>
 <p>Let’s implement this:</p>
 <div id="cell-8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-01T22:38:14.918343Z&quot;,&quot;start_time&quot;:&quot;2026-01-01T22:38:14.915511Z&quot;}}" data-execution_count="10">
 <details class="code-fold">
@@ -238,8 +242,12 @@ User B(diverse taste) entropy: 1.609</code></pre>
 <li><p><strong>User A (entropy = 0.500)</strong>: With 4 action + 1 comedy, their behavior is highly predictable. Low entropy means low “surprise” in what they’ll watch next.</p></li>
 <li><p><strong>User B (entropy = 1.609)</strong>: With equal spread across 5 genres, their behavior is maximally uncertain. This is actually the maximum possible entropy for 5 categories: <code>ln(5) ≈ 1.609</code>.</p></li>
 </ul>
-<p><strong>What the values mean practically:</strong> - Entropy of 0 = watches only one genre (perfectly predictable) - Entropy of ln(n) = watches n genres equally (maximum diversity)</p>
-<p>So User B’s entropy being exactly ln(5) tells us they have a perfectly uniform distribution across genres. User A’s 0.500 is much closer to 0, reflecting their strong single-genre preference.</p>
+<p><strong>What the values mean practically:</strong></p>
+<ul>
+<li>Entropy of 0 = watches only one genre (perfectly predictable)</li>
+<li>Entropy of log(n) = watches n genres equally (maximum diversity)</li>
+</ul>
+<p>So User B’s entropy being exactly log(5) tells us they have a perfectly uniform distribution across genres. User A’s 0.500 is much closer to 0, reflecting their strong single-genre preference.</p>
 <p>This entropy value becomes our “diversity propensity score” that we’ll use to personalize α in the next section.</p>
 </section>
 <section id="from-entropy-to-personalized-α" class="level1">
@@ -253,11 +261,25 @@ Figure: Snapshot from <a href="https://arxiv.org/pdf/2004.06390">Huawei’s Pers
 </figure>
 <p><a href="https://arxiv.org/pdf/2004.06390">Huawei paper</a> uses a simple multiplicative formula:</p>
 <p><code>α_u = f_u × α_0</code></p>
-<p>Where: - <code>α_0</code> is your baseline diversity weight (the system default) - <code>f_u</code> is a user-specific scaling factor between 0 and 1</p>
+<p>Where:</p>
+<ul>
+<li><code>α_0</code> is your baseline diversity weight (the system default)</li>
+<li><code>f_u</code> is a user-specific scaling factor between 0 and 1</li>
+</ul>
 <p>The scaling factor <code>f_u</code> is computed via min-max normalization of the user’s entropy:</p>
 <p><code>f_u = (H_u - H_min + l) / (H_max - H_min + l)</code></p>
-<p>Where: - <code>H_u</code> is the user’s entropy - <code>H_min</code>, <code>H_max</code> are the min/max entropy across your user population - <code>l</code> is a smoothing parameter</p>
-<p><strong>The <code>l</code> parameter as a personalization dial:</strong> - <code>l = 0</code>: Full personalization. Users at H_max get f_u = 1, users at H_min get f_u = 0 - <code>l → ∞</code>: No personalization. Everyone gets f_u ≈ 0, so α_u ≈ 0 for all users - In practice, <code>l</code> in the range of <code>H_max - H_min</code> gives moderate personalization</p>
+<p>Where:</p>
+<ul>
+<li><code>H_u</code> is the user’s entropy</li>
+<li><code>H_min</code>, <code>H_max</code> are the min/max entropy across your user population</li>
+<li><code>l</code> is a smoothing parameter</li>
+</ul>
+<p><strong>The <code>l</code> parameter as a personalization dial:</strong></p>
+<ul>
+<li><code>l = 0</code>: Full personalization. Users at H_max get f_u = 1, users at H_min get f_u = 0</li>
+<li><code>l → ∞</code>: No personalization. Everyone gets f_u ≈ 0, so α_u ≈ 0 for all users</li>
+<li>In practice, <code>l</code> in the range of <code>H_max - H_min</code> gives moderate personalization</li>
+</ul>
 <p>Let’s implement it:</p>
 <div id="cell-15" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-01T22:37:16.550685Z&quot;,&quot;start_time&quot;:&quot;2026-01-01T22:37:16.547519Z&quot;}}" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="kw" style="color: #003B4F;
@@ -1062,8 +1084,17 @@ Figure: pDPP example. Credit: <a href="https://notebooklm.google.com/">NotebookL
 <p><strong>The additive bounded formulation:</strong></p>
 <p>Instead of multiplying, we use an additive offset centered around 0.5:</p>
 <p><code>α_u = α_0 + (f_u - 0.5) × α_range</code></p>
-<p>Where: - <code>α_0</code> is your baseline (center point) - <code>α_range</code> controls how far users can deviate from baseline - <code>f_u - 0.5</code> shifts the range to [-0.5, +0.5], so the adjustment is symmetric</p>
-<p>This gives you explicit floor and ceiling: - Floor: <code>α_0 - 0.5 × α_range</code> - Ceiling: <code>α_0 + 0.5 × α_range</code></p>
+<p>Where:</p>
+<ul>
+<li><code>α_0</code> is your baseline (center point)</li>
+<li><code>α_range</code> controls how far users can deviate from baseline</li>
+<li><code>f_u - 0.5</code> shifts the range to [-0.5, +0.5], so the adjustment is symmetric</li>
+</ul>
+<p>This gives you explicit floor and ceiling:</p>
+<ul>
+<li>Floor: <code>α_0 - 0.5 × α_range</code></li>
+<li>Ceiling: <code>α_0 + 0.5 × α_range</code></li>
+</ul>
 <p>For example, with <code>α_0 = 0.6</code> and <code>α_range = 0.4</code>: - Minimum <code>α</code> = 0.6 - 0.2 = <strong>0.4</strong> (most focused users) - Maximum <code>α</code> = 0.6 + 0.2 = <strong>0.8</strong> (most diverse users)</p>
 <div id="cell-26" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-01T23:05:40.196920Z&quot;,&quot;start_time&quot;:&quot;2026-01-01T23:05:40.188875Z&quot;}}" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="kw" style="color: #003B4F;
@@ -1277,7 +1308,13 @@ Top 6: ['Action(0.9)', 'Comedy(0.7)', 'Documentary(0.6)', 'Action(0.85)', 'Actio
 <p>Now both users stay within the guardrails we set (0.4 to 0.8):</p>
 <p><strong>User A (α = 0.4)</strong> still gets all three action movies first, but now there’s <em>some</em> diversity consideration baked in. They’re at the floor, not at zero. If we had more videos in the candidate pool, this baseline diversity would prevent completely homogeneous results.</p>
 <p><strong>User B (α = 0.8)</strong> gets a diversified feed, but not as extreme as before. Compare to the multiplicative version where they had α ≈ 1.0: now the second action movie appears at position 4 instead of position 5. The ceiling prevents over-diversification.</p>
-<p><strong>Why this matters in production:</strong> - You can guarantee minimum diversity for all users (prevents filter bubbles) - You can cap maximum diversity (prevents feeds that feel random) - The parameters are intuitive to tune: “baseline 0.6, users can vary ±0.2” - Product and engineering can align on explicit bounds before launch</p>
+<p><strong>Why this matters in production:</strong></p>
+<ul>
+<li>You can guarantee minimum diversity for all users (prevents filter bubbles)</li>
+<li>You can cap maximum diversity (prevents feeds that feel random)</li>
+<li>The parameters are intuitive to tune: “baseline 0.6, users can vary ±0.2”</li>
+<li>Product and engineering can align on explicit bounds before launch</li>
+</ul>
 <p>The tradeoff is less dramatic personalization. The multiplicative approach gave a 10x difference between User A and B (0.0 vs 1.0). The bounded approach gives a 2x difference (0.4 vs 0.8). Which is right depends on your product goals and risk tolerance.</p>
 </section>
 <section id="production-considerations" class="level1">
