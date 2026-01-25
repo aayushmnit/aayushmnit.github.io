@@ -491,19 +491,19 @@ gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 <figure align="center" class="figure">
 <img src="./claude_code_infographics.jpg" style="width:100%" class="figure-img">
 <figcaption align="center">
-Figure: Claude Code Infograohics.Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
+Figure: Claude Code Infographics. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
 </figcaption>
 </figure>
 <p>If you’ve been following AI tooling trends, you’ve noticed something interesting: AI companies are going direct-to-developer. Cursor showed us what’s possible when you embed AI deeply into a code editor. But now Claude (Anthropic) and other foundation model providers are shipping their own coding agents. This isn’t just competition. It’s a signal that the “AI wrapper” layer is collapsing, and the companies building the models want to own the developer experience.</p>
 <p>As an ML Engineer, I spend my days building systems that learn from data. But I’m also a practitioner who uses AI tools daily. When Claude Code launched, I wanted to understand it deeply, not just use it casually. What makes it different from Cursor or Copilot? What new patterns does it enable? And most importantly: how do I get the most out of it for real engineering work?</p>
 <p>I’ll walk through the core concepts (context engineering, memory hierarchies, MCP), the practical commands you’ll use daily, and the advanced patterns like subagents and parallel workflows. Whether you’re evaluating Claude Code for your team or just curious about where AI-assisted development is heading, this should give you a clear picture.</p>
-If you are a video learner, I created a video using Notebook LM, which summarizes key concepts from the blog, watch here - <a href="https://youtu.be/soNYWPJO4Fk">Mastering Claude Code</a>
+If you are a video learner, I created a video using Notebook LM, which summarizes key concepts from the blog, watch here - <a href="https://youtu.be/soNYWPJO4Fk">Learning Claude Code</a>
 <center>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/soNYWPJO4Fk?si=taLuFmGEvt1DBxyG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
 </iframe>
 <figure class="figure">
 <figcaption>
-Video - <a href="https://youtu.be/soNYWPJO4Fk">Mastering Claude Code</a>
+Video - <a href="https://youtu.be/soNYWPJO4Fk">Learning Claude Code</a>
 </figcaption>
 </figure>
 </center>
@@ -742,7 +742,7 @@ Figure: Extending Claude Code. Credit: <a href="https://notebooklm.google.com/">
 <li><strong>Project commands</strong> (<code>.claude/commands/</code>) - Shared with your team via git. PR templates, project-specific workflows.</li>
 <li><strong>User commands</strong> (<code>~/.claude/commands/</code>) - Personal shortcuts that follow you everywhere. Your preferred code review checklist, your debugging workflow.</li>
 </ul>
-<p>You can find a whole list of practical commands in this github repo - <a href="https://github.com/wshobson/commands">wshobson/commands</a></p>
+<p>You can find a whole list of practical commands in this GitHub repo - <a href="https://github.com/wshobson/commands">wshobson/commands</a></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -817,7 +817,7 @@ Tip
 <li>Log all file changes to a separate audit file</li>
 <li>Block writes to production config files</li>
 </ul>
-<p>Read more in claude code offical docs - <a href="https://code.claude.com/docs/en/hooks">Link</a></p>
+<p>Read more in Claude code official docs - <a href="https://code.claude.com/docs/en/hooks">Link</a></p>
 </section>
 <section id="skills" class="level2">
 <h2 class="anchored" data-anchor-id="skills">Skills</h2>
@@ -1003,7 +1003,6 @@ Figure: The parallel workflow pattern. Credit: <a href="https://notebooklm.googl
 <section id="security-what-ai-agents-handle-well-and-what-they-dont" class="level1">
 <h1>Security: What AI Agents Handle Well (and What They Don’t)</h1>
 <p>If you’re expecting Claude Code to handle security for you, adjust your expectations. A December 2025 study by <a href="https://blog.tenzai.com/bad-vibes-comparing-the-secure-coding-capabilities-of-popular-coding-agents/">Tenzai called “Bad Vibes:Comparing the Secure Coding Capabilities of Popular Coding Agents”</a> tested all the major coding agents (Cursor, Claude Code, Codex, Replit, Devin) by having each build identical applications. The result? 69 vulnerabilities across 15 apps. Every agent shipped vulnerable code.</p>
-<p>But the details matter more than the headline.</p>
 <section id="solved-vulnerability-classes" class="level2">
 <h2 class="anchored" data-anchor-id="solved-vulnerability-classes">Solved Vulnerability Classes</h2>
 <p>Agents consistently avoid problems with clear rules. SQL injection? They use parameterized queries. Cross-site scripting? Frameworks escape output properly. These vulnerability classes have built-in framework protections, so agents learned the patterns from their training data.</p>
@@ -1016,23 +1015,6 @@ Figure: The parallel workflow pattern. Credit: <a href="https://notebooklm.googl
 <section id="the-ssrf-problem" class="level2">
 <h2 class="anchored" data-anchor-id="the-ssrf-problem">The SSRF Problem</h2>
 <p>All five agents introduced SSRF (Server-Side Request Forgery) vulnerabilities. There’s no universal rule for safe versus dangerous URL fetches because the answer depends entirely on context. When clear guardrails don’t exist, agents struggle.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Security Responsibility
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
-<p>Security remains your responsibility. I learned this early when Claude generated an API endpoint that exposed user data to anyone who guessed the ID format. The code worked, the tests passed, and the vulnerability would have shipped if I hadn’t reviewed it manually.</p>
-<p>Use agents to help implement security controls, but only with explicit guidance. Add CSRF requirements to your CLAUDE.md. Mention rate limiting in your prompts. Never assume the agent considered attack vectors you didn’t mention.</p>
-</div>
-</div>
-</div>
 <p>The study confirms what experienced engineers already suspected: agents excel where deterministic rules exist and fail where judgment calls require understanding intent. I use Claude Code to move faster on implementation, but threat modeling and security architecture stay with me.</p>
 </section>
 </section>
