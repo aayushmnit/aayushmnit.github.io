@@ -10,11 +10,817 @@
 <atom:link href="https://aayushmnit.com/blog.xml" rel="self" type="application/rss+xml"/>
 <description>Aayush&#39;s personal website</description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Sat, 24 Jan 2026 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sat, 31 Jan 2026 08:00:00 GMT</lastBuildDate>
+<item>
+  <title>Using AI to Read Technical Research Papers</title>
+  <dc:creator>Aayush Agrawal</dc:creator>
+  <link>https://aayushmnit.com/posts/2026-01-31_ReadWithAI/ReadWithAI.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<blockquote class="blockquote">
+<p>A practical guide to using local or paid LLMs to understand dense technical papers at your own pace.</p>
+</blockquote>
+<section id="why-i-started-using-ai-to-read-research-papers" class="level1">
+<h1>Why I Started Using AI to Read Research Papers</h1>
+<p>I’ll be honest: I used to dread reading research papers. The dense math, the notation-heavy proofs, the assumption that you already know three other papers to understand this one. As an ML engineer, I knew these papers held insights I could apply at work, but actually extracting that value felt like a slog.</p>
+<p>My learning style doesn’t mesh well with traditional academic writing. I learn best through small examples and code I can run and tinker with. Show me a 3x3 matrix example before the general n×n case. Let me see the algorithm work on toy data before throwing theorems at me.</p>
+<p>For years, this created a barrier. Research papers felt like they were written for PhDs, not practitioners. You either had the advanced math background to parse them, or you waited months for someone to write a blog post explaining it in plain English.</p>
+<p>That’s changed. With AI assistants (both local and cloud-based LLMs), I can now have a conversation with a paper. I can ask “what does this symbol mean?” or “show me this concept with a simple Python example” and get an answer calibrated to my current understanding. The paper adapts to me, not the other way around.</p>
+<p>This post walks through my workflow for using AI to read technical papers, so you can apply the same approach to level up your own learning.</p>
+<p>By the end of this post, you’ll be able to:</p>
+<ul>
+<li>Set up a local LLM (using Ollama) or connect to cloud APIs for paper reading</li>
+<li>Convert PDFs to markdown that LLMs can actually process</li>
+<li>Craft system prompts that turn an LLM into a patient tutor, not a lecture-bot</li>
+<li>Build an interactive Q&amp;A workflow where <em>you</em> control the pace and depth</li>
+<li>Apply this approach to papers, documentation, or any dense technical content</li>
+</ul>
+<figure align="center" class="figure">
+<img src="https://aayushmnit.com/posts/2026-01-31_ReadWithAI/core_workflow.jpg" style="width:100%" class="figure-img">
+<figcaption align="center">
+Figure: Core Workflow. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
+</figcaption>
+</figure>
+</section>
+<section id="prerequisites-setup" class="level1">
+<h1>Prerequisites &amp; Setup</h1>
+<p>Before we dive in, let’s get our environment ready. You’ll need two things: a local LLM running on your machine, and a few Python libraries to glue everything together.</p>
+<section id="installing-ollama" class="level2">
+<h2 class="anchored" data-anchor-id="installing-ollama">Installing Ollama</h2>
+<p>Ollama makes running LLMs locally dead simple. Head to <a href="https://ollama.com">ollama.com</a> and download the installer for your OS. On Mac, it’s a standard <code>.dmg</code> install. On Linux, a one-liner:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">curl</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-fsSL</span> https://ollama.com/install.sh <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sh</span></span></code></pre></div></div>
+<p>Once installed, verify it’s working:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ollama</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--version</span></span></code></pre></div></div>
+</section>
+<section id="choosing-and-pulling-a-model" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-and-pulling-a-model">Choosing and Pulling a Model</h2>
+<p>Browse the <a href="https://ollama.com/search">Ollama model library</a> to see what’s available. For reading papers with diagrams and equations, I recommend <a href="https://ollama.com/library/qwen3-vl:8b">qwen3-vl:8b</a>, a vision-language model that can handle both text and images. You can use other models based on your machine’s specifications.</p>
+<p>Pull it with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ollama</span> pull qwen3-vl:8b</span></code></pre></div></div>
+<p>This downloads the model weights (around 5GB). Grab a coffee.</p>
+<p>To start serving:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">OLLAMA_CONTEXT_LENGTH</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>64000 <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">ollama</span> serve</span></code></pre></div></div>
+<p>Keep this terminal running. Ollama now exposes an OpenAI-compatible API at <code>localhost:11434</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>Note: Default context length in Ollama is 4096 tokens which is too small for our usecase, so we bump it upto 64K.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="python-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="python-libraries">Python Libraries</h2>
+<p>We need three packages:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Library</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/pymupdf/pymupdf4llm"><code>pymupdf4llm</code></a></td>
+<td>Converts PDF pages to clean markdown that LLMs can parse</td>
+</tr>
+<tr class="even">
+<td><a href="https://lisette.answer.ai/"><code>lisette</code></a></td>
+<td>Lightweight wrapper on <a href="https://github.com/BerriAI/litellm"><code>litellm</code></a> that simplifies multi-turn conversations and provide a Unified API to talk to 100+ LLM providers (local or cloud) with one interface</td>
+</tr>
+</tbody>
+</table>
+<p>Install them:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">pip</span> install pymupdf4llm lisette</span></code></pre></div></div>
+<p>With Ollama running and these libraries installed, you’re ready to start chatting with papers.</p>
+</section>
+</section>
+<section id="core-workflow-pdf-to-conversation" class="level1">
+<h1>Core Workflow: PDF to Conversation</h1>
+<p>The workflow has two parts: getting the paper into a format LLMs can work with, then setting up the conversation so the AI becomes a useful tutor rather than a generic chatbot.</p>
+<section id="converting-pdf-to-markdown" class="level2">
+<h2 class="anchored" data-anchor-id="converting-pdf-to-markdown">Converting PDF to Markdown</h2>
+<p>First step is to convert a pdf into text. <a href="https://github.com/pymupdf/pymupdf4llm"><code>pymupdf4llm</code></a> handles this by extracting text while preserving structure. Here’s an example, reading this <a href="https://dl.acm.org/doi/epdf/10.1145/3269206.3272018">paper</a>:</p>
+<div id="cell-18" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T22:49:54.486641Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T22:49:22.944716Z&quot;}}" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pymupdf4llm</span>
+<span id="cb6-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Convert PDF to txt</span></span>
+<span id="cb6-3">paper_txt <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pymupdf4llm.to_markdown(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"./paper/1_2018_DPP_YT.pdf"</span>)</span>
+<span id="cb6-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Save the paper as Markdown</span></span>
+<span id="cb6-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"./paper/1_2018_DPP_YT.md"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"w"</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> f:</span>
+<span id="cb6-6">    f.write(paper_txt)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Consider using the pymupdf_layout package for a greatly improved page layout analysis.</code></pre>
+</div>
+</div>
+<p>Let’s see the first paragraph.</p>
+<div id="cell-20" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:06:51.550597Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:06:51.547622Z&quot;}}" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(paper_txt[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">500</span>])</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Industry and Case Study Paper CIKM’18, October 22-26, 2018, Torino, Italy
+
+# **Practical Diversified Recommendations on YouTube with** **Determinantal Point Processes**
+
+
+Mark Wilhelm, Ajith Ramanathan, Alexander Bonomo, Sagar Jain, Ed H. Chi, Jennifer Gillenwater
+Google Inc.
+{wilhelm,ajith,bonomo,sagarj,edchi,jengi}@google.com
+
+
+
+**ABSTRACT**
+
+
+Many recommendation systems produce result sets with large numbers of highly similar items. Diversifying these results is often
+accomplished with heuris</code></pre>
+</div>
+</div>
+<p>That’s it. You now have clean markdown with headers, code blocks, and reasonable table formatting. For papers with complex layouts, the results aren’t perfect, but they’re good enough for an LLM to understand the content. If you want a more accurate PDF to markdown converter, you can also look at <a href="https://github.com/datalab-to/marker">Datalab Marker</a>.</p>
+</section>
+<section id="designing-your-system-prompt" class="level2">
+<h2 class="anchored" data-anchor-id="designing-your-system-prompt">Designing Your System Prompt</h2>
+<p>This is where the magic happens. A vanilla “you are a helpful assistant” prompt gives you Wikipedia-style explanations. A well-crafted system prompt gives you a patient tutor who meets you at your level.</p>
+<p>Here’s the prompt which works well for paper-reading sessions:</p>
+<div id="cell-24" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:44:19.824112Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:44:19.821052Z&quot;}}" data-execution_count="66">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1">system_prompt <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"""</span></span>
+<span id="cb10-2"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">You are helping a someone understand an academic paper.</span></span>
+<span id="cb10-3"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Here is the paper </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\n</span></span>
+<span id="cb10-4"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&lt;paper&gt;</span></span>
+<span id="cb10-5"><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>paper_txt<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb10-6"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&lt;/paper&gt;</span></span>
+<span id="cb10-7"></span>
+<span id="cb10-8"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">CRITICAL RULES:</span></span>
+<span id="cb10-9"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">1. NEVER explain everything at once. Take ONE small step, then STOP and wait.</span></span>
+<span id="cb10-10"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">2. ALWAYS start by asking what the learner already knows about the topic.</span></span>
+<span id="cb10-11"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">3. After each explanation, ask a question to check understanding OR ask what they want to explore next.</span></span>
+<span id="cb10-12"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">4. Keep responses SHORT (2-4 paragraphs max). End with a question.</span></span>
+<span id="cb10-13"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">5. Use concrete examples and analogies before math. </span></span>
+<span id="cb10-14"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">6. Build foundations with code - Teach unfamiliar mathematical concepts through small numpy experiments rather than pure theory. Let the learner run code and observe patterns.</span></span>
+<span id="cb10-15"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">7. If they ask "explain X", first ask what parts of X they already understand.</span></span>
+<span id="cb10-16"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">8. Use string format like this for formula display `L_ij = q_i × q_j × exp(-α × D_ij^γ)`.</span></span>
+<span id="cb10-17"></span>
+<span id="cb10-18"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">TEACHING FLOW:</span></span>
+<span id="cb10-19"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">- Assess background → Build intuition with examples → Connect to math → Let learner guide direction</span></span>
+<span id="cb10-20"></span>
+<span id="cb10-21"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">BAD (don't do this):</span></span>
+<span id="cb10-22"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Here's everything about DPPs: [wall of text with all equations]"</span></span>
+<span id="cb10-23"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span></code></pre></div></div>
+</div>
+<p><strong>The Teaching Prompt Deep-Dive</strong></p>
+<p>The prompt design isn’t arbitrary. Each rule targets a specific failure mode I’ve seen when using LLMs for learning:</p>
+<ol type="1">
+<li><p><strong>The paper lives in the system prompt.</strong> This keeps the full context available for every question you ask. You don’t need to re-paste sections or remind the AI what paper you’re discussing.</p></li>
+<li><p><strong>“Intuition before math” matches how practitioners learn.</strong> Most of us grasp concepts faster through examples and analogies than through theorem statements. If your learning style differs, swap in your own preferences here.</p></li>
+<li><p><strong>“Tiny example first” counteracts the LLM’s default behavior.</strong> Without this, models tend toward abstract, general explanations. Forcing concrete examples (a 3x3 matrix, a toy dataset) makes concepts stick.</p></li>
+<li><p><strong>“Check if I want to go deeper” prevents walls of text.</strong> LLMs love to explain everything at once. This rule puts you in control of pacing. You decide when to zoom in on details vs.&nbsp;move to the next topic.</p></li>
+<li><p><strong>The “BAD” example shows what to avoid.</strong> Negative examples help the model understand boundaries. Without it, you’ll get comprehensive but overwhelming responses.</p></li>
+</ol>
+<p><strong>Putting It Together:</strong> With these two pieces, you’re ready to start a conversation. The next section shows how to wire this up with lisette for a smooth multi-turn chat experience.</p>
+</section>
+</section>
+<section id="wiring-up-the-conversation-with-lisette" class="level1">
+<h1>Wiring Up the Conversation with Lisette</h1>
+<p><a href="https://lisette.answer.ai/"><code>lisette</code></a> handles the boilerplate of multi-turn conversations: tracking message history, formatting requests for different LLM providers, and managing context windows. Here’s the minimal setup:</p>
+<div id="cell-29" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:46:39.817331Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:46:39.813989Z&quot;}}" data-execution_count="71">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> lisette <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Chat, contents</span>
+<span id="cb11-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> IPython.display <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> HTML, Markdown, display</span>
+<span id="cb11-3">chat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Chat(</span>
+<span id="cb11-4">    model<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ollama/qwen3-vl:8b"</span>,</span>
+<span id="cb11-5">    sp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Insert prompt here</span></span>
+<span id="cb11-6">)</span></code></pre></div></div>
+</div>
+<p>That’s it. The <code>model</code> string follows litellm’s <a href="https://docs.litellm.ai/docs/#basic-usage">provider/model convention</a>. For Ollama, prefix with <code>ollama/</code>. For cloud providers, you’d use <code>anthropic/claude-sonnet-4-20250514</code> or <code>openai/gpt-4o</code>.</p>
+<p>To send a message and get a response:</p>
+<div id="cell-31" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:46:49.184706Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:46:45.577198Z&quot;}}" data-execution_count="72">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1">chat(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hi! I am Aayush"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="72">
+<p>Hello Aayush! 😊 How can I assist you today? Let me know if you have any questions or need help with anything!</p>
+<details>
+<ul>
+<li>id: <code>chatcmpl-9accb778-d9f9-4be5-8559-fb7d54b30a9f</code></li>
+<li>model: <code>ollama/qwen3-vl:8b</code></li>
+<li>finish_reason: <code>stop</code></li>
+<li>usage: <code>Usage(completion_tokens=240, prompt_tokens=21, total_tokens=261, completion_tokens_details=None, prompt_tokens_details=None)</code></li>
+</ul>
+</details>
+</div>
+</div>
+<p>As we can see above, it’s as easy to start a conversation with a <code>ollama</code> running in your local machine. <code>Chat</code> class is designed to be persistent which means it remembers the previous conversations.</p>
+<div id="cell-33" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:48:51.022982Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:48:46.741893Z&quot;}}" data-execution_count="73">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1">chat(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"What's my name?"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="73">
+<p>Your name is <strong>Aayush</strong>! 😊 I remember you mentioned it in your first message. Is there anything else you’d like to share or ask?</p>
+<details>
+<ul>
+<li>id: <code>chatcmpl-d8858647-054a-44af-a9cd-6640b248de24</code></li>
+<li>model: <code>ollama/qwen3-vl:8b</code></li>
+<li>finish_reason: <code>stop</code></li>
+<li>usage: <code>Usage(completion_tokens=323, prompt_tokens=60, total_tokens=383, completion_tokens_details=None, prompt_tokens_details=None)</code></li>
+</ul>
+</details>
+</div>
+</div>
+<p>As you can see model remembers my name from the previous conversation. Each call to <code>chat()</code> appends your message and the AI’s response to the conversation history. The next time you call it, the model sees the full exchange so far. Let’s see current history:</p>
+<div id="cell-35" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:49:22.421554Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:49:22.417041Z&quot;}}" data-execution_count="74">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1">chat.hist</span></code></pre></div></div>
+<div class="cell-output cell-output-display" data-execution_count="74">
+<pre><code>[{'role': 'user', 'content': 'Hi! I am Aayush'},
+ Message(content='Hello Aayush! 😊 How can I assist you today? Let me know if you have any questions or need help with anything!', role='assistant', tool_calls=None, function_call=None, provider_specific_fields=None),
+ {'role': 'user', 'content': "What's my name?"},
+ Message(content="Your name is **Aayush**! 😊 I remember you mentioned it in your first message. Is there anything else you'd like to share or ask?", role='assistant', tool_calls=None, function_call=None, provider_specific_fields=None)]</code></pre>
+</div>
+</div>
+<section id="live-example-reading-a-dpp-paper" class="level2">
+<h2 class="anchored" data-anchor-id="live-example-reading-a-dpp-paper">Live Example: Reading a DPP Paper</h2>
+<p>Here’s a real exchange from when I was working through a paper on Determinantal Point Processes. For ease of reading in the blog post, lets create a class which can render the AI output in a terminal style for easy reading.</p>
+<div id="cell-38" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:55:42.337179Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:55:42.333459Z&quot;}}" data-execution_count="79">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> ask(chat, question, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs):</span>
+<span id="cb16-2">    r <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> chat(question, <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">**</span>kwargs)</span>
+<span id="cb16-3">    text <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> contents(r).content</span>
+<span id="cb16-4">    display(HTML(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"""</span></span>
+<span id="cb16-5"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    &lt;div style="background-color: #1e1e1e; color: #00ff00; padding: 12px; </span></span>
+<span id="cb16-6"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">                border-radius: 5px; font-family: monospace; white-space: pre-wrap;"&gt;</span></span>
+<span id="cb16-7"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&lt;span style="color: #00aaff;"&gt;You:&lt;/span&gt; </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>question<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb16-8"></span>
+<span id="cb16-9"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&lt;span style="color: #ffcc00;"&gt;Tutor:&lt;/span&gt; </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>text<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb16-10"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    &lt;/div&gt;</span></span>
+<span id="cb16-11"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">    """</span>))</span>
+<span id="cb16-12">    </span>
+<span id="cb16-13">chat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Chat(</span>
+<span id="cb16-14">    model<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ollama/qwen3-vl:8b"</span>,</span>
+<span id="cb16-15">    sp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>system_prompt</span>
+<span id="cb16-16">)</span></code></pre></div></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>This time we are actually passing the prompt we created in previous section with paper text and our instructions.</p>
+</div>
+</div>
+</div>
+<div id="cell-40" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:55:51.897622Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:55:43.709641Z&quot;}}" data-execution_count="80">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1">q <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb17-2"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">I want to learn about this paper. Help me.</span></span>
+<span id="cb17-3"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb17-4">ask(chat, q, think<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-display">
+
+    <div style="background-color: #1e1e1e; color: #00ff00; padding: 12px; 
+                border-radius: 5px; font-family: monospace; white-space: pre-wrap;">
+<span style="color: #00aaff;">You:</span> 
+I want to learn about this paper. Help me.
+
+
+<span style="color: #ffcc00;">Tutor:</span> Let's start with a simple question: What do you already know about recommendation systems or diversification? Are you familiar with YouTube's recommendation algorithm? Or maybe you've heard of techniques like collaborative filtering or matrix factorization?
+
+I'm excited about this paper because it tackles a real problem we face on YouTube: when users scroll through recommendations, they often see similar videos in a row, which can cause them to abandon the feed. The authors used a statistical model called Determinantal Point Processes (DPPs) to diversify recommendations while still respecting user preferences.
+
+What aspects of this paper interest you most? Are you more curious about how DPPs work conceptually, how they were implemented at scale, or the specific results YouTube saw? I can tailor my explanation to what you'd like to explore first.
+    </div>
+    
+</div>
+</div>
+<div id="cell-41" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:57:04.961755Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:56:50.293867Z&quot;}}" data-execution_count="81">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1">q <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb18-2"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">I know about recommendation systems and work on a large recommender system which serves video content.</span></span>
+<span id="cb18-3"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">I am familiar with recommendation algorithms. I am interested in understanding how DPP works.</span></span>
+<span id="cb18-4"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb18-5">ask(chat, q, think<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-display">
+
+    <div style="background-color: #1e1e1e; color: #00ff00; padding: 12px; 
+                border-radius: 5px; font-family: monospace; white-space: pre-wrap;">
+<span style="color: #00aaff;">You:</span> 
+I know about recommendation systems and work on a large recommender system which serves video content.
+I am familiar with recommendation algorithms. I am interested in understanding how DPP works.
+
+
+<span style="color: #ffcc00;">Tutor:</span> The core idea of DPPs is modeling **repulsion between items** in a recommendation list. Unlike traditional pointwise scoring (e.g., sorting by individual video quality scores), DPPs consider *how items interact* when presented together. For example, if two basketball videos are shown consecutively, the DPP model would reduce the probability of both being selected because they're redundant. 
+
+In your video recommender system, this translates to: Instead of just selecting the "highest quality" videos, DPPs automatically suppress items that would decrease overall user engagement when placed together. The magic happens in the **determinant calculation**: when you take the determinant of a submatrix from the kernel matrix `L`, it measures both the individual quality of items (via diagonal entries) and their mutual diversity (via off-diagonal entries). A large determinant means you've selected a diverse set with high overall utility.
+
+Would you like me to walk through a simple Python example using NumPy to demonstrate how the determinant of a 2x2 kernel matrix captures both quality and diversity? Or would you prefer to first understand why this approach is better than heuristic methods like "sliding window" diversity?
+    </div>
+    
+</div>
+</div>
+<div id="cell-42" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-01-31T23:58:41.928606Z&quot;,&quot;start_time&quot;:&quot;2026-01-31T23:58:09.737823Z&quot;}}" data-execution_count="82">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1">q <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb19-2"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">Yes I don't understand what determinant are, can you help me understand the basic intuition and use code examples?</span></span>
+<span id="cb19-3"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">I am fairly familiar with numpy.</span></span>
+<span id="cb19-4"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"""</span></span>
+<span id="cb19-5">ask(chat, q)</span></code></pre></div></div>
+<div class="cell-output cell-output-display">
+
+    <div style="background-color: #1e1e1e; color: #00ff00; padding: 12px; 
+                border-radius: 5px; font-family: monospace; white-space: pre-wrap;">
+<span style="color: #00aaff;">You:</span> 
+Yes I don't understand what determinant are, can you help me understand the basic intuition and use code examples?
+I am fairly familiar with numpy.
+
+
+<span style="color: #ffcc00;">Tutor:</span> Let's visualize this with a simple NumPy example. Determinants measure how "spread out" a matrix is - think of it as the volume of the parallelogram formed by the matrix's columns. For DPPs, this volume represents both item quality and diversity:
+
+```python
+import numpy as np
+
+# Create two items with different qualities
+q1 = 5.0  # High-quality video
+q2 = 1.0  # Low-quality video
+
+# Case 1: Similar items (D=0.5)
+L_similar = np.array([
+    [q1**2, 0.5 * q1 * q2 * np.exp(-0.5**2 / 2)],
+    [0.5 * q1 * q2 * np.exp(-0.5**2 / 2), q2**2]
+])
+print("Determinant for similar items:", np.linalg.det(L_similar))
+
+# Case 2: Dissimilar items (D=2.0)
+L_dissimilar = np.array([
+    [q1**2, 0.5 * q1 * q2 * np.exp(-2.0**2 / 2)],
+    [0.5 * q1 * q2 * np.exp(-2.0**2 / 2), q2**2]
+])
+print("Determinant for dissimilar items:", np.linalg.det(L_dissimilar))
+```
+
+What you'll see:
+- When items are similar (D=0.5), the determinant is small (≈18.75)
+- When items are dissimilar (D=2.0), the determinant is larger (≈24.99)
+
+Why? The determinant combines:
+1. **Quality**: Diagonal terms (q1² and q2²)
+2. **Diversity**: Off-diagonal terms (which decrease as items become more dissimilar)
+
+This creates a natural trade-off: adding a high-quality but similar item reduces the determinant (bad), while adding a high-quality dissimilar item increases it (good).
+
+Would you like me to:
+1. Show the actual numbers from the paper's experiments?
+2. Explain how this connects to YouTube's specific implementation?
+3. Or dive deeper into why determinants work for this problem?
+    </div>
+    
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>The rendering from <code>Chat</code> class is markdown style, which is more readable. The above examples are wrapped for easy separation b/w blog text and code output.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="managing-chat-history-checkpoints-and-context-control" class="level1">
+<h1>Managing Chat History: Checkpoints and Context Control</h1>
+<p>One advantage of this approach over general chat interfaces is that you have full access to the conversation history. This matters when sessions get long or when the AI goes down a wrong path and you want to rewind.</p>
+<section id="accessing-the-history" class="level2">
+<h2 class="anchored" data-anchor-id="accessing-the-history">Accessing the History</h2>
+<p>The <code>Chat</code> object stores messages in a list you can inspect and modify:</p>
+<div id="cell-48" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-01T00:01:06.578213Z&quot;,&quot;start_time&quot;:&quot;2026-02-01T00:01:06.574404Z&quot;}}" data-execution_count="86">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># See the current conversation</span></span>
+<span id="cb20-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(chat.hist)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Returns list of message dicts</span></span>
+<span id="cb20-3"></span>
+<span id="cb20-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Check how many turns you've had</span></span>
+<span id="cb20-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(chat.hist))</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[{'role': 'user', 'content': '\nI want to learn about this paper. Help me.\n'}, Message(content="Let's start with a simple question: What do you already know about recommendation systems or diversification? Are you familiar with YouTube's recommendation algorithm? Or maybe you've heard of techniques like collaborative filtering or matrix factorization?\n\nI'm excited about this paper because it tackles a real problem we face on YouTube: when users scroll through recommendations, they often see similar videos in a row, which can cause them to abandon the feed. The authors used a statistical model called Determinantal Point Processes (DPPs) to diversify recommendations while still respecting user preferences.\n\nWhat aspects of this paper interest you most? Are you more curious about how DPPs work conceptually, how they were implemented at scale, or the specific results YouTube saw? I can tailor my explanation to what you'd like to explore first.", role='assistant', tool_calls=None, function_call=None, provider_specific_fields=None), {'role': 'user', 'content': '\nI know about recommendation systems and work on a large recommender system which serves video content.\nI am familiar with recommendation algorithms. I am interested in understanding how DPP works.\n'}, Message(content='The core idea of DPPs is modeling **repulsion between items** in a recommendation list. Unlike traditional pointwise scoring (e.g., sorting by individual video quality scores), DPPs consider *how items interact* when presented together. For example, if two basketball videos are shown consecutively, the DPP model would reduce the probability of both being selected because they\'re redundant. \n\nIn your video recommender system, this translates to: Instead of just selecting the "highest quality" videos, DPPs automatically suppress items that would decrease overall user engagement when placed together. The magic happens in the **determinant calculation**: when you take the determinant of a submatrix from the kernel matrix `L`, it measures both the individual quality of items (via diagonal entries) and their mutual diversity (via off-diagonal entries). A large determinant means you\'ve selected a diverse set with high overall utility.\n\nWould you like me to walk through a simple Python example using NumPy to demonstrate how the determinant of a 2x2 kernel matrix captures both quality and diversity? Or would you prefer to first understand why this approach is better than heuristic methods like "sliding window" diversity?', role='assistant', tool_calls=None, function_call=None, provider_specific_fields=None), {'role': 'user', 'content': "\nYes I don't understand what determinant are, can you help me understand the basic intuition and use code examples?\nI am fairly familiar with numpy.\n"}, Message(content='Let\'s visualize this with a simple NumPy example. Determinants measure how "spread out" a matrix is - think of it as the volume of the parallelogram formed by the matrix\'s columns. For DPPs, this volume represents both item quality and diversity:\n\n```python\nimport numpy as np\n\n# Create two items with different qualities\nq1 = 5.0  # High-quality video\nq2 = 1.0  # Low-quality video\n\n# Case 1: Similar items (D=0.5)\nL_similar = np.array([\n    [q1**2, 0.5 * q1 * q2 * np.exp(-0.5**2 / 2)],\n    [0.5 * q1 * q2 * np.exp(-0.5**2 / 2), q2**2]\n])\nprint("Determinant for similar items:", np.linalg.det(L_similar))\n\n# Case 2: Dissimilar items (D=2.0)\nL_dissimilar = np.array([\n    [q1**2, 0.5 * q1 * q2 * np.exp(-2.0**2 / 2)],\n    [0.5 * q1 * q2 * np.exp(-2.0**2 / 2), q2**2]\n])\nprint("Determinant for dissimilar items:", np.linalg.det(L_dissimilar))\n```\n\nWhat you\'ll see:\n- When items are similar (D=0.5), the determinant is small (≈18.75)\n- When items are dissimilar (D=2.0), the determinant is larger (≈24.99)\n\nWhy? The determinant combines:\n1. **Quality**: Diagonal terms (q1² and q2²)\n2. **Diversity**: Off-diagonal terms (which decrease as items become more dissimilar)\n\nThis creates a natural trade-off: adding a high-quality but similar item reduces the determinant (bad), while adding a high-quality dissimilar item increases it (good).\n\nWould you like me to:\n1. Show the actual numbers from the paper\'s experiments?\n2. Explain how this connects to YouTube\'s specific implementation?\n3. Or dive deeper into why determinants work for this problem?', role='assistant', tool_calls=None, function_call=None, provider_specific_fields=None)]
+6</code></pre>
+</div>
+</div>
+</section>
+<section id="creating-checkpoints" class="level2">
+<h2 class="anchored" data-anchor-id="creating-checkpoints">Creating Checkpoints</h2>
+<p>Before exploring a tangent, save your current state:</p>
+<div id="cell-51" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-01T00:02:38.789367Z&quot;,&quot;start_time&quot;:&quot;2026-02-01T00:02:30.877591Z&quot;}}" data-execution_count="88">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Save checkpoint before a risky question</span></span>
+<span id="cb22-2">checkpoint <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(chat.hist)</span>
+<span id="cb22-3"></span>
+<span id="cb22-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Ask something that might derail the conversation</span></span>
+<span id="cb22-5">ask(chat, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Actually, can you explain all the math in one go?"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-display">
+
+    <div style="background-color: #1e1e1e; color: #00ff00; padding: 12px; 
+                border-radius: 5px; font-family: monospace; white-space: pre-wrap;">
+<span style="color: #00aaff;">You:</span> Actually, can you explain all the math in one go?
+
+<span style="color: #ffcc00;">Tutor:</span> I understand you want a comprehensive explanation, but I need to be honest: explaining all the math at once would overwhelm you. The paper contains several key mathematical concepts that build on each other, including:
+
+1. **Determinantal Point Processes (DPPs)** - Probabilistic models that capture repulsion between items
+2. **Kernel matrices** - The `L` matrix that encodes both item quality and diversity
+3. **Determinant calculation** - The core operation that measures set utility
+4. **Approximate inference** - How they compute DPPs at scale
+
+Let's take one concept at a time. Would you like me to:
+1. Explain the kernel matrix `L` with a concrete example?
+2. Show how the determinant calculation works for small sets?
+3. Walk through the training procedure for the DPP parameters?
+
+I can provide a focused explanation on whichever part interests you most. What would you like to explore first?
+    </div>
+    
+</div>
+</div>
+<div id="cell-52" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-01T00:04:26.417982Z&quot;,&quot;start_time&quot;:&quot;2026-02-01T00:04:26.413977Z&quot;}}" data-execution_count="101">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># That response was overwhelming. Rewind.</span></span>
+<span id="cb23-2">chat.hist <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> chat.hist[:checkpoint]</span>
+<span id="cb23-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(chat.hist[<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(chat.hist)<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>])</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Message(content='Let\'s visualize this with a simple NumPy example. Determinants measure how "spread out" a matrix is - think of it as the volume of the parallelogram formed by the matrix\'s columns. For DPPs, this volume represents both item quality and diversity:\n\n```python\nimport numpy as np\n\n# Create two items with different qualities\nq1 = 5.0  # High-quality video\nq2 = 1.0  # Low-quality video\n\n# Case 1: Similar items (D=0.5)\nL_similar = np.array([\n    [q1**2, 0.5 * q1 * q2 * np.exp(-0.5**2 / 2)],\n    [0.5 * q1 * q2 * np.exp(-0.5**2 / 2), q2**2]\n])\nprint("Determinant for similar items:", np.linalg.det(L_similar))\n\n# Case 2: Dissimilar items (D=2.0)\nL_dissimilar = np.array([\n    [q1**2, 0.5 * q1 * q2 * np.exp(-2.0**2 / 2)],\n    [0.5 * q1 * q2 * np.exp(-2.0**2 / 2), q2**2]\n])\nprint("Determinant for dissimilar items:", np.linalg.det(L_dissimilar))\n```\n\nWhat you\'ll see:\n- When items are similar (D=0.5), the determinant is small (≈18.75)\n- When items are dissimilar (D=2.0), the determinant is larger (≈24.99)\n\nWhy? The determinant combines:\n1. **Quality**: Diagonal terms (q1² and q2²)\n2. **Diversity**: Off-diagonal terms (which decrease as items become more dissimilar)\n\nThis creates a natural trade-off: adding a high-quality but similar item reduces the determinant (bad), while adding a high-quality dissimilar item increases it (good).\n\nWould you like me to:\n1. Show the actual numbers from the paper\'s experiments?\n2. Explain how this connects to YouTube\'s specific implementation?\n3. Or dive deeper into why determinants work for this problem?', role='assistant', tool_calls=None, function_call=None, provider_specific_fields=None)</code></pre>
+</div>
+</div>
+</section>
+<section id="why-this-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-matters">Why This Matters</h2>
+<p>Two problems this solves:</p>
+<ol type="1">
+<li><p><strong>Context bloat.</strong> Long conversations eat up your context window. If you spent 10 turns on a section you now understand, trim those exchanges and reclaim tokens for the next topic.</p></li>
+<li><p><strong>Context poisoning.</strong> If the AI misunderstands something and you correct it, the wrong explanation still sits in history, potentially confusing later responses. Removing it gives you a cleaner slate.</p></li>
+</ol>
+</section>
+</section>
+<section id="going-further-paid-llm-options" class="level1">
+<h1>Going Further: Paid LLM Options</h1>
+<p>Local models are great for privacy and cost, but sometimes you need more firepower. Longer papers, denser math, or multi-step reasoning tasks can benefit from larger models like Claude or GPT-4o.</p>
+<p>The good news: lisette uses litellm under the hood, so switching providers is a one-line change.</p>
+<p>For cloud providers, you’ll need API keys. Set them as environment variables or use a <code>.env</code> file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">ANTHROPIC_API_KEY</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"your-key-here"</span></span>
+<span id="cb25-2"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">OPENAI_API_KEY</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"your-key-here"</span></span></code></pre></div></div>
+<div id="cell-58" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-01T00:14:15.591206Z&quot;,&quot;start_time&quot;:&quot;2026-02-01T00:14:15.587238Z&quot;}}" data-execution_count="122">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> os</span>
+<span id="cb26-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> dotenv <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> load_dotenv</span>
+<span id="cb26-3">load_dotenv()</span>
+<span id="cb26-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Print first string of Anthropic key: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>os<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>getenv(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'ANTHROPIC_API_KEY'</span>)[:<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>]<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Print first string of Anthropic key: sk-ant-api03-JS</code></pre>
+</div>
+</div>
+<div id="cell-59" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-01T00:12:53.828713Z&quot;,&quot;start_time&quot;:&quot;2026-02-01T00:12:51.282858Z&quot;}}" data-execution_count="121">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Claude (Anthropic)</span></span>
+<span id="cb28-2">chat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Chat(model<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"anthropic/claude-haiku-4-5"</span>, sp<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>system_prompt)</span>
+<span id="cb28-3">ask(chat, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Help me understand the paper"</span>)</span></code></pre></div></div>
+<div class="cell-output cell-output-display">
+
+    <div style="background-color: #1e1e1e; color: #00ff00; padding: 12px; 
+                border-radius: 5px; font-family: monospace; white-space: pre-wrap;">
+<span style="color: #00aaff;">You:</span> Help me understand the paper
+
+<span style="color: #ffcc00;">Tutor:</span> I'd love to help! This is a really interesting paper about improving YouTube recommendations.
+
+Before I dive in, let me ask: **What's your background?** For example:
+- Are you familiar with recommendation systems (like how Netflix suggests movies)?
+- Do you know what machine learning models are?
+- Have you seen probability/statistics before?
+
+Also, **what part interests you most?** The paper covers several things:
+1. The *problem* (why similar videos in a feed is bad)
+2. The *solution* (using something called DPPs)
+3. The *results* (how well it worked on YouTube)
+
+What would you like to start with?
+    </div>
+    
+</div>
+</div>
+<p>As you can see the workflow stays identical. Your system prompt, conversation history, and teaching flow all transfer across providers.</p>
+</section>
+<section id="key-takeaways" class="level1">
+<h1>Key Takeaways</h1>
+<p>Reading technical papers used to be a solitary grind. You either had the background to parse the notation, or you didn’t. AI changes this equation.</p>
+<p>Here’s what I want you to walk away with:</p>
+<ol type="1">
+<li><p><strong>The barrier to technical content has dropped.</strong> The same workflow that worked for this paper works for textbooks, API documentation, dense blog posts, or any content where you need concepts explained at your level. The AI adapts to you.</p></li>
+<li><p><strong>You control the pace and depth.</strong> Unlike courses or tutorials that assume a fixed audience, this approach lets you skip what you know and linger on what confuses you. Your learning path, not someone else’s curriculum.</p></li>
+<li><p><strong>Local LLMs make this nearly free.</strong> Ollama plus a capable open model means you can read papers all day without API costs. You can try reading books, YT transcripts, brainstorming using same method. One tool, many uses.</p></li>
+<li><p><strong>The system prompt is the lever.</strong> Generic prompts give generic results. The tutor prompt we built forces the AI into a teaching mode that actually helps. Steal it, tweak it, make it yours.</p></li>
+<li><p><strong>Start with a paper you actually care about.</strong> Don’t practice on something boring. Pick a paper relevant to your work or a concept you’ve always wanted to understand. Motivation carries you through the setup friction.</p></li>
+</ol>
+<p>The tools exist. The cost is minimal. The only question is which paper you’ll read first.</p>
+<p>I hope you found this blog useful. If you have questions or want to share your own Claude Code patterns, find me on <a href="https://www.linkedin.com/in/aayushmnit/">LinkedIn</a>.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>AI</category>
+  <category>Research Papers</category>
+  <category>Reading</category>
+  <guid>https://aayushmnit.com/posts/2026-01-31_ReadWithAI/ReadWithAI.html</guid>
+  <pubDate>Sat, 31 Jan 2026 08:00:00 GMT</pubDate>
+  <media:content url="https://aayushmnit.com/posts/2026-01-31_ReadWithAI/paper_reading_ai.jpg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Learning Claude Code - From Context Engineering to Multi-Agent Workflows</title>
   <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.com/posts/2026-24-01_ClaudeCode/ClaudeCode.html</link>
+  <link>https://aayushmnit.com/posts/2026-01-24_ClaudeCode/ClaudeCode.html</link>
   <description><![CDATA[ 
 
 
@@ -25,7 +831,7 @@
 <p>This post captures what I learned from the Udemy course <a href="https://www.udemy.com/course/claudecode/">“Claude Code Crash Course: Claude Code in a Day”</a>.</p>
 </blockquote>
 <figure align="center" class="figure">
-<img src="https://aayushmnit.com/posts/2026-24-01_ClaudeCode/claude_code_infographics.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2026-01-24_ClaudeCode/claude_code_infographics.jpg" style="width:100%" class="figure-img">
 <figcaption align="center">
 Figure: Claude Code Infographics. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
 </figcaption>
@@ -46,7 +852,7 @@ Video - <a href="https://youtu.be/soNYWPJO4Fk">Learning Claude Code</a>
 <section id="core-concept-context-engineering" class="level1">
 <h1>Core Concept: Context Engineering</h1>
 <figure align="center" class="figure">
-<img src="https://aayushmnit.com/posts/2026-24-01_ClaudeCode/context_engineering.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2026-01-24_ClaudeCode/context_engineering.jpg" style="width:100%" class="figure-img">
 <figcaption align="center">
 Figure: Context Engineering. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
 </figcaption>
@@ -180,7 +986,7 @@ font-style: inherit;">- </span>Never modify files in src/legacy/ without explici
 <section id="essential-commands" class="level1">
 <h1>Essential Commands</h1>
 <figure align="center" class="figure">
-<img src="https://aayushmnit.com/posts/2026-24-01_ClaudeCode/claude_code_essentials.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2026-01-24_ClaudeCode/claude_code_essentials.jpg" style="width:100%" class="figure-img">
 <figcaption align="center">
 Figure: Claude Code essentials. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
 </figcaption>
@@ -194,7 +1000,7 @@ Figure: Claude Code essentials. Credit: <a href="https://notebooklm.google.com/"
 /context  # Shows what's consuming your context window</code></pre>
 <p>Use <code>/context</code> liberally. It breaks down token usage: system prompt, MCP tools, messages, memory files. When your responses start degrading, run this first to see what’s eating your budget. I’ve found MCP tools are often the silent killer here.</p>
 <figure align="center" class="figure">
-<img src="https://aayushmnit.com/posts/2026-24-01_ClaudeCode/context_terminal.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2026-01-24_ClaudeCode/context_terminal.jpg" style="width:100%" class="figure-img">
 <figcaption align="center">
 Figure: Claude Code <code>/context</code> snapshot
 </figcaption>
@@ -263,7 +1069,7 @@ Figure: Claude Code <code>/context</code> snapshot
 <section id="extending-claude-code" class="level1">
 <h1>Extending Claude Code</h1>
 <figure align="center" class="figure">
-<img src="https://aayushmnit.com/posts/2026-24-01_ClaudeCode/extending_claude_code.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2026-01-24_ClaudeCode/extending_claude_code.jpg" style="width:100%" class="figure-img">
 <figcaption align="center">
 Figure: Extending Claude Code. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
 </figcaption>
@@ -614,7 +1420,7 @@ font-style: inherit;">4. </span>**Highlight a gotcha**: What's a common mistake 
 </table>
 <p>Subagents sidestep this. They receive one prompt, work in their own window, and return one condensed response. Your main thread stays lean. If I’d delegated “analyze and propose approaches” to a subagent, I’d have gotten back a clean summary without the intermediate file contents clogging my context.</p>
 <figure align="center" class="figure">
-<img src="https://aayushmnit.com/posts/2026-24-01_ClaudeCode/subagent_pattern.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2026-01-24_ClaudeCode/subagent_pattern.jpg" style="width:100%" class="figure-img">
 <figcaption align="center">
 Figure: The Subagent Pattern. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
 </figcaption>
@@ -683,7 +1489,7 @@ font-style: inherit;">## System Prompt</span></span>
 <p>This is the real skill shift with multi-agent systems. You’re not writing code line by line. You’re writing specs, reviewing implementations, and deciding which AI-generated approach best fits your constraints. Git worktrees make the mechanics manageable, but the cognitive load moves from “how do I implement this” to “how do I evaluate these six implementations.”</p>
 <p>For simple tasks, this overhead isn’t worth it. For exploratory work where you genuinely want multiple approaches, or for parallelizable features with clear specs, the time savings are real.</p>
 <figure align="center" class="figure">
-<img src="https://aayushmnit.com/posts/2026-24-01_ClaudeCode/parallel_workflow_pattern.jpg" style="width:100%" class="figure-img">
+<img src="https://aayushmnit.com/posts/2026-01-24_ClaudeCode/parallel_workflow_pattern.jpg" style="width:100%" class="figure-img">
 <figcaption align="center">
 Figure: The parallel workflow pattern. Credit: <a href="https://notebooklm.google.com/">NotebookLM</a>
 </figcaption>
@@ -730,9 +1536,9 @@ Figure: The parallel workflow pattern. Credit: <a href="https://notebooklm.googl
  ]]></description>
   <category>AI Tools</category>
   <category>Developer Productivity</category>
-  <guid>https://aayushmnit.com/posts/2026-24-01_ClaudeCode/ClaudeCode.html</guid>
+  <guid>https://aayushmnit.com/posts/2026-01-24_ClaudeCode/ClaudeCode.html</guid>
   <pubDate>Sat, 24 Jan 2026 08:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.com/posts/2026-24-01_ClaudeCode/claude_code_cover.jpg" medium="image" type="image/jpeg"/>
+  <media:content url="https://aayushmnit.com/posts/2026-01-24_ClaudeCode/claude_code_cover.jpg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Diversity in Recommendations using Personalized DPP (pDPP)</title>
@@ -19468,28 +20274,6 @@ font-style: inherit;">"</span>)</span></code></pre></div></div>
   <guid>https://aayushmnit.com/posts/2019-01-05-Multi_Layer_perceptron_using_Fastai_and_Pytorch/</guid>
   <pubDate>Sat, 05 Jan 2019 08:00:00 GMT</pubDate>
   <media:content url="https://raw.githubusercontent.com/aayushmnit/Deep_learning_explorations/master/1_MLP_from_scratch/single_layer_mlp.png" medium="image" type="image/png"/>
-</item>
-<item>
-  <title>Leaf Disease detection by Tranfer learning using FastAI V1 library</title>
-  <dc:creator>Aayush Agrawal</dc:creator>
-  <link>https://aayushmnit.com/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p>Blog Transferred to <a href="https://towardsdatascience.com/transfer-learning-using-the-fastai-library-d686b238213e">Medium.com</a>.</p>
-
-
-
- ]]></description>
-  <category>Deep Learning</category>
-  <category>FastAI</category>
-  <category>Vision</category>
-  <guid>https://aayushmnit.com/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/</guid>
-  <pubDate>Sun, 28 Oct 2018 07:00:00 GMT</pubDate>
-  <media:content url="https://aayushmnit.com/posts/2018-10-28-Leaf_Disease_detection_by_Tranfer_learning_using_FastAI_V1_library/leaf_classification.png" medium="image" type="image/png" height="99" width="144"/>
 </item>
 </channel>
 </rss>
