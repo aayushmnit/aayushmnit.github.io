@@ -28,15 +28,15 @@ website:
       - text: Other
         icon: stack
         menu:
+          - icon: megaphone
+            href: talks.qmd
+            text: Talks
           - text: "Pytorch Book"
             icon: box-arrow-up-right
             href: https://aayushmnit.com/pytorch_book/
           - text: "Carlson Q&A"
             icon: box-arrow-up-right
             href: other/carlson.qmd
-          - icon: megaphone
-            href: talks.qmd
-            text: Talks
     right:
       - icon: bell
         href: https://medium.com/@aayushmnit

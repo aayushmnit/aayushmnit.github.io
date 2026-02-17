@@ -2,6 +2,7 @@
   {
     "listing": "/talks.html",
     "items": [
+      "/talks/2026-02-05-AIxRecSys/index.html",
       "/talks/2020-12-15-OrcaHello/index.html",
       "/talks/2018-10-18-msba_devops/index.html",
       "/talks/2018-7-28-Model-Building-Explainability-Deployment/index.html",

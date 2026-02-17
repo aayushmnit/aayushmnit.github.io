@@ -172,5 +172,8 @@
   },
   "posts/2026-01-31_ReadWithAI/ReadWithAI.ipynb": {
     "ReadWithAI.html": "5c3ee394"
+  },
+  "talks/2026-02-05-AIxRecSys/index.qmd": {
+    "index.html": "2b618383"
   }
 }
