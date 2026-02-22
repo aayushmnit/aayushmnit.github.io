@@ -214,7 +214,7 @@ Two parallel pathways:
 - Doesn't incorporate features beyond user/item IDs — purely CF.
 - Not suitable for retrieval (can't pre-compute item embeddings if interaction is non-linear and requires both user and item at inference time).
 
-### 3. Deep Crossing (Microsoft, 2016)
+### Deep Crossing (Microsoft, 2016)
 
 **Branch:** ResNet-style architecture for CTR prediction.
 
@@ -239,7 +239,7 @@ Two parallel pathways:
 - Wide & Deep hedges by keeping a linear wide component for memorization.
 - Deep Crossing needs to be deeper to compensate (5+ residual layers), but avoids the manual feature engineering that the wide component requires.
 
-### 4. PNN — Product-based Neural Network (Qu et al., 2016)
+### PNN — Product-based Neural Network (Qu et al., 2016)
 
 **Branch:** Explicit product layer on top of embeddings before the MLP.
 
@@ -266,7 +266,7 @@ Two parallel pathways:
 
 **Relationship to DeepFM:** Both add explicit 2nd-order interactions. The difference is that DeepFM uses a *parallel* FM and MLP with shared embeddings, while PNN uses a *sequential* product layer → MLP pipeline. PNN's product signals are processed further by the deep network, potentially learning more complex patterns on top of the interactions.
 
-### 5. FNN — Factorization-Machine Supported Neural Networks (Zhang et al., 2016)
+### FNN — Factorization-Machine Supported Neural Networks (Zhang et al., 2016)
 
 **Branch:** Use pre-trained FM embeddings to initialize a deep network.
 
@@ -292,7 +292,7 @@ Two parallel pathways:
 
 FNN is a good example of how pre-training/transfer learning ideas (now ubiquitous with LLMs) appeared early in the recommendation space.
 
-### 6. AFM — Attentional Factorization Machines (Xiao et al., 2017)
+### AFM — Attentional Factorization Machines (Xiao et al., 2017)
 
 **Branch:** Add attention to the FM interaction layer (Wide Part Improvement → Deep Part).
 
@@ -315,7 +315,7 @@ FNN is a good example of how pre-training/transfer learning ideas (now ubiquitou
 
 **Limitations:** Still only 2nd-order interactions (like FM). No deep component for higher-order learning. In practice, DeepFM or DCN-v2 offer better performance because they combine explicit interactions with deep learning.
 
-### 7. NFM — Neural Factorization Machines (He & Chua, 2017)
+### NFM — Neural Factorization Machines (He & Chua, 2017)
 
 **Branch:** Replace the Deep Part with a Bi-Interaction + MLP.
 
