@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Aayush Agrawal">
+<meta name="dcterms.date" content="2026-02-22">
+
+<title>Loss Functions – Aayush Agrawal</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8fedceaa9c5b51e05daa085a98af5997.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-af8a908a13f4fda948c7407926ad6c39.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-8fedceaa9c5b51e05daa085a98af5997.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-7QN8N70N41"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="Loss Functions – Aayush Agrawal">
+<meta property="og:description" content="Aayush’s personal website">
+<meta property="og:site_name" content="Aayush Agrawal">
+<meta name="twitter:title" content="Loss Functions – Aayush Agrawal">
+<meta name="twitter:description" content="Aayush’s personal website">
+<meta name="twitter:creator" content="@aayushmnit">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Aayush Agrawal</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> <i class="bi bi-house" role="img">
+</i> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog.html"> <i class="bi bi-newspaper" role="img">
+</i> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> <i class="bi bi-file-person" role="img">
+</i> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-other" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-stack" role="img">
+</i> 
+ <span class="menu-text">Other</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-other">    
+        <li>
+    <a class="dropdown-item" href="../talks.html"><i class="bi bi-megaphone" role="img">
+</i> 
+ <span class="dropdown-text">Talks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://aayushmnit.com/pytorch_book/"><i class="bi bi-box-arrow-up-right" role="img">
+</i> 
+ <span class="dropdown-text">Pytorch Book</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../other/carlson.html"><i class="bi bi-box-arrow-up-right" role="img">
+</i> 
+ <span class="dropdown-text">Carlson Q&amp;A</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://medium.com/@aayushmnit"> <i class="bi bi-bell" role="img">
+</i> 
+<span class="menu-text">Subscribe</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/aayushmnit/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/aayushmnit/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://medium.com/@aayushmnit"> <i class="bi bi-medium" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/aayushmnit"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:aayushmnit@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../blog.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#evaluation-metrics-primer" id="toc-evaluation-metrics-primer" class="nav-link active" data-scroll-target="#evaluation-metrics-primer">Evaluation Metrics Primer</a>
+  <ul class="collapse">
+  <li><a href="#precisionk-and-recallk" id="toc-precisionk-and-recallk" class="nav-link" data-scroll-target="#precisionk-and-recallk">Precision@K and Recall@K</a></li>
+  <li><a href="#mean-reciprocal-rank-mrr" id="toc-mean-reciprocal-rank-mrr" class="nav-link" data-scroll-target="#mean-reciprocal-rank-mrr">Mean Reciprocal Rank (MRR)</a></li>
+  <li><a href="#dcg-and-ndcg" id="toc-dcg-and-ndcg" class="nav-link" data-scroll-target="#dcg-and-ndcg">DCG and NDCG</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick Reference</a></li>
+  </ul></li>
+  <li><a href="#mental-model-what-unit-does-the-loss-operate-on" id="toc-mental-model-what-unit-does-the-loss-operate-on" class="nav-link" data-scroll-target="#mental-model-what-unit-does-the-loss-operate-on">Mental Model: What Unit Does the Loss Operate On?</a></li>
+  <li><a href="#pointwise-losses" id="toc-pointwise-losses" class="nav-link" data-scroll-target="#pointwise-losses">Pointwise Losses</a>
+  <ul class="collapse">
+  <li><a href="#binary-cross-entropy-bce" id="toc-binary-cross-entropy-bce" class="nav-link" data-scroll-target="#binary-cross-entropy-bce">Binary Cross-Entropy (BCE)</a></li>
+  <li><a href="#mean-squared-error-mse" id="toc-mean-squared-error-mse" class="nav-link" data-scroll-target="#mean-squared-error-mse">Mean Squared Error (MSE)</a></li>
+  <li><a href="#the-core-limitation-low-pointwise-loss-good-ranking" id="toc-the-core-limitation-low-pointwise-loss-good-ranking" class="nav-link" data-scroll-target="#the-core-limitation-low-pointwise-loss-good-ranking">The Core Limitation: Low Pointwise Loss ≠ Good Ranking</a></li>
+  </ul></li>
+  <li><a href="#pairwise-losses" id="toc-pairwise-losses" class="nav-link" data-scroll-target="#pairwise-losses">Pairwise Losses</a>
+  <ul class="collapse">
+  <li><a href="#bpr-bayesian-personalized-ranking" id="toc-bpr-bayesian-personalized-ranking" class="nav-link" data-scroll-target="#bpr-bayesian-personalized-ranking">BPR (Bayesian Personalized Ranking)</a></li>
+  <li><a href="#margin-hinge-loss" id="toc-margin-hinge-loss" class="nav-link" data-scroll-target="#margin-hinge-loss">Margin / Hinge Loss</a></li>
+  <li><a href="#bpr-vs.-hinge-when-to-pick-which" id="toc-bpr-vs.-hinge-when-to-pick-which" class="nav-link" data-scroll-target="#bpr-vs.-hinge-when-to-pick-which">BPR vs.&nbsp;Hinge: When to Pick Which</a></li>
+  <li><a href="#the-core-limitation-not-all-pairs-are-equal" id="toc-the-core-limitation-not-all-pairs-are-equal" class="nav-link" data-scroll-target="#the-core-limitation-not-all-pairs-are-equal">The Core Limitation: Not All Pairs Are Equal</a></li>
+  </ul></li>
+  <li><a href="#listwise-losses" id="toc-listwise-losses" class="nav-link" data-scroll-target="#listwise-losses">4. Listwise Losses</a>
+  <ul class="collapse">
+  <li><a href="#lambdarank" id="toc-lambdarank" class="nav-link" data-scroll-target="#lambdarank">LambdaRank</a></li>
+  <li><a href="#softmax-cross-entropy-sampled-softmax" id="toc-softmax-cross-entropy-sampled-softmax" class="nav-link" data-scroll-target="#softmax-cross-entropy-sampled-softmax">Softmax Cross-Entropy (Sampled Softmax)</a></li>
+  <li><a href="#the-trade-off" id="toc-the-trade-off" class="nav-link" data-scroll-target="#the-trade-off">The Trade-off</a></li>
+  </ul></li>
+  <li><a href="#contrastive-losses" id="toc-contrastive-losses" class="nav-link" data-scroll-target="#contrastive-losses">Contrastive Losses</a>
+  <ul class="collapse">
+  <li><a href="#infonce" id="toc-infonce" class="nav-link" data-scroll-target="#infonce">InfoNCE</a></li>
+  <li><a href="#temperature-the-one-hyperparameter-that-matters" id="toc-temperature-the-one-hyperparameter-that-matters" class="nav-link" data-scroll-target="#temperature-the-one-hyperparameter-that-matters">Temperature: The One Hyperparameter That Matters</a></li>
+  <li><a href="#in-batch-negatives" id="toc-in-batch-negatives" class="nav-link" data-scroll-target="#in-batch-negatives">In-Batch Negatives</a></li>
+  <li><a href="#hard-negative-mining" id="toc-hard-negative-mining" class="nav-link" data-scroll-target="#hard-negative-mining">Hard Negative Mining</a></li>
+  <li><a href="#the-connection-back-to-other-losses" id="toc-the-connection-back-to-other-losses" class="nav-link" data-scroll-target="#the-connection-back-to-other-losses">The Connection Back to Other Losses</a></li>
+  </ul></li>
+  <li><a href="#choosing-the-right-loss" id="toc-choosing-the-right-loss" class="nav-link" data-scroll-target="#choosing-the-right-loss">Choosing the Right Loss</a>
+  <ul class="collapse">
+  <li><a href="#by-stage" id="toc-by-stage" class="nav-link" data-scroll-target="#by-stage">By Stage</a></li>
+  <li><a href="#by-data-type" id="toc-by-data-type" class="nav-link" data-scroll-target="#by-data-type">By Data Type</a></li>
+  <li><a href="#common-mistakes" id="toc-common-mistakes" class="nav-link" data-scroll-target="#common-mistakes">Common Mistakes</a></li>
+  <li><a href="#multi-loss-training" id="toc-multi-loss-training" class="nav-link" data-scroll-target="#multi-loss-training">Multi-Loss Training</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.dev/aayushmnit/aayushmnit.github.io/blob/main/notes/2026-02-22-LossFunctions.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Loss Functions</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">RecSys</div>
+    <div class="quarto-category">ML</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aayush Agrawal </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 22, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="evaluation-metrics-primer" class="level2">
+<h2 class="anchored" data-anchor-id="evaluation-metrics-primer">Evaluation Metrics Primer</h2>
+<p>Before talking about loss functions, we need to know what we’re trying to optimize. These are the metrics that matter in ranking.</p>
+<section id="precisionk-and-recallk" class="level3">
+<h3 class="anchored" data-anchor-id="precisionk-and-recallk">Precision@K and Recall@K</h3>
+<p>The simplest ranking metrics. Given the top-K items the model returns:</p>
+<ul>
+<li><strong>Precision@K</strong> = (relevant items in top-K) / K — “Of what I showed, how much was good?”</li>
+<li><strong>Recall@K</strong> = (relevant items in top-K) / (total relevant items) — “Of all the good stuff, how much did I find?”</li>
+</ul>
+<div id="ba37076c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:17:40.079041Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:17:40.075458Z&quot;}}" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 10 items, 4 are relevant (indices 0, 2, 5, 7)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>relevant <span class="op">=</span> {<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">7</span>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Model's top-5 ranking: items [2, 5, 3, 0, 9]</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>top_k <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">9</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>hits <span class="op">=</span> [item <span class="kw">in</span> relevant <span class="cf">for</span> item <span class="kw">in</span> top_k]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Hits in top-5: </span><span class="sc">{</span>hits<span class="sc">}</span><span class="ss">"</span>)  </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>precision_at_5 <span class="op">=</span> <span class="bu">sum</span>(hits) <span class="op">/</span> <span class="bu">len</span>(top_k)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>recall_at_5 <span class="op">=</span> <span class="bu">sum</span>(hits) <span class="op">/</span> <span class="bu">len</span>(relevant)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Precision@5: </span><span class="sc">{</span>precision_at_5<span class="sc">:.2f}</span><span class="ss">"</span>)  </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Recall@5: </span><span class="sc">{</span>recall_at_5<span class="sc">:.2f}</span><span class="ss">"</span>)        </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hits in top-5: [True, True, False, True, False]
+Precision@5: 0.60
+Recall@5: 0.75</code></pre>
+</div>
+</div>
+<p>Limitation: these treat position as binary – you’re either in the top-K or you’re not. Being ranked 1st vs.&nbsp;5th doesn’t matter. That’s a problem because <strong>users look at the top of the list first</strong>.</p>
+</section>
+<section id="mean-reciprocal-rank-mrr" class="level3">
+<h3 class="anchored" data-anchor-id="mean-reciprocal-rank-mrr">Mean Reciprocal Rank (MRR)</h3>
+<p>“How far down does the user have to scroll to find the <em>first</em> relevant item?”</p>
+<p><span class="math display">\[\text{MRR} = \frac{1}{|Q|} \sum_{q=1}^{|Q|} \frac{1}{\text{rank}_q}\]</span></p>
+<p>where rank_q is the position of the first relevant item for query q.</p>
+<div id="6721694c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:22:03.768655Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:22:03.764672Z&quot;}}" data-execution_count="24">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Three queries, each with a ranked list of items (1 = relevant, 0 = not)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>queries <span class="op">=</span> [</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>],  <span class="co"># first relevant at position 3 → 1/3</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>],  <span class="co"># first relevant at position 1 → 1/1</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>],  <span class="co"># first relevant at position 4 → 1/4</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>reciprocal_ranks <span class="op">=</span> []</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ranked_list <span class="kw">in</span> queries:</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, label <span class="kw">in</span> <span class="bu">enumerate</span>(ranked_list):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> label <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            reciprocal_ranks.append(<span class="fl">1.0</span> <span class="op">/</span> (i <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Reciprocal rank: </span><span class="sc">{</span>reciprocal_ranks<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>mrr <span class="op">=</span> np.mean(reciprocal_ranks)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MRR: </span><span class="sc">{</span>mrr<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reciprocal rank: [0.3333333333333333, 1.0, 0.25]
+MRR: 0.5277777777777778</code></pre>
+</div>
+</div>
+<p><strong>When it matters:</strong> Single-answer retrieval (search, Q&amp;A). Less useful when multiple items are relevant since it ignores everything after the first hit.</p>
+</section>
+<section id="dcg-and-ndcg" class="level3">
+<h3 class="anchored" data-anchor-id="dcg-and-ndcg">DCG and NDCG</h3>
+<p>This is the ranking metric you’ll see most often. It answers: “Are the <em>best</em> items near the <em>top</em> of the list?”</p>
+<p><strong>DCG (Discounted Cumulative Gain)</strong> adds up relevance scores, but discounts items lower in the list by 1/log₂(position):</p>
+<p><span class="math display">\[\text{DCG@K} = \sum_{i=1}^{K} \frac{2^{\text{rel}_i} - 1}{\log_2(i + 1)}\]</span></p>
+<p>Two key ideas baked in:</p>
+<ul>
+<li><strong>Gain:</strong> 2^rel - 1 makes highly relevant items worth exponentially more. A 5-star item isn’t 5x as valuable as a 1-star, it’s 31x (2⁵-1 vs 2¹-1).</li>
+<li><strong>Discount:</strong> 1/log₂(i+1) means position 1 gets full credit, position 2 gets 63% credit, position 10 gets 30%. Items buried at the bottom barely count.</li>
+</ul>
+<p><strong>NDCG</strong> normalizes DCG by dividing by the best possible DCG (the “ideal” ranking where all relevant items are sorted to the top):</p>
+<p><span class="math display">\[\text{NDCG@K} = \frac{\text{DCG@K}}{\text{IDCG@K}}\]</span></p>
+<p>This gives a 0-to-1 score. NDCG = 1.0 means the model’s ranking is perfect.</p>
+<div id="3162a0cc" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:18:59.823720Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:18:59.818603Z&quot;}}" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dcg_at_k(relevances, k):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute DCG@K for a single ranked list."""</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    rel <span class="op">=</span> np.array(relevances[:k])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    gains <span class="op">=</span> <span class="dv">2</span><span class="op">**</span>rel <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    discounts <span class="op">=</span> np.log2(np.arange(<span class="dv">2</span>, k <span class="op">+</span> <span class="dv">2</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>(gains <span class="op">/</span> discounts)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ndcg_at_k(relevances, k):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Compute NDCG@K for a single ranked list."""</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    dcg <span class="op">=</span> dcg_at_k(relevances, k)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ideal: sort relevances descending, then compute DCG</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    ideal_relevances <span class="op">=</span> <span class="bu">sorted</span>(relevances, reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    idcg <span class="op">=</span> dcg_at_k(ideal_relevances, k)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> idcg <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.0</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dcg <span class="op">/</span> idcg</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Model ranks 6 items. Relevance: 3=highly relevant, 0=irrelevant</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>model_ranking <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">0</span>]  <span class="co"># model's output order</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>dcg <span class="op">=</span> dcg_at_k(model_ranking, k)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>ndcg <span class="op">=</span> ndcg_at_k(model_ranking, k)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"DCG@</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>dcg<span class="sc">:.4f}</span><span class="ss">"</span>)    <span class="co"># 12.0314</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NDCG@</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>ndcg<span class="sc">:.4f}</span><span class="ss">"</span>)  <span class="co"># 0.9014</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># What if we had the perfect ranking? </span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>perfect <span class="op">=</span> <span class="bu">sorted</span>(model_ranking, reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Perfect ranking: </span><span class="sc">{</span>perfect<span class="sc">}</span><span class="ss">"</span>) <span class="co"># [3, 3, 2, 1, 0, 0]</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"NDCG@</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss"> (perfect): </span><span class="sc">{</span>ndcg_at_k(perfect, k)<span class="sc">:.4f}</span><span class="ss">"</span>)  <span class="co"># 1.0000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>DCG@6: 12.0314
+NDCG@6: 0.9014
+Perfect ranking: [3, 3, 2, 1, 0, 0]
+NDCG@6 (perfect): 1.0000</code></pre>
+</div>
+</div>
+<p>The model ranked a 0-relevance item at position 3, pushing a relevance-3 item down to position 5. NDCG captures exactly how much that costs.</p>
+<p><strong>When it matters:</strong> Anywhere you care about the quality of the full ranked list, which is most recommendation and search settings. This is the metric that LambdaRank/LambdaMART directly optimize.</p>
+</section>
+<section id="quick-reference" class="level3">
+<h3 class="anchored" data-anchor-id="quick-reference">Quick Reference</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>What it measures</th>
+<th>Position-aware?</th>
+<th>Best for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Precision@K</td>
+<td>Fraction of top-K that’s relevant</td>
+<td>No</td>
+<td>Retrieval stage filtering</td>
+</tr>
+<tr class="even">
+<td>Recall@K</td>
+<td>Fraction of relevant items found in top-K</td>
+<td>No</td>
+<td>Retrieval coverage</td>
+</tr>
+<tr class="odd">
+<td>MRR</td>
+<td>How quickly you find the first relevant item</td>
+<td>Yes (first hit only)</td>
+<td>Single-answer tasks (search)</td>
+</tr>
+<tr class="even">
+<td>NDCG@K</td>
+<td>Quality of the full ranked list, top-weighted</td>
+<td>Yes (all positions)</td>
+<td>Ranking stage evaluation</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="mental-model-what-unit-does-the-loss-operate-on" class="level2">
+<h2 class="anchored" data-anchor-id="mental-model-what-unit-does-the-loss-operate-on">Mental Model: What Unit Does the Loss Operate On?</h2>
+<p>Every loss function in recommendation ranking answers one question: <strong>what do you compare against what?</strong></p>
+<p>The answer falls on a spectrum:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Level</th>
+<th>Input to Loss</th>
+<th>What It Optimizes</th>
+<th>Analogy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Pointwise</td>
+<td>Single (user, item) score vs.&nbsp;label</td>
+<td>Absolute accuracy per item</td>
+<td>“Is this rating correct?”</td>
+</tr>
+<tr class="even">
+<td>Pairwise</td>
+<td>Two items: one positive, one negative</td>
+<td>Relative order between a pair</td>
+<td>“Is A ranked above B?”</td>
+</tr>
+<tr class="odd">
+<td>Listwise</td>
+<td>Full ranked list of items</td>
+<td>Global ranking quality (e.g., NDCG)</td>
+<td>“Is the whole list sorted well?”</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why this spectrum matters:</strong></p>
+<ul>
+<li>Moving left to right, you get <strong>closer to the actual objective</strong> (serve a well-ranked list), but <strong>further from a clean, easy-to-optimize loss</strong>.</li>
+<li>Pointwise losses are simple to implement and scale, but they optimize a proxy. A model can nail per-item accuracy and still produce a bad ranking.</li>
+<li>Listwise losses directly target ranking metrics, but the gradients are noisier and the implementation is more involved.</li>
+<li>Pairwise sits in the middle – it captures relative ordering (which is what ranking <em>is</em>) without needing to reason over full permutations.</li>
+</ul>
+<p><strong>Contrastive losses</strong> (InfoNCE, etc.) don’t fit neatly on this spectrum. They’re structurally similar to softmax over a batch (listwise over a sampled subset), but their goal is learning a similarity space rather than optimizing a ranking metric directly. Think of them as a separate axis: <strong>“learn distances”</strong> vs.&nbsp;<strong>“learn orderings.”</strong></p>
+<p><strong>In practice, most production systems use multiple losses across stages:</strong></p>
+<ul>
+<li>Retrieval: contrastive (learn embedding space)</li>
+<li>Ranking: pointwise BCE (calibrated scores for mixing with other signals)</li>
+<li>Re-ranking/blending: sometimes a listwise objective on top</li>
+</ul>
+<p>The loss isn’t chosen in isolation. It’s chosen <em>per stage</em>, based on what that stage needs to produce.</p>
+</section>
+<section id="pointwise-losses" class="level2">
+<h2 class="anchored" data-anchor-id="pointwise-losses">Pointwise Losses</h2>
+<p>Pointwise losses treat each (user, item) pair independently. Predict a score, compare it to a label, compute the loss. No awareness of other items in the list.</p>
+<section id="binary-cross-entropy-bce" class="level3">
+<h3 class="anchored" data-anchor-id="binary-cross-entropy-bce">Binary Cross-Entropy (BCE)</h3>
+<p>The workhorse of CTR prediction. You have implicit feedback – clicked or not, watched or not – and you predict a probability.</p>
+<p><strong>Formula:</strong></p>
+<p><span class="math display">\[\mathcal{L} = -\left[y \cdot \log(\hat{y}) + (1 - y) \cdot \log(1 - \hat{y})\right]\]</span></p>
+<div id="4d74f2f0" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:04:55.921008Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:04:54.560009Z&quot;}}" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Model predicts raw logits for 5 (user, item) pairs</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>logits <span class="op">=</span> torch.tensor([<span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="fl">3.0</span>, <span class="op">-</span><span class="fl">0.5</span>])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Ground truth: clicked (1) or not (0)</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>])</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> F.binary_cross_entropy_with_logits(logits, labels)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"BCE loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>BCE loss: 0.2874</code></pre>
+</div>
+</div>
+<p>BCE gives you <strong>calibrated probabilities</strong> – the output actually means something (“70% chance of click”). This matters when you need to blend scores from multiple models (e.g., P(click) * P(purchase) * bid) downstream in an auction or score fusion layer.</p>
+</section>
+<section id="mean-squared-error-mse" class="level3">
+<h3 class="anchored" data-anchor-id="mean-squared-error-mse">Mean Squared Error (MSE)</h3>
+<p>For explicit ratings. User gave 4 stars, you predicted 3.2, penalty is (4 - 3.2)².</p>
+<p><strong>Formula:</strong></p>
+<p><span class="math display">\[\mathcal{L} = \frac{1}{n}\sum(y - \hat{y})^2\]</span></p>
+<div id="1191d21c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:04:57.338666Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:04:57.334584Z&quot;}}" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicted ratings vs actual ratings</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> torch.tensor([<span class="fl">3.2</span>, <span class="fl">4.8</span>, <span class="fl">2.1</span>, <span class="fl">3.9</span>])</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>actuals     <span class="op">=</span> torch.tensor([<span class="fl">4.0</span>, <span class="fl">5.0</span>, <span class="fl">1.0</span>, <span class="fl">4.0</span>])</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> F.mse_loss(predictions, actuals)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MSE loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MSE loss: 0.4750</code></pre>
+</div>
+</div>
+<p>MSE assumes Gaussian noise around the true rating. It penalizes large errors quadratically, so a prediction that’s off by 2 is 4x worse than one that’s off by 1. This makes it sensitive to outliers – a single “hate-click” 1-star rating on something a user usually rates 4-5 can disproportionately warp the model.</p>
+</section>
+<section id="the-core-limitation-low-pointwise-loss-good-ranking" class="level3">
+<h3 class="anchored" data-anchor-id="the-core-limitation-low-pointwise-loss-good-ranking">The Core Limitation: Low Pointwise Loss ≠ Good Ranking</h3>
+<p>This is the critical insight. A model can be well-calibrated per item but rank terribly.</p>
+<div id="8585a780" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:05:00.829157Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:05:00.823121Z&quot;}}" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># User has 5 candidate items. Items 0, 1, 2 were clicked (relevant).</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span>  np.array([<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>])</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Model A: Nails 4 out of 5 items with high confidence,</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#          but swaps item 2 (positive) and item 3 (negative)</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>scores_a <span class="op">=</span>    np.array([<span class="fl">0.99</span>, <span class="fl">0.98</span>, <span class="fl">0.40</span>, <span class="fl">0.60</span>, <span class="fl">0.01</span>])</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Ranked order: [0, 1, 3, 2, 4] — one negative leaks above a positive</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Model B: Moderate confidence everywhere, but perfectly ordered</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>scores_b <span class="op">=</span>    np.array([<span class="fl">0.70</span>, <span class="fl">0.65</span>, <span class="fl">0.60</span>, <span class="fl">0.40</span>, <span class="fl">0.35</span>])</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ranked order: [0, 1, 2, 3, 4] — all relevant items on top</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bce(y, p):</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> np.clip(p, <span class="fl">1e-7</span>, <span class="dv">1</span><span class="op">-</span><span class="fl">1e-7</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>np.mean(y <span class="op">*</span> np.log(p) <span class="op">+</span> (<span class="dv">1</span><span class="op">-</span>y) <span class="op">*</span> np.log(<span class="dv">1</span><span class="op">-</span>p))</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ndcg_at_k(labels, scores, k<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> np.argsort(<span class="op">-</span>scores)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    gains <span class="op">=</span> (<span class="dv">2</span><span class="op">**</span>labels[order[:k]] <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> np.log2(np.arange(<span class="dv">2</span>, k<span class="op">+</span><span class="dv">2</span>))</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    ideal <span class="op">=</span> np.sort(<span class="dv">2</span><span class="op">**</span>labels <span class="op">-</span> <span class="dv">1</span>)[::<span class="op">-</span><span class="dv">1</span>][:k]</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    ideal_dcg <span class="op">=</span> np.<span class="bu">sum</span>(ideal <span class="op">/</span> np.log2(np.arange(<span class="dv">2</span>, k<span class="op">+</span><span class="dv">2</span>)))</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>(gains) <span class="op">/</span> ideal_dcg</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Model A — BCE: </span><span class="sc">{</span>bce(labels, scores_a)<span class="sc">:.4f}</span><span class="ss">, NDCG@5: </span><span class="sc">{</span>ndcg_at_k(labels, scores_a)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Model B — BCE: </span><span class="sc">{</span>bce(labels, scores_b)<span class="sc">:.4f}</span><span class="ss">, NDCG@5: </span><span class="sc">{</span>ndcg_at_k(labels, scores_b)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model A — BCE: 0.3746, NDCG@5: 0.9675
+Model B — BCE: 0.4480, NDCG@5: 1.0000</code></pre>
+</div>
+</div>
+<p>Model A is extremely confident on 4 out of 5 items (0.99, 0.98, 0.01 contribute almost zero BCE), pulling its average loss below Model B. But it swaps one positive-negative pair at the boundary – item 3 (negative, scored 0.60) sits above item 2 (positive, scored 0.40). Model B’s scores are moderate across the board (higher per-item BCE) but the <em>ordering</em> is perfect.</p>
+<p><strong>The takeaway:</strong> BCE rewards confidence on easy items. Ranking rewards getting the <em>boundaries</em> right. A model can “spend” its BCE budget being extremely sure about obvious cases while botching the one pair that actually matters for list quality. This gap is exactly why pairwise and listwise losses exist.</p>
+</section>
+</section>
+<section id="pairwise-losses" class="level2">
+<h2 class="anchored" data-anchor-id="pairwise-losses">Pairwise Losses</h2>
+<p>Pairwise losses shift the question from “is this score correct?” to “is this item ranked above that one?” You sample a pair – one positive (interacted), one negative (not interacted) – and push the positive’s score higher.</p>
+<p>This is a fundamental shift: <strong>you’re optimizing relative order, not absolute accuracy.</strong> That’s closer to what ranking actually is.</p>
+<section id="bpr-bayesian-personalized-ranking" class="level3">
+<h3 class="anchored" data-anchor-id="bpr-bayesian-personalized-ranking">BPR (Bayesian Personalized Ranking)</h3>
+<p>The classic pairwise loss for implicit feedback. Derived from maximizing the posterior probability that a user prefers item <span class="math inline">\(i\)</span> over item <span class="math inline">\(j\)</span>.</p>
+<p><span class="math display">\[\mathcal{L}_{\text{BPR}} = -\log\left(\sigma(\hat{s}_{\text{pos}} - \hat{s}_{\text{neg}})\right)\]</span></p>
+<p>where <span class="math inline">\(\sigma\)</span> is the sigmoid function. Intuition: the larger the gap <span class="math inline">\(\hat{s}_{\text{pos}} - \hat{s}_{\text{neg}}\)</span>, the closer <span class="math inline">\(\sigma(\cdot)\)</span> is to 1, the closer <span class="math inline">\(-\log(\cdot)\)</span> is to 0.</p>
+<div id="dc5b874d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:08:51.013896Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:08:51.008779Z&quot;}}" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bpr_loss(score_pos, score_neg):</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>F.logsigmoid(score_pos <span class="op">-</span> score_neg)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 4 users, each with one positive and one sampled negative</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>score_pos <span class="op">=</span> torch.tensor([<span class="fl">2.5</span>, <span class="fl">1.8</span>, <span class="fl">3.0</span>, <span class="fl">0.9</span>])</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>score_neg <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>])</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> bpr_loss(score_pos, score_neg)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"BPR loss: </span><span class="sc">{</span>loss<span class="sc">}</span><span class="ss">"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>BPR loss: tensor([0.2014, 0.7981, 0.0789, 0.6444])</code></pre>
+</div>
+</div>
+<p>Look at user 2: positive scored 1.8, negative scored 2.0. The model ranks this pair <em>wrong</em> – the negative is higher. That pair contributes heavily to the loss. User 3 (gap of 2.5) contributes almost nothing. The loss naturally focuses on the violated pairs.</p>
+<p><strong>When to use:</strong> Matrix factorization with implicit feedback. BPR was the standard loss for collaborative filtering models (ALS, LightFM, etc.) before deep learning took over retrieval.</p>
+</section>
+<section id="margin-hinge-loss" class="level3">
+<h3 class="anchored" data-anchor-id="margin-hinge-loss">Margin / Hinge Loss</h3>
+<p>Enforce a minimum gap (margin <span class="math inline">\(m\)</span>) between positive and negative scores.</p>
+<p><span class="math display">\[\mathcal{L}_{\text{hinge}} = \max\left(0,\; m - (\hat{s}_{\text{pos}} - \hat{s}_{\text{neg}})\right)\]</span></p>
+<div id="f5781828" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:10:43.671559Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:10:43.667361Z&quot;}}" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hinge_loss(score_pos, score_neg, margin<span class="op">=</span><span class="fl">1.0</span>):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.clamp(margin <span class="op">-</span> (score_pos <span class="op">-</span> score_neg), <span class="bu">min</span><span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>score_pos <span class="op">=</span> torch.tensor([<span class="fl">2.5</span>, <span class="fl">1.8</span>, <span class="fl">3.0</span>, <span class="fl">0.9</span>])</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>score_neg <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>])</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> hinge_loss(score_pos, score_neg, margin<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Hinge loss: </span><span class="sc">{</span>loss<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Hinge loss: tensor([0.0000, 1.2000, 0.0000, 0.9000])</code></pre>
+</div>
+</div>
+<p>Breaking it down per pair:</p>
+<ul>
+<li>User 1: margin - (2.5 - 1.0) = 1.0 - 1.5 = -0.5 → clamped to 0 (satisfied)</li>
+<li>User 2: 1.0 - (1.8 - 2.0) = 1.0 - (-0.2) = 1.2 → loss = 1.2 (violated, wrong order AND no margin)</li>
+<li>User 3: 1.0 - (3.0 - 0.5) = 1.0 - 2.5 = -1.5 → clamped to 0 (satisfied)</li>
+<li>User 4: 1.0 - (0.9 - 0.8) = 1.0 - 0.1 = 0.9 → loss = 0.9 (right order, but gap too small)</li>
+</ul>
+<p>The key difference from BPR: once the gap exceeds <span class="math inline">\(m\)</span>, hinge loss is <strong>exactly zero</strong> – no further gradient. BPR always pushes scores apart (asymptotically). This makes hinge loss more suitable for <strong>embedding learning</strong> where you want items to be “far enough” apart but don’t need infinite separation.</p>
+<p><strong>When to use:</strong> Metric learning, embedding spaces (think: learning user/item embeddings where cosine distance matters). Triplet loss is the three-term version of this (anchor, positive, negative).</p>
+</section>
+<section id="bpr-vs.-hinge-when-to-pick-which" class="level3">
+<h3 class="anchored" data-anchor-id="bpr-vs.-hinge-when-to-pick-which">BPR vs.&nbsp;Hinge: When to Pick Which</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>BPR</th>
+<th>Hinge</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Gradient when pair is correct</td>
+<td>Still nonzero (decaying)</td>
+<td>Zero once margin met</td>
+</tr>
+<tr class="even">
+<td>Sensitive to margin hyperparameter</td>
+<td>No</td>
+<td>Yes (<span class="math inline">\(m\)</span> matters a lot)</td>
+</tr>
+<tr class="odd">
+<td>Probabilistic interpretation</td>
+<td>Yes (posterior maximization)</td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>Common in</td>
+<td>Collaborative filtering</td>
+<td>Embedding / metric learning</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-core-limitation-not-all-pairs-are-equal" class="level3">
+<h3 class="anchored" data-anchor-id="the-core-limitation-not-all-pairs-are-equal">The Core Limitation: Not All Pairs Are Equal</h3>
+<p>Pairwise losses treat every (positive, negative) pair with equal weight. But ranking is <strong>top-heavy</strong> – swapping items at positions 1 and 2 is catastrophic, while swapping at positions 99 and 100 is irrelevant.</p>
+<div id="0f4e2d4f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:05:42.423748Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:05:42.419249Z&quot;}}" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 10 items, first 3 are relevant</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> np.array([<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>])</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Model ranks perfectly except it swaps ONE pair</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>scores_top_swap <span class="op">=</span> np.array([<span class="fl">0.95</span>, <span class="fl">0.50</span>, <span class="fl">0.85</span>, <span class="fl">0.90</span>, <span class="fl">0.45</span>, <span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span>, <span class="fl">0.20</span>])</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank order: [0, 3, 2, 1, 4, 5, 6, 7, 8, 9]</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Position 2 is a negative (item 3). User sees a bad rec at slot 2.</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>scores_bot_swap <span class="op">=</span> np.array([<span class="fl">0.95</span>, <span class="fl">0.90</span>, <span class="fl">0.85</span>, <span class="fl">0.45</span>, <span class="fl">0.40</span>, <span class="fl">0.35</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span>, <span class="fl">0.15</span>, <span class="fl">0.20</span>])</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Rank order: [0, 1, 2, 3, 4, 5, 6, 7, 9, 8]</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Items 8 and 9 (both negative) swapped. User never scrolls that far. Zero impact.</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Both models violate exactly ONE pair, so BPR/hinge treat them identically.</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co"># But the ranking quality is vastly different.</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ndcg_at_k(labels, scores, k<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> np.argsort(<span class="op">-</span>scores)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    gains <span class="op">=</span> (<span class="dv">2</span><span class="op">**</span>labels[order[:k]] <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> np.log2(np.arange(<span class="dv">2</span>, k<span class="op">+</span><span class="dv">2</span>))</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    ideal <span class="op">=</span> np.sort(<span class="dv">2</span><span class="op">**</span>labels <span class="op">-</span> <span class="dv">1</span>)[::<span class="op">-</span><span class="dv">1</span>][:k]</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    ideal_dcg <span class="op">=</span> np.<span class="bu">sum</span>(ideal <span class="op">/</span> np.log2(np.arange(<span class="dv">2</span>, k<span class="op">+</span><span class="dv">2</span>)))</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>(gains) <span class="op">/</span> ideal_dcg</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Top swap — NDCG@5: </span><span class="sc">{</span>ndcg_at_k(labels, scores_top_swap)<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Bottom swap — NDCG@5: </span><span class="sc">{</span>ndcg_at_k(labels, scores_bot_swap)<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Top swap — NDCG@5: 0.9060
+Bottom swap — NDCG@5: 1.0000</code></pre>
+</div>
+</div>
+<p>One pair violation at the top costs you ~11% NDCG. The same violation at the bottom costs nothing. BPR and hinge are blind to this distinction. This is exactly the gap that <strong>LambdaRank</strong> fills – it weights each pair by |ΔNDCG|, so top-of-list swaps get massive gradients and bottom-of-list swaps get near-zero.</p>
+<p><strong>The takeaway:</strong> Pairwise losses get you from “predict accurately” to “rank correctly,” but they still don’t know <em>where in the list</em> the pair sits. That’s what listwise losses solve.</p>
+</section>
+</section>
+<section id="listwise-losses" class="level2">
+<h2 class="anchored" data-anchor-id="listwise-losses">4. Listwise Losses</h2>
+<p>Listwise losses operate on the entire ranked list at once. Instead of asking “is A above B?” for one pair, they ask “how good is this entire ordering?” This directly aligns the loss with the metrics we actually evaluate (NDCG, MAP).</p>
+<p>The challenge: ranking metrics like NDCG involve sorting, which is non-differentiable. You can’t backpropagate through argmax. Every listwise loss is a different strategy for getting around this.</p>
+<section id="lambdarank" class="level3">
+<h3 class="anchored" data-anchor-id="lambdarank">LambdaRank</h3>
+<p>The key insight: <strong>you don’t need the loss function itself, you just need its gradients.</strong></p>
+<p>LambdaRank starts from a pairwise setup (every pair of items where one is relevant and the other isn’t), then multiplies each pair’s gradient by |ΔNDCG| – the change in NDCG that would result from swapping those two items.</p>
+<p><span class="math display">\[\lambda_{ij} = \frac{-\sigma\left(\hat{s}_i - \hat{s}_j\right)}{1 + e^{\hat{s}_i - \hat{s}_j}} \cdot |\Delta\text{NDCG}_{ij}|\]</span></p>
+<p>The |ΔNDCG| term does all the heavy lifting: - Swapping items at positions 1 and 2? Huge ΔNDCG, huge gradient. - Swapping items at positions 98 and 99? Tiny ΔNDCG, near-zero gradient. - Swapping two items that have the same relevance? Zero ΔNDCG, no gradient at all.</p>
+<div id="47cbe846" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:26:31.479332Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:26:31.473299Z&quot;}}" data-execution_count="25">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_dcg(relevances, k<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> k <span class="kw">is</span> <span class="va">None</span>: k <span class="op">=</span> <span class="bu">len</span>(relevances)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    rel <span class="op">=</span> np.array(relevances[:k])</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    discounts <span class="op">=</span> np.log2(np.arange(<span class="dv">2</span>, k <span class="op">+</span> <span class="dv">2</span>))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>((<span class="dv">2</span><span class="op">**</span>rel <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> discounts)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compute_delta_ndcg(relevances, i, j):</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""NDCG change from swapping items at positions i and j."""</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> <span class="bu">len</span>(relevances)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    ideal_dcg <span class="op">=</span> compute_dcg(<span class="bu">sorted</span>(relevances, reverse<span class="op">=</span><span class="va">True</span>), k)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ideal_dcg <span class="op">==</span> <span class="dv">0</span>: <span class="cf">return</span> <span class="fl">0.0</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Current NDCG</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    ndcg_before <span class="op">=</span> compute_dcg(relevances, k) <span class="op">/</span> ideal_dcg</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Swap and recompute</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    swapped <span class="op">=</span> <span class="bu">list</span>(relevances)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    swapped[i], swapped[j] <span class="op">=</span> swapped[j], swapped[i]</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    ndcg_after <span class="op">=</span> compute_dcg(swapped, k) <span class="op">/</span> ideal_dcg</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">abs</span>(ndcg_after <span class="op">-</span> ndcg_before)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 6 items in current model order, relevance labels</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>relevances <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">3</span>]</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare swapping different pairs</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>pairs <span class="op">=</span> [(<span class="dv">0</span>, <span class="dv">1</span>), (<span class="dv">1</span>, <span class="dv">2</span>), (<span class="dv">3</span>, <span class="dv">4</span>), (<span class="dv">4</span>, <span class="dv">5</span>)]</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> pairs:</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> compute_delta_ndcg(relevances, i, j)</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Swap positions </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">&lt;-&gt;</span><span class="sc">{</span>j<span class="sc">}</span><span class="ss"> (rel </span><span class="sc">{</span>relevances[i]<span class="sc">}</span><span class="ss">&lt;-&gt;</span><span class="sc">{</span>relevances[j]<span class="sc">}</span><span class="ss">): |ΔNDCG| = </span><span class="sc">{</span>delta<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Swap positions 0&lt;-&gt;1 (rel 3&lt;-&gt;0): |ΔNDCG| = 0.1936  ← huge, top of list + big relevance gap</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Swap positions 1&lt;-&gt;2 (rel 0&lt;-&gt;2): |ΔNDCG| = 0.0294  ← moderate</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Swap positions 3&lt;-&gt;4 (rel 1&lt;-&gt;0): |ΔNDCG| = 0.0033  ← tiny, bottom of list + small gap</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Swap positions 4&lt;-&gt;5 (rel 0&lt;-&gt;3): |ΔNDCG| = 0.0161  ← moderate, big relevance gap but low position</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Swap positions 0&lt;-&gt;1 (rel 3&lt;-&gt;0): |ΔNDCG| = 0.1936
+Swap positions 1&lt;-&gt;2 (rel 0&lt;-&gt;2): |ΔNDCG| = 0.0294
+Swap positions 3&lt;-&gt;4 (rel 1&lt;-&gt;0): |ΔNDCG| = 0.0033
+Swap positions 4&lt;-&gt;5 (rel 0&lt;-&gt;3): |ΔNDCG| = 0.0161</code></pre>
+</div>
+</div>
+<p>Position 0↔︎1 swap has 25x the gradient weight of position 3↔︎4 swap. The model learns to fight hard for the top of the list and not waste capacity on the tail. This is exactly what NDCG rewards.</p>
+<p><strong>LambdaMART</strong> = LambdaRank + gradient-boosted decision trees (GBDT). Instead of a neural net, the model is an ensemble of trees, each fitted to the lambda gradients. This powers XGBoost/LightGBM rankers and is still the backbone of many production search engines.</p>
+<p><strong>When to use:</strong> When you have graded relevance labels and care about NDCG. Search ranking, recommendation re-ranking, any setting where a learning-to-rank model takes features and produces a final ordering.</p>
+</section>
+<section id="softmax-cross-entropy-sampled-softmax" class="level3">
+<h3 class="anchored" data-anchor-id="softmax-cross-entropy-sampled-softmax">Softmax Cross-Entropy (Sampled Softmax)</h3>
+<p>Treat the relevant item as the correct “class” among all candidates. Given user <span class="math inline">\(u\)</span>, the probability of the positive item <span class="math inline">\(i^+\)</span> is:</p>
+<p><span class="math display">\[P(i^+ | u) = \frac{\exp(\hat{s}_{i^+})}{\sum_{j \in \mathcal{C}} \exp(\hat{s}_j)}\]</span></p>
+<p><span class="math display">\[\mathcal{L}_{\text{softmax}} = -\log P(i^+ | u)\]</span></p>
+<p>This is identical to classification cross-entropy where the number of classes = number of items. Obviously computing the denominator over millions of items is infeasible, so in practice you sample:</p>
+<div id="888a98dd" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:45:22.682673Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:45:22.677542Z&quot;}}" data-execution_count="28">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sampled_softmax_loss(score_pos, scores_neg):</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">    score_pos: (batch_size,) — score for the positive item per user</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">    scores_neg: (batch_size, num_neg) — scores for sampled negatives</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Positive is "class 0", negatives are the rest</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Shape: (batch_size, 1 + num_neg)</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> torch.cat([score_pos.unsqueeze(<span class="dv">1</span>), scores_neg], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> torch.zeros(logits.size(<span class="dv">0</span>), dtype<span class="op">=</span>torch.<span class="bu">long</span>)  <span class="co"># correct class = 0</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> F.cross_entropy(logits, labels)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>batch_size, num_neg <span class="op">=</span> <span class="dv">4</span>, <span class="dv">99</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>score_pos <span class="op">=</span> torch.tensor([<span class="fl">3.0</span>, <span class="fl">1.5</span>, <span class="fl">2.8</span>, <span class="fl">0.5</span>])</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>scores_neg <span class="op">=</span> torch.randn(batch_size, num_neg)  <span class="co"># 99 random negatives per user</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> sampled_softmax_loss(score_pos, scores_neg)</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Sampled softmax loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sampled softmax loss: 3.1978</code></pre>
+</div>
+</div>
+<p>The gradient pushes the positive score up and all negative scores down, but weighted by their softmax probability. High-scoring negatives (hard negatives) get pushed down harder. This is a natural hard-negative weighting built into the loss.</p>
+<p><strong>When to use:</strong> Two-tower retrieval models. YouTube’s Deep Retrieval, Google’s two-tower, Meta’s EBR – they all use some variant of this. It’s the standard loss for learning embedding spaces where you retrieve via approximate nearest neighbor.</p>
+</section>
+<section id="the-trade-off" class="level3">
+<h3 class="anchored" data-anchor-id="the-trade-off">The Trade-off</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Pointwise</th>
+<th>Pairwise</th>
+<th>Listwise</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Optimizes</td>
+<td>Per-item accuracy</td>
+<td>Relative order of pairs</td>
+<td>Full list quality</td>
+</tr>
+<tr class="even">
+<td>Gradient signal</td>
+<td>From individual labels</td>
+<td>From pair comparisons</td>
+<td>From list-level metric</td>
+</tr>
+<tr class="odd">
+<td>Complexity</td>
+<td>O(n)</td>
+<td>O(n²) worst case</td>
+<td>O(n² ) for lambda, O(n) for softmax</td>
+</tr>
+<tr class="even">
+<td>Position-aware</td>
+<td>No</td>
+<td>No</td>
+<td>Yes (LambdaRank), partially (softmax)</td>
+</tr>
+<tr class="odd">
+<td>Production use</td>
+<td>CTR prediction</td>
+<td>CF models (BPR)</td>
+<td>Search ranking, retrieval</td>
+</tr>
+</tbody>
+</table>
+<p>The movement from pointwise → listwise is a movement from “easy to optimize, loose proxy” to “hard to optimize, tight alignment with the real objective.” Most production systems don’t pick one – they use different losses at different stages.</p>
+</section>
+</section>
+<section id="contrastive-losses" class="level2">
+<h2 class="anchored" data-anchor-id="contrastive-losses">Contrastive Losses</h2>
+<p>Contrastive losses learn a <strong>similarity space</strong>: items that should be close get pulled together, items that should be far get pushed apart. The output isn’t a ranking score directly – it’s an embedding where distance <em>is</em> the score.</p>
+<p>This is the engine behind modern retrieval: CLIP, SimCLR, two-tower recommenders. The core question shifts from “what score should this item get?” to “should these two embeddings be close or far?”</p>
+<section id="infonce" class="level3">
+<h3 class="anchored" data-anchor-id="infonce">InfoNCE</h3>
+<p>The dominant contrastive loss. Given a query <span class="math inline">\(q\)</span>, one positive key <span class="math inline">\(k^+\)</span>, and <span class="math inline">\(N-1\)</span> negative keys <span class="math inline">\(\{k^-\}\)</span>:</p>
+<p><span class="math display">\[\mathcal{L}_{\text{InfoNCE}} = -\log \frac{\exp(\text{sim}(q, k^+) / \tau)}{\sum_{i=1}^{N} \exp(\text{sim}(q, k_i) / \tau)}\]</span></p>
+<p>This is literally softmax cross-entropy where the positive is the correct class and all negatives are the other classes. The connection is not an analogy – it’s algebraically identical.</p>
+<div id="651f00e0" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:49:17.442118Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:49:17.414985Z&quot;}}" data-execution_count="42">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> info_nce_loss(query, positive, negatives, temperature<span class="op">=</span><span class="fl">0.07</span>):</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">    query: (batch_size, embed_dim)</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">    positive: (batch_size, embed_dim)</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">    negatives: (batch_size, num_neg, embed_dim)</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalize embeddings (cosine similarity)</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    query <span class="op">=</span> F.normalize(query, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    positive <span class="op">=</span> F.normalize(positive, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    negatives <span class="op">=</span> F.normalize(negatives, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Positive similarity: (batch_size,)</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    pos_sim <span class="op">=</span> torch.<span class="bu">sum</span>(query <span class="op">*</span> positive, dim<span class="op">=-</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>) <span class="op">/</span> temperature</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Negative similarities: (batch_size, num_neg)</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    neg_sim <span class="op">=</span> torch.bmm(negatives, query.unsqueeze(<span class="op">-</span><span class="dv">1</span>)).squeeze(<span class="op">-</span><span class="dv">1</span>) <span class="op">/</span> temperature</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Logits: positive first, then negatives</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> torch.cat([pos_sim, neg_sim], dim<span class="op">=</span><span class="dv">1</span>)  <span class="co"># (batch_size, 1 + num_neg)</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> torch.zeros(query.size(<span class="dv">0</span>), dtype<span class="op">=</span>torch.<span class="bu">long</span>)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> F.cross_entropy(logits, labels)</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>batch_size, embed_dim, num_neg <span class="op">=</span> <span class="dv">32</span>, <span class="dv">128</span>, <span class="dv">255</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> torch.randn(batch_size, embed_dim)</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>positive <span class="op">=</span> torch.randn(batch_size, embed_dim)</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>negatives <span class="op">=</span> torch.randn(batch_size, num_neg, embed_dim)</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> info_nce_loss(query, positive, negatives, temperature<span class="op">=</span><span class="fl">0.07</span>)</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"InfoNCE loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>InfoNCE loss: 6.0130</code></pre>
+</div>
+</div>
+</section>
+<section id="temperature-the-one-hyperparameter-that-matters" class="level3">
+<h3 class="anchored" data-anchor-id="temperature-the-one-hyperparameter-that-matters">Temperature: The One Hyperparameter That Matters</h3>
+<p>Temperature <span class="math inline">\(\tau\)</span> controls the <strong>sharpness</strong> of the similarity distribution. This is worth understanding deeply because getting it wrong can quietly ruin your model.</p>
+<div id="4c9383fa" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:49:47.570833Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:49:47.566298Z&quot;}}" data-execution_count="45">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 items with cosine similarities to query</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>similarities <span class="op">=</span> torch.tensor([<span class="fl">0.9</span>, <span class="fl">0.7</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span>, <span class="fl">0.1</span>])</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> temp <span class="kw">in</span> [<span class="fl">0.01</span>, <span class="fl">0.07</span>, <span class="fl">0.5</span>, <span class="fl">1.0</span>]:</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    probs <span class="op">=</span> F.softmax(similarities <span class="op">/</span> temp, dim<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"τ=</span><span class="sc">{</span>temp<span class="sc">:&lt;5}</span><span class="ss"> → probs: [</span><span class="sc">{</span><span class="st">', '</span><span class="sc">.</span>join(<span class="ss">f'</span><span class="sc">{</span>p<span class="sc">:.3f}</span><span class="ss">'</span> <span class="cf">for</span> p <span class="kw">in</span> probs)<span class="sc">}</span><span class="ss">]"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>τ=0.01  → probs: [1.000, 0.000, 0.000, 0.000, 0.000]
+τ=0.07  → probs: [0.943, 0.054, 0.003, 0.000, 0.000]
+τ=0.5   → probs: [0.381, 0.256, 0.171, 0.115, 0.077]
+τ=1.0   → probs: [0.287, 0.235, 0.192, 0.157, 0.129]</code></pre>
+</div>
+</div>
+<p><strong>Low τ</strong> (0.01-0.05): Only the hardest negatives contribute gradients. Learns very fine-grained distinctions but training is unstable – the loss landscape is spiky.</p>
+<p><strong>High τ</strong> (0.5-1.0): All negatives contribute roughly equally. Stable training but the model doesn’t learn to separate similar items. Everything clusters into broad blobs.</p>
+<p><strong>Sweet spot</strong> (0.05-0.1): Sharp enough to focus on hard negatives, smooth enough for stable gradients. CLIP uses 0.07 (learned). SimCLR uses 0.1. Most two-tower recommenders land in this range.</p>
+</section>
+<section id="in-batch-negatives" class="level3">
+<h3 class="anchored" data-anchor-id="in-batch-negatives">In-Batch Negatives</h3>
+<p>Instead of explicitly sampling negatives, use the other positives in the same batch as negatives. If the batch has <span class="math inline">\(B\)</span> (query, item) pairs, each query treats its own item as positive and the other <span class="math inline">\(B-1\)</span> items as negatives.</p>
+<div id="e69f7b2d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:55:17.856863Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:55:17.850774Z&quot;}}" data-execution_count="50">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> in_batch_contrastive_loss(query_emb, item_emb, temperature<span class="op">=</span><span class="fl">0.07</span>):</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">    query_emb: (B, D) — user/query embeddings</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">    item_emb: (B, D) — item embeddings (query_emb[i] pairs with item_emb[i])</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    query_emb <span class="op">=</span> F.normalize(query_emb, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    item_emb <span class="op">=</span> F.normalize(item_emb, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># All-pairs similarity matrix: (B, B)</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    sim_matrix <span class="op">=</span> query_emb <span class="op">@</span> item_emb.T <span class="op">/</span> temperature</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Diagonal entries are the positives</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> torch.arange(sim_matrix.size(<span class="dv">0</span>))</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> F.cross_entropy(sim_matrix, labels)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>B, D <span class="op">=</span> <span class="dv">512</span>, <span class="dv">128</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>query_emb <span class="op">=</span> torch.randn(B, D)</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>item_emb <span class="op">=</span> torch.randn(B, D)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> in_batch_contrastive_loss(query_emb, item_emb)</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"In-batch contrastive loss: </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>In-batch contrastive loss: 7.0379</code></pre>
+</div>
+</div>
+<p>Simple, efficient, no negative sampler needed. <strong>But there’s a catch:</strong> popular items appear in many batches, so they show up as negatives disproportionately often. The model learns to push popular items away from everything, which is the opposite of what you want (popular items are often relevant).</p>
+<p><strong>The fix: log-popularity correction.</strong> Subtract <span class="math inline">\(\log(p_j)\)</span> from each negative’s score, where <span class="math inline">\(p_j\)</span> is the item’s sampling probability (proportional to its frequency):</p>
+<div id="911cae2f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:50:35.321036Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:50:35.317816Z&quot;}}" data-execution_count="47">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> corrected_in_batch_loss(query_emb, item_emb, item_freq, temperature<span class="op">=</span><span class="fl">0.07</span>):</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    query_emb <span class="op">=</span> F.normalize(query_emb, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    item_emb <span class="op">=</span> F.normalize(item_emb, dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    sim_matrix <span class="op">=</span> query_emb <span class="op">@</span> item_emb.T <span class="op">/</span> temperature</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Subtract log-frequency to correct for popularity bias</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    log_correction <span class="op">=</span> torch.log(item_freq <span class="op">+</span> <span class="fl">1e-8</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    sim_matrix <span class="op">=</span> sim_matrix <span class="op">-</span> log_correction.unsqueeze(<span class="dv">0</span>)</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> torch.arange(sim_matrix.size(<span class="dv">0</span>))</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> F.cross_entropy(sim_matrix, labels)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This comes from the theory of sampled softmax: if your negatives are sampled from distribution <span class="math inline">\(Q\)</span> but you want to approximate the full softmax, you subtract <span class="math inline">\(\log Q(j)\)</span> from each sampled negative. Google’s two-tower retrieval paper showed this correction matters a lot in practice.</p>
+</section>
+<section id="hard-negative-mining" class="level3">
+<h3 class="anchored" data-anchor-id="hard-negative-mining">Hard Negative Mining</h3>
+<p>Random negatives are easy to distinguish – a cooking video vs.&nbsp;a car review. The model learns to separate these quickly and then stops improving. The interesting pairs are items that are <em>similar but wrong</em> – a cooking video the user didn’t click vs.&nbsp;one they did.</p>
+<p><strong>The two-phase strategy used in production:</strong></p>
+<p><strong>Phase 1: Train with random/in-batch negatives.</strong> Get a baseline model that has reasonable embeddings.</p>
+<p><strong>Phase 2: Mine hard negatives from the model’s own predictions.</strong> For each query, retrieve the top-K items using the Phase 1 model. Items in the top-K that are <em>not</em> relevant are your hard negatives. Re-train (or fine-tune) with a mix of hard and random negatives.</p>
+<div id="2857f7c1" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;ExecuteTime&quot;,&quot;value&quot;:{&quot;end_time&quot;:&quot;2026-02-22T20:50:58.813210Z&quot;,&quot;start_time&quot;:&quot;2026-02-22T20:50:58.809393Z&quot;}}" data-execution_count="48">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pseudocode for hard negative mining</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mine_hard_negatives(model, queries, positive_items, all_items, k<span class="op">=</span><span class="dv">100</span>, num_hard<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">    For each query, retrieve top-K with current model,</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">    filter out true positives, take the top `num_hard` as hard negatives.</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    hard_negatives <span class="op">=</span> []</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> q, pos_set <span class="kw">in</span> <span class="bu">zip</span>(queries, positive_items):</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Retrieve top-K from current model</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>        scores <span class="op">=</span> model.score(q, all_items)        <span class="co"># score all items</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>        top_k_indices <span class="op">=</span> scores.argsort()[<span class="op">-</span>k:][::<span class="op">-</span><span class="dv">1</span>]  <span class="co"># top K by score</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Filter: keep only items NOT in the positive set</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>        hard_negs <span class="op">=</span> [idx <span class="cf">for</span> idx <span class="kw">in</span> top_k_indices <span class="cf">if</span> idx <span class="kw">not</span> <span class="kw">in</span> pos_set]</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>        hard_negatives.append(hard_negs[:num_hard])</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> hard_negatives</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Training loop sketch</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Phase 1: train with random negatives for N epochs</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Phase 2: every M steps, re-mine hard negatives, mix 50/50 with random</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Why mix hard and random?</strong> Pure hard negatives cause the model to oscillate – it fixes one hard pair, which changes the top-K, which creates new hard pairs that break old ones. Mixing with random negatives acts as a regularizer, keeping the embedding space globally coherent while fine-tuning boundaries.</p>
+<p><strong>How much does this matter?</strong> Typically the single biggest improvement you can make to a retrieval model. Going from random-only to hard negative mining can improve Recall@100 by 10-30% depending on the domain.</p>
+</section>
+<section id="the-connection-back-to-other-losses" class="level3">
+<h3 class="anchored" data-anchor-id="the-connection-back-to-other-losses">The Connection Back to Other Losses</h3>
+<p>InfoNCE with in-batch negatives is algebraically equivalent to:</p>
+<ul>
+<li><strong>Sampled softmax</strong> (Section 4) when the “classes” are items in the batch</li>
+<li><strong>Multi-class cross-entropy</strong> where each item gets one positive class</li>
+</ul>
+<p>The differences are in framing, not math:</p>
+<ul>
+<li>Softmax CE: “classify this query to the right item”</li>
+<li>InfoNCE: “make this query-item pair more similar than other pairs”</li>
+<li>Both produce the same gradients.</li>
+</ul>
+<p>The real difference is <strong>what negatives you use</strong> and <strong>how you sample them</strong>, not the loss formula itself.</p>
+</section>
+</section>
+<section id="choosing-the-right-loss" class="level2">
+<h2 class="anchored" data-anchor-id="choosing-the-right-loss">Choosing the Right Loss</h2>
+<section id="by-stage" class="level3">
+<h3 class="anchored" data-anchor-id="by-stage">By Stage</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Stage</th>
+<th>Loss</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Retrieval</strong> (two-tower, ANN)</td>
+<td>Sampled softmax / InfoNCE</td>
+<td>You need embeddings where nearest neighbors are relevant items. Contrastive losses learn this space directly. Softmax over the batch is cheap and effective.</td>
+</tr>
+<tr class="even">
+<td><strong>Ranking</strong> (CTR/CVR prediction)</td>
+<td>BCE</td>
+<td>Downstream systems need calibrated probabilities, not just orderings. Auction mechanisms, score fusion across multiple models, and business rules all depend on “this item has a 4.2% click probability,” not “this item is better than that one.”</td>
+</tr>
+<tr class="odd">
+<td><strong>Ranking</strong> (order optimization)</td>
+<td>LambdaRank / LambdaMART</td>
+<td>When the final metric is NDCG or MAP and you have graded relevance labels. Common in search, less common in recommendations where labels are binary.</td>
+</tr>
+<tr class="even">
+<td><strong>Embedding learning</strong> (similarity)</td>
+<td>Contrastive / Triplet / Hinge</td>
+<td>Goal is a distance metric, not a ranked list. User-to-user similarity, item-to-item similarity, content understanding.</td>
+</tr>
+<tr class="odd">
+<td><strong>Collaborative filtering</strong> (MF)</td>
+<td>BPR</td>
+<td>Clean pairwise optimization for implicit feedback with matrix factorization. If you’re using ALS or SGD-based MF, BPR is the default.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="by-data-type" class="level3">
+<h3 class="anchored" data-anchor-id="by-data-type">By Data Type</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Your Data Looks Like</th>
+<th>Loss</th>
+<th>Reasoning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Binary implicit (click/no-click)</td>
+<td>BCE or BPR</td>
+<td>BCE if you need probabilities, BPR if you need ranking</td>
+</tr>
+<tr class="even">
+<td>Binary implicit + embeddings</td>
+<td>InfoNCE / sampled softmax</td>
+<td>Learning retrieval representations</td>
+</tr>
+<tr class="odd">
+<td>Explicit ratings (1-5 stars)</td>
+<td>MSE</td>
+<td>Predicting the rating value itself</td>
+</tr>
+<tr class="even">
+<td>Graded relevance (0/1/2/3)</td>
+<td>LambdaRank</td>
+<td>Multiple relevance levels, NDCG is the right metric</td>
+</tr>
+<tr class="odd">
+<td>Pairwise preferences (A &gt; B)</td>
+<td>BPR / Hinge</td>
+<td>Data is already in pairwise form</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="common-mistakes" class="level3">
+<h3 class="anchored" data-anchor-id="common-mistakes">Common Mistakes</h3>
+<p><strong>1. Using BCE for retrieval.</strong> BCE optimizes per-item accuracy, not embedding geometry. Your embeddings might be accurate classifiers but form a useless nearest-neighbor space – items with similar scores don’t end up close in embedding space.</p>
+<p><strong>2. Skipping log-popularity correction with in-batch negatives.</strong> Popular items get pushed away from everything. Your retrieval model develops a systematic bias against the items users actually want most.</p>
+<p><strong>3. Using only random negatives.</strong> The model quickly learns to separate obviously different items and then plateaus. Hard negative mining is almost always the highest-ROI improvement for retrieval quality.</p>
+<p><strong>4. Choosing LambdaRank when labels are binary.</strong> With binary labels (relevant / not relevant), ΔNDCG reduces to a function of position only. LambdaRank still works but the advantage over pairwise losses is smaller. LambdaRank shines with graded relevance (0/1/2/3) where the gain differences between grades create richer gradient signals.</p>
+<p><strong>5. Optimizing one loss, evaluating another.</strong> Training on BCE, evaluating on NDCG, and being surprised they don’t correlate. As Section 2 showed, these can diverge. If your evaluation metric is NDCG, at minimum add a pairwise or listwise loss component.</p>
+</section>
+<section id="multi-loss-training" class="level3">
+<h3 class="anchored" data-anchor-id="multi-loss-training">Multi-Loss Training</h3>
+<p>Production systems often combine losses. A retrieval model might use:</p>
+<p><span class="math display">\[\mathcal{L} = \mathcal{L}_{\text{InfoNCE}} + \alpha \cdot \mathcal{L}_{\text{BCE}}\]</span></p>
+<p>InfoNCE shapes the embedding space for retrieval. The BCE term on a side prediction head keeps the model calibrated for downstream use. The weight <span class="math inline">\(\alpha\)</span> is tuned to prevent one loss from dominating.</p>
+<p>Similarly, a ranking model might use:</p>
+<p><span class="math display">\[\mathcal{L} = \mathcal{L}_{\text{BCE}} + \beta \cdot \mathcal{L}_{\text{pairwise}}\]</span></p>
+<p>BCE handles calibration. The pairwise term directly penalizes misordered pairs that BCE might miss (the Model A vs.&nbsp;Model B problem from Section 2).</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aayushmnit\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.dev/aayushmnit/aayushmnit.github.io/blob/main/notes/2026-02-22-LossFunctions.ipynb" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
