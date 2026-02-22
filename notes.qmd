@@ -1,0 +1,14 @@
+---
+title: "Notes"
+listing:
+  contents: notes
+  sort: "date desc"
+  type: table
+  categories: true
+  sort-ui: true
+  filter-ui: true
+  fields: [date, title, categories]
+  feed: false
+page-layout: full
+title-block-banner: false
+---

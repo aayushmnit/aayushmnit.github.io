@@ -1,0 +1,272 @@
+---
+title: 'Two-Tower Networks'
+author: "Aayush Agrawal"
+date: "2026-02-21"
+categories: [RecSys, ML]
+---
+
+Two-tower networks (also called Dual Encoders or DSSM — Deep Structured Semantic Models) are the **dominant architecture for large-scale retrieval** in recommendation systems, search, and ads. They're used at Google, Meta, Amazon, YouTube, LinkedIn, and virtually every company operating at scale.
+
+### The Core Idea
+
+The fundamental insight is **decomposing the scoring function** into two independent parts:
+
+```
+score(user, item) = f(user_features) · g(item_features) = uᵤ · vᵢ
+```
+
+* **User tower** `f(·)`: A neural network that takes user features as input and outputs a dense user embedding vector `uᵤ ∈ ℝᵈ`
+* **Item tower** `g(·)`: A separate neural network that takes item features as input and outputs a dense item embedding vector `vᵢ ∈ ℝᵈ`
+* **Score**: The dot product (or cosine similarity) between the two embeddings
+
+The two towers share **no parameters** and have **no cross-feature interactions**. This restriction is what makes the architecture so powerful for serving.
+
+
+### Why This Architecture?
+
+The problem: at Amazon or Meta, you have hundreds of millions of items and need to find the best ~1000 candidates for a user **within milliseconds**. You can't run a complex model on every (user, item) pair — that's O(N) full model forward passes per request.
+
+Two-tower solves this with a **pre-compute + ANN retrieval** strategy:
+
+1. **Offline:** Run the item tower on every item in the catalog. Store all item embeddings `vᵢ` in an Approximate Nearest Neighbor (ANN) index (FAISS, ScaNN, HNSW).
+2. **Online (per request):** Run the user tower *once* to get `uᵤ`. Then do ANN lookup to find the top-K item embeddings closest to `uᵤ`.
+
+ANN lookup on millions of items takes **sub-millisecond** time. So total retrieval latency is dominated by the single user tower forward pass — typically a few milliseconds.
+
+This is why two-tower is used for **retrieval** (the first stage of the funnel), not for ranking. Ranking models (which see only hundreds of candidates) can afford cross-feature interactions.
+
+
+### Architecture Details
+
+**User Tower Input Features:**
+
+* User ID embedding (learned)
+* Demographics: age, gender, country, locale
+* Behavioral features: recent interaction history (item IDs, categories, timestamps)
+* Contextual features: time of day, day of week, device type, session length
+* Aggregated statistics: purchase frequency, average order value, category distribution
+
+For sequence features (e.g., last 50 items viewed), common approaches:
+
+* Average pooling of item embeddings (simplest)
+* Attention pooling (weighted by recency or learned weights)
+* Transformer/GRU encoder over the sequence
+
+**Item Tower Input Features:**
+
+* Item ID embedding (learned)
+* Category / taxonomy features
+* Text features: title, description → pre-trained text encoder (BERT-based) or learned embeddings
+* Image features: product image → pre-trained vision encoder (ResNet, ViT)
+* Numerical features: price, rating, review count, popularity
+* Item metadata: brand, seller, availability
+
+**Network Architecture:**
+Typically each tower is an MLP with 2-4 layers, ReLU or GELU activations, batch normalization or layer normalization, and dropout. Embedding dimension `d` is typically 64–256.
+
+```
+User Tower:                          Item Tower:
+┌──────────────┐                     ┌──────────────┐
+│ User Features │                     │ Item Features │
+└──────┬───────┘                     └──────┬───────┘
+       │                                    │
+  ┌────▼────┐                          ┌────▼────┐
+  │ Dense   │                          │ Dense   │
+  │ 512     │                          │ 512     │
+  │ + ReLU  │                          │ + ReLU  │
+  └────┬────┘                          └────┬────┘
+       │                                    │
+  ┌────▼────┐                          ┌────▼────┐
+  │ Dense   │                          │ Dense   │
+  │ 256     │                          │ 256     │
+  │ + ReLU  │                          │ + ReLU  │
+  └────┬────┘                          └────┬────┘
+       │                                    │
+  ┌────▼────┐                          ┌────▼────┐
+  │ Dense   │                          │ Dense   │
+  │ 128     │                          │ 128     │
+  │ L2 Norm │                          │ L2 Norm │
+  └────┬────┘                          └────┬────┘
+       │                                    │
+       ▼                                    ▼
+    uᵤ ∈ ℝ¹²⁸                          vᵢ ∈ ℝ¹²⁸
+
+         score = uᵤ · vᵢ
+```
+
+L2 normalization of the final embeddings is common — it converts the dot product into cosine similarity and stabilizes training.
+
+
+### Training
+
+**Task:** Given a (user, item) pair from logged interactions, the model should score the positive item higher than unrelated (negative) items.
+
+**Loss Functions:**
+
+**1. Softmax Cross-Entropy with In-Batch Negatives** (most common in practice)
+
+For a batch of B positive (user, item) pairs, compute the B × B score matrix. For user `i`, the positive item is item `i`, and the other B-1 items in the batch serve as negatives.
+
+```
+loss_i = -log( exp(uᵢ · vᵢ / τ) / Σⱼ exp(uᵢ · vⱼ / τ) )
+```
+
+where τ is a temperature parameter (typically 0.05–0.1). This is essentially a B-way classification problem.
+
+**Advantage:** You get B-1 negatives "for free" — no separate negative sampling needed. Very efficient.
+
+**Problem — Popularity Bias:** In-batch negatives are sampled proportional to item frequency (popular items appear in more batches). This means popular items serve as negatives more often, which *underestimates* their scores. Conversely, the model overpredicts for popular items if not corrected.
+
+**Correction:** Google's seminal two-tower paper (Yi et al., 2019) introduced **logQ correction** — subtract `log(p(item))` from the logit, where `p(item)` is the item's sampling probability (proportional to frequency). This effectively corrects for the non-uniform negative sampling distribution.
+
+**2. Sampled Softmax:**
+
+Instead of in-batch negatives, explicitly sample K negatives per positive from a distribution (uniform, popularity-weighted, or a mixture). More control over the negative distribution but less computationally efficient.
+
+**3. Triplet Loss / BPR:**
+
+```
+loss = max(0, margin + uᵤ · v_neg * uᵤ · v_pos)
+```
+
+Pairwise: score for positive should exceed score for negative by a margin. Simpler but typically worse than softmax-based losses at scale.
+
+**Hard Negative Mining:**
+
+Not all negatives are equal. A random negative (e.g., recommending diapers to a 20-year-old male) is trivially easy — the model learns nothing from it. **Hard negatives** — items that are plausible but wrong — provide the most learning signal.
+
+Strategies:
+
+* **Semi-hard negatives:** Items that the model currently ranks close to the positive but are actually negative
+* **ANN-mined negatives:** Periodically run inference, use the model's own top-K retrievals that aren't positive as negatives for the next training round
+* **Cross-batch negatives:** Maintain a memory bank of recent embeddings (MoCo-style) for a larger effective negative pool
+* **Mixing strategy:** Use a mixture — some random negatives for coverage, some hard negatives for precision
+
+
+### Key Design Decisions & Tradeoffs
+
+**1. What goes in which tower?**
+
+The strict rule: any feature that depends on *both* user and item **cannot** be used. Features like "does this user's size preference match this item's available sizes?" require cross-features and must be deferred to the ranking model. Each tower only sees features from its own entity.
+
+However, there's a gray area: you can inject **some** item context into the user tower via the user's history. For example, encoding the user's last 50 interacted item IDs effectively puts item information into the user tower. This is one of the most impactful design choices — how much behavioral history to encode, and how.
+
+**2. Dot product vs. cosine similarity vs. learned similarity**
+
+* **Dot product:** The standard choice because ANN indexes (FAISS, ScaNN) are optimized for it. Allows the magnitude of embeddings to encode "confidence" or "popularity."
+* **Cosine similarity:** L2-normalize both embeddings. Removes magnitude information but stabilizes training and makes temperature more interpretable.
+* In practice, cosine with temperature (τ) is most common.
+
+**3. Temperature τ**
+
+Controls the "peakiness" of the softmax distribution:
+
+* Low τ (e.g., 0.05): Sharp distribution — model is very decisive, but gradients concentrate on the hardest examples. Can cause training instability.
+* High τ (e.g., 1.0): Flat distribution — model treats all negatives more equally, smoother training but less discriminative.
+* Typical range: 0.05–0.2. Often treated as a learned parameter.
+
+**4. Feature hashing for IDs**
+
+With hundreds of millions of items, a full item ID embedding table is enormous. Common strategies:
+
+* **Hashing trick:** Hash IDs into a smaller bucket space (e.g., 10M buckets). Accepts some collision.
+* **Compositional embeddings:** Represent each ID as a combination of multiple smaller hash embeddings (quotient-remainder trick).
+* **Frequency-based:** Full embeddings for high-frequency items, hashed for tail items.
+
+
+### Limitations & How They're Addressed
+
+**1. No cross-feature interactions**
+
+The dot product `uᵤ · vᵢ` is a bilinear function — it cannot capture complex user-item interactions like "this user only likes red shoes in winter." This is *by design* (for serving efficiency) but limits expressiveness.
+
+**Solution:** Two-tower handles **retrieval** (finding ~1000 candidates from millions). A separate, more powerful **ranking model** (Wide&Deep, DCN-v2, DIN, etc.) that can use cross-features handles the precise ordering.
+
+**2. Staleness of item embeddings**
+
+Item embeddings are pre-computed periodically (e.g., daily). If an item's features change (price drop, new reviews, trending status), the index is stale until the next refresh.
+
+**Solutions:**
+
+* Frequent re-indexing (every few hours)
+* Streaming updates for fast-changing features
+* Use only stable features in the item tower, fast-changing features in the ranker
+
+**3. Folding — Popularity collapse**
+
+A known failure mode where the model "folds" the embedding space — popular items cluster at the center, and all user embeddings point toward them. The model effectively becomes a popularity recommender.
+
+**Solutions:**
+
+* LogQ correction (mentioned above)
+* Regularization on embedding norms
+* Negative sampling strategies that upsample rare items
+
+**4. Cold-start items**
+
+A brand new item has no interaction data, but it *does* have content features (title, image, category). The item tower can produce a reasonable embedding from these alone — this is a major advantage of two-tower over pure CF approaches. The embedding quality improves as interactions accumulate.
+
+
+### Serving Architecture
+
+```
+┌─────────────────────────────────────────┐
+│              Offline Pipeline            │
+│                                          │
+│  All Items → Item Tower → Item Embeddings│
+│                    ↓                     │
+│           ANN Index (FAISS/ScaNN)        │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│              Online Serving              │
+│                                          │
+│  User Request → User Tower → uᵤ         │
+│                    ↓                     │
+│        ANN Lookup: top-K items           │
+│           nearest to uᵤ                  │
+│                    ↓                     │
+│         Candidate set (~1000)            │
+│                    ↓                     │
+│           Ranking Model                  │
+└─────────────────────────────────────────┘
+```
+
+**ANN Indexes:**
+
+* **FAISS** (Meta): GPU-accelerated, supports IVF (inverted file) + PQ (product quantization). Billions of vectors.
+* **ScaNN** (Google): Anisotropic vector quantization — preserves inner product better than symmetric quantization.
+* **HNSW** (Hierarchical Navigable Small World): Graph-based, excellent recall, higher memory.
+* Tradeoff: recall vs. latency vs. memory. Typical target: 95%+ recall@1000 in <5ms.
+
+
+### Multi-Task Two-Tower
+
+In practice, you don't just predict "will the user interact?" — you predict multiple objectives: click, add-to-cart, purchase, long-view, share, etc.
+
+**Approach 1: Shared towers, multiple heads**
+
+* Shared user/item towers produce embeddings
+* Separate prediction heads (one per task) on top of the concatenated or combined embeddings
+* Risk: task interference (optimizing for clicks hurts purchase prediction)
+
+**Approach 2: Separate towers per task**
+
+* Each objective gets its own two-tower model
+* More parameters, no interference, but N× the serving cost
+* In practice, a compromise: shared bottom layers, task-specific top layers (MMoE — Multi-gate Mixture of Experts)
+
+**Approach 3: Multi-objective retrieval**
+
+* Produce a single embedding but train with a weighted combination of losses across objectives
+* The weighting determines the retrieval tradeoff (e.g., 70% click-oriented, 30% purchase-oriented)
+
+
+### Variants & Extensions
+
+* **Multi-Tower:** Add a third tower for context (time, location, device) that modulates the interaction. Score = f(u, c) · g(i).
+* **Mixture of Representation (Google):** User tower outputs K different embeddings to represent different user intents. Each embedding retrieves from the same item index independently, then results are merged. Captures multi-interest users.
+* **Path-specific towers:** Different sub-networks activated based on user segment or context, sharing some layers.
+* **Sequential Two-Tower:** Replace the user tower with a transformer over the user's interaction sequence. The output embedding is context-dependent — it changes based on what the user just did in this session.
+
+

@@ -1,0 +1,134 @@
+---
+title: 'PreDL Recsys'
+author: "Aayush Agrawal"
+date: "2026-02-21"
+categories: [RecSys, ML]
+---
+
+Some of the popular pre deep learning RecSys models.
+
+
+| Model Name | Mechanisms | Characteristics | Limitations |
+|---|---|---|---|
+| **Collaborative Filtering** | Generate a user–item co-occurrence matrix based on the user's behavior history, and use user similarity and item similarity for recommendation | The concept is simple, straightforward, and widely used | Poor generalization ability, lack of ability to deal with sparse matrices, and obvious popularity bias in the recommendation results |
+| **Matrix Factorization** | Decompose the co-occurrence matrix in the collaborative filtering algorithm into a user matrix and an item matrix; the inner product of the user latent vector and the item latent vector is used to compute the ranking score for recommendation | Compared with collaborative filtering, the generalization ability has been strengthened, and the processing ability of sparse matrices has been improved | It is difficult to use contextual information and additional user/item features other than users' historical behavior data |
+| **Logistic Regression** | Convert the recommendation problem into a binary classification problem such as CTR estimation; Convert different features like users, items, and contexts into feature vectors, and input into the logistic regression model to get the CTR prediction. Then sort by the predicted CTR score | Ability to integrate multiple types of features | The model does not have the ability to combine features, and shows poor expressivity |
+| **FM** | Based on logistic regression, the second-order interacted features are added to the model; the corresponding feature latent vectors are obtained for each dimension through training; the interacted feature weights are obtained by the inner product between the latent vectors | Compared with logistic regression, it includes second-order feature interactions, and the expressivity of the model is enhanced | Due to the limitation of combinatorial explosion problem, the model is not easily extended to third-order feature interactions |
+| **FFM** | Based on FM models, the concept of "feature field" is added, so that each feature adopts different latent vectors when it interacts with features from different fields | Compared with FM, it further strengthens the ability of feature interaction | The training complexity of the model has reached O(n²) and the training overhead is relatively large |
+| **GBDT+LR** | Use GBDT for automatic feature interaction; convert the original feature vectors into new discrete feature vectors, and input it into the logistic regression model for final CTR prediction | Feature engineering modeling, so that the model has the ability for higher-order feature interactions | GBDT cannot perform fully parallelized training, so the training time is relatively long for model updates |
+| **LS-PLM** | First partition the whole training sample; then build a logistic regression model inside each partition, and perform a weighted average of the partition probability of each sample and the logistic regression score to obtain the final prediction | The model structure is similar to a three-layer neural network, with strong expressivity | Compared with the deep learning model, the model structure is still relatively simple, and there is room for further improvement |
+
+## Collaborative Filtering (CF)
+
+*Core assumption:* Users who agreed in the past will agree in the future. You don't need to know *what* an item is — only *who* interacted with it.
+
+**Memory-based CF:**
+
+- **User-based:** Find users similar to the target user (via cosine similarity, Pearson correlation over rating vectors), recommend what those neighbors liked. Problem: user vectors are extremely sparse and user behavior drifts.
+- **Item-based:** Find items similar to the target item based on co-interaction patterns. Amazon pioneered this in the early 2000s ("customers who bought X also bought Y"). More stable than user-based because item similarity changes less than user similarity.
+- Similarity metrics: cosine similarity, Pearson correlation, Jaccard index.
+- Weakness: Sparsity (most users interact with <0.1% of items), cold start (no interactions = no signal), doesn't scale naively (O(n²) similarity computation).
+
+**Model-based CF:**
+
+- **Matrix Factorization (MF):** The workhorse of classical CF. Decompose the user-item interaction matrix R ≈ P·Qᵀ, where P is user embeddings and Q is item embeddings, both of dimension k (typically 50-200). The predicted rating for user u on item i is the dot product pᵤ · qᵢ.
+  - **ALS (Alternating Least Squares):** Fix P, solve for Q, then fix Q, solve for P. Parallelizes well for implicit feedback (Hu, Koren & Volinsky 2008). This is what powered early Amazon and Spotify recommendations.
+  - **SGD-based:** Standard gradient descent on observed entries. BPR (Bayesian Personalized Ranking) is the key loss function for implicit feedback — it optimizes pairwise ordering: a user should prefer an observed item over an unobserved one.
+  - **SVD++:** Koren's extension that adds implicit feedback signals (items a user has interacted with, regardless of rating) into the user embedding.
+  - Regularization is critical — without it, MF overfits to observed entries.
+- **Strengths:** Learns latent features automatically, handles sparsity better than memory-based, scales to millions of users/items.
+- **Weaknesses:** Still can't handle new users/items, doesn't incorporate side features naturally, assumes a static low-rank structure.
+
+## Content-Based Filtering
+
+*Core assumption:* Recommend items similar to what the user has liked before, based on item features.
+
+- Build a **user profile** from features of items they've engaged with (TF-IDF of product descriptions, category distributions, brand preferences).
+- Score new items by similarity between item features and user profile.
+- Strengths: No cold-start problem *for items* (as long as you have item features), provides explainable recommendations ("because you bought running shoes").
+- Weaknesses: Over-specialization / filter bubble (never recommends outside user's established taste), cold-start *for users* (no profile to build on), quality depends heavily on feature engineering.
+- In shopping context: product attributes (brand, category, price range, color, material), product descriptions (NLP embeddings), product images (visual embeddings).
+
+
+## FFM — Field-aware Factorization Machines (Juan et al., 2016)
+
+**Problem with FM:** In FM, each feature has *one* latent vector, and it uses that same vector when interacting with every other feature. But intuitively, how "Nike" interacts with the feature "user_gender=male" should be different from how "Nike" interacts with "product_category=shoes."
+
+**Key idea:** Each feature gets a *separate* latent vector for each **field** it might interact with. If there are f fields, each feature has f embedding vectors instead of 1.
+
+- FM interaction: ⟨vᵢ, vⱼ⟩  
+- FFM interaction: ⟨vᵢ,ₖⱼ, vⱼ,ₖᵢ⟩ — feature i uses the embedding trained for field fⱼ, and vice versa.
+
+**Example:** Fields might be {user, item, context, advertiser}. The feature "Nike" has separate embeddings for interacting with user features, context features, and advertiser features.
+
+**Tradeoff:**
+- FM has n·k parameters (n features × k dimensions)
+- FFM has n·f·k parameters — **f times larger**
+- This gives FFM significantly better expressiveness for feature interactions, but training complexity goes from O(nk) to O(n²k), and the model is much larger.
+
+**Why it matters:** FFM won two Criteo CTR prediction competitions on Kaggle and became the standard for ad click prediction before deep learning took over. It's the direct precursor to the "field-aware" thinking that shows up in modern architectures.
+
+**Connection to deep models:** DeepFM essentially replaces FFM's explicit computation with shared embeddings + an MLP. The "field" concept persists in how modern models group features into semantic fields for embedding lookup.
+
+## GBDT + LR (Facebook, 2014)
+
+**This is a landmark paper** — "Practical Lessons from Predicting Clicks on Ads at Facebook" by He et al.
+
+**Key idea:** Use Gradient Boosted Decision Trees to **automatically create feature crosses**, then feed those as input to Logistic Regression.
+
+**How it works:**
+
+1. Train a GBDT (e.g., 500 trees, each with ~64 leaves) on raw features.
+2. For each input example, record which **leaf node** it lands in for each tree. Each tree produces a one-hot vector (which of the 64 leaves was activated).
+3. Concatenate all leaf one-hot vectors → a binary feature vector of length 500 × 64 = 32,000.
+4. Feed this into a Logistic Regression model for final CTR prediction.
+
+**Why it works:**
+
+- Each tree path from root to leaf represents a learned **feature conjunction** (e.g., "age > 25 AND category = electronics AND time = evening"). The GBDT automatically discovers the most informative crosses.
+- LR on top provides calibrated probabilities and is fast to serve.
+- Much more powerful than manual feature crosses but interpretable and fast.
+
+**Limitations:**
+
+- GBDT can't be fully parallelized during training (trees are sequential by nature), making model updates slow.
+- The feature transformation is **fixed** after GBDT training — the LR can't influence what crosses the GBDT learns. No end-to-end training.
+- Doesn't handle high-cardinality sparse features well (user IDs, item IDs) — trees split poorly on these.
+
+**Historical significance:** This was **the** production CTR model at Facebook before deep learning, and the paper established many practical lessons (importance of data freshness, feature importance, calibration) that still apply. It's the direct predecessor of Wide & Deep — conceptually, GBDT plays the "wide" role (memorization of crosses) and LR plays a simple prediction role. Wide & Deep replaced GBDT with learned crosses and LR with a deep network.
+
+## LS-PLM — Large Scale Piece-wise Linear Model (Alibaba, 2017)
+
+Also known as **MLR (Mixed Logistic Regression)**.
+
+**Key idea:** The feature space is too complex for a single linear model, but a **mixture of linear models**, each specializing in a different region of the input space, can capture non-linear patterns.
+
+**How it works:**
+
+1. A **gating/partition function** (softmax over m linear classifiers) divides the input space into m regions.
+2. Each region has its own **logistic regression** model.
+3. Final prediction: P(click) = Σᵢ πᵢ(x) · σ(wᵢᵀx), where πᵢ(x) is the gating weight for region i and σ(wᵢᵀx) is that region's logistic regression prediction.
+4. Trained end-to-end with L1 + L2 regularization (L1 for sparsity — critical at Alibaba's feature scale).
+
+**Intuition:** It's a "divide and conquer" approach. One region might learn "young male users clicking on electronics" with its own weights, while another handles "older female users browsing fashion." Each local LR is simple, but the mixture is expressive.
+
+**Characteristics:**
+- Structure is similar to a **shallow 3-layer neural network** (input → softmax gating → regional LR → output), but the piece-wise linearity makes it more interpretable.
+- Scales well to extremely sparse, high-dimensional feature spaces (Alibaba's ad system).
+- Sparsity from L1 regularization keeps serving fast.
+
+**Limitations:** Compared to deep learning, the model is still relatively shallow — it can capture interactions within each region but has limited ability to learn the deep hierarchical feature representations that modern models capture.
+
+
+## Lineage
+
+```
+LR (baseline)
+ ↓  "need feature interactions"
+FM → FFM
+ ↓  "need automatic feature crosses"
+GBDT + LR
+ ↓  "need end-to-end learning + deep features"
+LS-PLM (divide & conquer linear models)
+ ↓  "need memorization + generalization"
+```

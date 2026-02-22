@@ -70,5 +70,14 @@
       "/posts/2018-04-17-Business_usecases_by_recommender_system_using_lightFM/index.html",
       "/posts/2018-02-19-launch/index.html"
     ]
+  },
+  {
+    "listing": "/notes.html",
+    "items": [
+      "/notes/2026-02-21-DLRecsys.html",
+      "/notes/2026-02-21-PreDLRecsys.html",
+      "/notes/2026-02-21-twotower.html",
+      "/notes/2026-02-05-LLMxRecsys.html"
+    ]
   }
 ]

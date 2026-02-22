@@ -175,5 +175,20 @@
   },
   "talks/2026-02-05-AIxRecSys/index.qmd": {
     "index.html": "2b618383"
+  },
+  "notes/2026-02-21-twotower.qmd": {
+    "2026-02-21-twotower.html": "93545796"
+  },
+  "notes.qmd": {
+    "notes.html": "912fd265"
+  },
+  "notes/2026-02-05-LLMxRecsys.qmd": {
+    "2026-02-05-LLMxRecsys.html": "fc78a0a3"
+  },
+  "notes/2026-02-21-PreDLRecsys.qmd": {
+    "2026-02-21-PreDLRecsys.html": "0048948a"
+  },
+  "notes/2026-02-21-DLRecsys.qmd": {
+    "2026-02-21-DLRecsys.html": "d96f7662"
   }
 }

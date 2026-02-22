@@ -8,6 +8,9 @@
     ],
     "talks.qmd": [
       "talks"
+    ],
+    "notes.qmd": [
+      "notes"
     ]
   }
 }
