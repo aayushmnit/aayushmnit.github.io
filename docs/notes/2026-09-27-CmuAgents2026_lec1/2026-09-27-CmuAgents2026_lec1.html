@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Aayush Agrawal">
+<meta name="dcterms.date" content="2026-09-27">
 
-<title>Notes – Aayush Agrawal</title>
+<title>CMU Agents 2026 - Lec 1 – Aayush Agrawal</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,32 +22,65 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8fedceaa9c5b51e05daa085a98af5997.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-af8a908a13f4fda948c7407926ad6c39.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-8fedceaa9c5b51e05daa085a98af5997.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-8fedceaa9c5b51e05daa085a98af5997.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-af8a908a13f4fda948c7407926ad6c39.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-8fedceaa9c5b51e05daa085a98af5997.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,35 +108,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-7QN8N70N41"></script>
 
 <script type="text/javascript">
@@ -112,42 +118,21 @@ gtag('js', new Date());
 gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Notes – Aayush Agrawal">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="CMU Agents 2026 - Lec 1 – Aayush Agrawal">
+<meta property="og:description" content="Aayush’s personal website">
+<meta property="og:image" content="https://aayushmnit.com/notes/2026-09-27-CmuAgents2026_lec1/img/1_agents.png">
 <meta property="og:site_name" content="Aayush Agrawal">
-<meta name="twitter:title" content="Notes – Aayush Agrawal">
+<meta property="og:image:height" content="229">
+<meta property="og:image:width" content="597">
+<meta name="twitter:title" content="CMU Agents 2026 - Lec 1 – Aayush Agrawal">
+<meta name="twitter:description" content="Aayush’s personal website">
+<meta name="twitter:image" content="https://aayushmnit.com/notes/2026-09-27-CmuAgents2026_lec1/img/1_agents.png">
 <meta name="twitter:creator" content="@aayushmnit">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image-height" content="229">
+<meta name="twitter:image-width" content="597">
 </head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -319,7 +304,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Aayush Agrawal</span>
     </a>
   </div>
@@ -330,17 +315,17 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> <i class="bi bi-house" role="img">
+    <a class="nav-link" href="../../index.html"> <i class="bi bi-house" role="img">
 </i> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog.html"> <i class="bi bi-newspaper" role="img">
+    <a class="nav-link" href="../../blog.html"> <i class="bi bi-newspaper" role="img">
 </i> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> <i class="bi bi-file-person" role="img">
+    <a class="nav-link" href="../../about.html"> <i class="bi bi-file-person" role="img">
 </i> 
 <span class="menu-text">About</span></a>
   </li>  
@@ -352,7 +337,7 @@ window.Quarto = {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-other">    
         <li>
-    <a class="dropdown-item" href="./talks.html"><i class="bi bi-megaphone" role="img">
+    <a class="dropdown-item" href="../../talks.html"><i class="bi bi-megaphone" role="img">
 </i> 
  <span class="dropdown-text">Talks</span></a>
   </li>  
@@ -362,7 +347,7 @@ window.Quarto = {
  <span class="dropdown-text">Pytorch Book</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./other/carlson.html"><i class="bi bi-box-arrow-up-right" role="img">
+    <a class="dropdown-item" href="../../other/carlson.html"><i class="bi bi-box-arrow-up-right" role="img">
 </i> 
  <span class="dropdown-text">Carlson Q&amp;A</span></a>
   </li>  
@@ -401,7 +386,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./blog.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../blog.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -414,26 +399,73 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(7)</span></div><div class="category" data-category="QWdlbnRz">Agents <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Q01VJTIwQWdlbnRzJTIwMjAyNg==">CMU Agents 2026 <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExNcw==">LLMs <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUw=">ML <span class="quarto-category-count">(6)</span></div><div class="category" data-category="UmVjU3lz">RecSys <span class="quarto-category-count">(6)</span></div></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ai-agents-foundations-capabilities-and-system-design" id="toc-ai-agents-foundations-capabilities-and-system-design" class="nav-link active" data-scroll-target="#ai-agents-foundations-capabilities-and-system-design">AI Agents: Foundations, Capabilities, and System Design</a>
+  <ul class="collapse">
+  <li><a href="#why-ai-agents-matter" id="toc-why-ai-agents-matter" class="nav-link" data-scroll-target="#why-ai-agents-matter">Why AI Agents Matter</a>
+  <ul class="collapse">
+  <li><a href="#a-useful-boundary-exercise" id="toc-a-useful-boundary-exercise" class="nav-link" data-scroll-target="#a-useful-boundary-exercise">A useful boundary exercise</a></li>
+  </ul></li>
+  <li><a href="#what-is-an-ai-agent" id="toc-what-is-an-ai-agent" class="nav-link" data-scroll-target="#what-is-an-ai-agent">What Is an AI Agent?</a>
+  <ul class="collapse">
+  <li><a href="#agent-versus-chatbot" id="toc-agent-versus-chatbot" class="nav-link" data-scroll-target="#agent-versus-chatbot">Agent versus chatbot</a></li>
+  </ul></li>
+  <li><a href="#examples-of-current-agent-capabilities" id="toc-examples-of-current-agent-capabilities" class="nav-link" data-scroll-target="#examples-of-current-agent-capabilities">Examples of Current Agent Capabilities</a>
+  <ul class="collapse">
+  <li><a href="#computer-use-agents" id="toc-computer-use-agents" class="nav-link" data-scroll-target="#computer-use-agents">Computer-use agents</a></li>
+  <li><a href="#coding-agents" id="toc-coding-agents" class="nav-link" data-scroll-target="#coding-agents">Coding agents</a></li>
+  </ul></li>
+  <li><a href="#the-agent-environment" id="toc-the-agent-environment" class="nav-link" data-scroll-target="#the-agent-environment">The Agent Environment</a>
+  <ul class="collapse">
+  <li><a href="#observations" id="toc-observations" class="nav-link" data-scroll-target="#observations">Observations</a></li>
+  <li><a href="#actions" id="toc-actions" class="nav-link" data-scroll-target="#actions">Actions</a></li>
+  <li><a href="#rewards-and-success-signals" id="toc-rewards-and-success-signals" class="nav-link" data-scroll-target="#rewards-and-success-signals">Rewards and success signals</a></li>
+  </ul></li>
+  <li><a href="#tools-and-tool-calls" id="toc-tools-and-tool-calls" class="nav-link" data-scroll-target="#tools-and-tool-calls">Tools and Tool Calls</a>
+  <ul class="collapse">
+  <li><a href="#alternative-tool-interfaces" id="toc-alternative-tool-interfaces" class="nav-link" data-scroll-target="#alternative-tool-interfaces">Alternative tool interfaces</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/edit/main/notes/2026-09-27-CmuAgents2026_lec1/2026-09-27-CmuAgents2026_lec1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Notes</h1>
-</div>
+<h1 class="title">CMU Agents 2026 - Lec 1</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Agents</div>
+    <div class="quarto-category">CMU Agents 2026</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aayush Agrawal </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 27, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -443,148 +475,368 @@ window.Quarto = {
 </header>
 
 
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-date-sort" data-direction="asc">
-        Date - Oldest
-      </option>
-      <option value="listing-date-sort" data-direction="desc">
-        Date - Newest
-      </option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
+<section id="ai-agents-foundations-capabilities-and-system-design" class="level1">
+<h1>AI Agents: Foundations, Capabilities, and System Design</h1>
+<p>AI agents are becoming part of everyday software development, research, customer support, and knowledge work. Coding agents can now modify repositories, run tests, interact with browsers, and recover from certain failures. However, building an agent that works reliably is much harder than connecting a language model to a few tools.</p>
+<p>This lecture introduced the foundations of agent systems:</p>
+<ul>
+<li>What an agent is</li>
+<li>How agents use tools</li>
+<li>How the agent loop works</li>
+<li>Why current agents still fail</li>
+<li>The difference between model training and harness engineering</li>
+<li>The importance of safety, sandboxing, monitoring, and evaluation</li>
+<li>How the course will approach agent development</li>
+</ul>
+<p>The central message is simple:</p>
+<blockquote class="blockquote">
+<p>An agent is not just a language model. It is a system made up of a model, a harness, tools, memory, an environment, safety controls, and evaluation infrastructure.</p>
+</blockquote>
+<p>Slide: <a href="https://www.cmu-agents.com/slides/lecture-01-agents.pdf">Link</a> Lecture: <a href="https://www.youtube.com/watch?v=UwfjzyLnvMg&amp;list=PLSN0qpDfUvTM&amp;index=1">Link</a> Readings: <a href="https://arxiv.org/abs/2302.04761">Toolformer</a>, <a href="https://arxiv.org/abs/2210.03629">ReAct</a>, <a href="https://github.com/swe-agent/mini-swe-agent">Mini-SWE-Agent</a></p>
+<section id="why-ai-agents-matter" class="level2">
+<h2 class="anchored" data-anchor-id="why-ai-agents-matter">Why AI Agents Matter</h2>
+<p>An ordinary language model produces text in response to a prompt. An agent can take actions in an external environment.</p>
+<p>That difference changes the nature of the system.</p>
+<p>A chatbot might explain how to modify a file. A coding agent can:</p>
+<ol type="1">
+<li>Inspect the repository</li>
+<li>Locate the relevant file</li>
+<li>Modify the code</li>
+<li>Run tests</li>
+<li>Inspect failures</li>
+<li>Revise the implementation</li>
+<li>Report the result</li>
+</ol>
+<p>This makes agents useful for tasks involving multiple steps, external state, and feedback.</p>
+<p>Examples include:</p>
+<ul>
+<li>Debugging software</li>
+<li>Migrating code between programming languages</li>
+<li>Browsing websites</li>
+<li>Operating desktop applications</li>
+<li>Filing forms</li>
+<li>Managing customer-support workflows</li>
+<li>Performing research</li>
+<li>Monitoring systems</li>
+<li>Running experiments</li>
+<li>Automating repetitive business processes</li>
+</ul>
+<p>However, autonomy also creates risk. An agent that can act can also make incorrect or destructive decisions.</p>
+<section id="a-useful-boundary-exercise" class="level3">
+<h3 class="anchored" data-anchor-id="a-useful-boundary-exercise">A useful boundary exercise</h3>
+<p>Consider the following tasks:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
 <thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-date-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Date</a>
-</th>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
-<th>
-Categories
-</th>
-
+<tr class="header">
+<th>Task</th>
+<th>Possible autonomy level</th>
 </tr>
 </thead>
-<tbody class="list">
-
-<tr data-index="0" data-categories="QWdlbnRzJTJDQ01VJTIwQWdlbnRzJTIwMjAyNg==" data-listing-date-sort="1790492400000" data-listing-file-modified-sort="1790554442655" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="21" data-listing-word-count-sort="4087" data-listing-title-sort="CMU Agents 2026 - Lec 1" data-listing-filename-sort="2026-09-27-CmuAgents2026_lec1.qmd">
-<td>
-<span class="listing-date">Sep 27, 2026</span>
-</td>
-<td>
-<a href="./notes/2026-09-27-CmuAgents2026_lec1.html" class="title listing-title">CMU Agents 2026 - Lec 1</a>
-</td>
-<td>
-<span class="listing-categories">Agents, CMU Agents 2026</span>
-</td>
-
+<tbody>
+<tr class="odd">
+<td>Diagnose a failing online store</td>
+<td>Autonomous, ask first, or human-only</td>
 </tr>
-
-<tr data-index="1" data-categories="UmVjU3lzJTJDTUw=" data-listing-date-sort="1771747200000" data-listing-file-modified-sort="1771794569878" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3266" data-listing-title-sort="Loss Functions" data-listing-filename-sort="2026-02-22-LossFunctions.ipynb">
-<td>
-<span class="listing-date">Feb 22, 2026</span>
-</td>
-<td>
-<a href="./notes/2026-02-22-LossFunctions.html" class="title listing-title">Loss Functions</a>
-</td>
-<td>
-<span class="listing-categories">RecSys, ML</span>
-</td>
-
+<tr class="even">
+<td>Draft and send an email to 50,000 customers</td>
+<td>Usually ask first</td>
 </tr>
-
-<tr data-index="2" data-categories="UmVjU3lzJTJDTUw=" data-listing-date-sort="1771747200000" data-listing-file-modified-sort="1771814350228" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="951" data-listing-title-sort="Ranking Metrics" data-listing-filename-sort="2026-02-22-RankingMetrics.ipynb">
-<td>
-<span class="listing-date">Feb 22, 2026</span>
-</td>
-<td>
-<a href="./notes/2026-02-22-RankingMetrics.html" class="title listing-title">Ranking Metrics</a>
-</td>
-<td>
-<span class="listing-categories">RecSys, ML</span>
-</td>
-
+<tr class="odd">
+<td>Prepare and file a tax return</td>
+<td>Usually ask first or human-only</td>
 </tr>
-
-<tr data-index="3" data-categories="UmVjU3lzJTJDTUw=" data-listing-date-sort="1771660800000" data-listing-file-modified-sort="1771731571854" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3139" data-listing-title-sort="DL Recsys" data-listing-filename-sort="2026-02-21-DLRecsys.qmd">
-<td>
-<span class="listing-date">Feb 21, 2026</span>
-</td>
-<td>
-<a href="./notes/2026-02-21-DLRecsys.html" class="title listing-title">DL Recsys</a>
-</td>
-<td>
-<span class="listing-categories">RecSys, ML</span>
-</td>
-
+<tr class="even">
+<td>Migrate a payments API from Python to Rust</td>
+<td>Potentially autonomous with tests and review</td>
 </tr>
-
-<tr data-index="4" data-categories="UmVjU3lzJTJDTUw=" data-listing-date-sort="1771660800000" data-listing-file-modified-sort="1771788536125" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1713" data-listing-title-sort="PreDL Recsys" data-listing-filename-sort="2026-02-21-PreDLRecsys.qmd">
-<td>
-<span class="listing-date">Feb 21, 2026</span>
-</td>
-<td>
-<a href="./notes/2026-02-21-PreDLRecsys.html" class="title listing-title">PreDL Recsys</a>
-</td>
-<td>
-<span class="listing-categories">RecSys, ML</span>
-</td>
-
+<tr class="odd">
+<td>Buy concert tickets</td>
+<td>Potentially autonomous with spending limits</td>
 </tr>
-
-<tr data-index="5" data-categories="UmVjU3lzJTJDTUw=" data-listing-date-sort="1771660800000" data-listing-file-modified-sort="1771788461115" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2911" data-listing-title-sort="Two-Tower Networks" data-listing-filename-sort="2026-02-21-twotower.qmd">
-<td>
-<span class="listing-date">Feb 21, 2026</span>
-</td>
-<td>
-<a href="./notes/2026-02-21-twotower.html" class="title listing-title">Two-Tower Networks</a>
-</td>
-<td>
-<span class="listing-categories">RecSys, ML</span>
-</td>
-
+<tr class="even">
+<td>Adjust an insulin dose</td>
+<td>Human-controlled or medically supervised</td>
 </tr>
-
-<tr data-index="6" data-categories="UmVjU3lzJTJDTUwlMkNMTE1z" data-listing-date-sort="1770278400000" data-listing-file-modified-sort="1771726206356" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3629" data-listing-title-sort="LLMxRecSys" data-listing-filename-sort="2026-02-05-LLMxRecsys.qmd">
-<td>
-<span class="listing-date">Feb 5, 2026</span>
-</td>
-<td>
-<a href="./notes/2026-02-05-LLMxRecsys.html" class="title listing-title">LLMxRecSys</a>
-</td>
-<td>
-<span class="listing-categories">RecSys, ML, LLMs</span>
-</td>
-
-</tr>
-
 </tbody>
 </table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+<p>The correct level of autonomy depends on:</p>
+<ul>
+<li>Consequence of failure</li>
+<li>Reversibility</li>
+<li>Cost</li>
+<li>Privacy</li>
+<li>Availability of reliable validation</li>
+<li>User expectations</li>
+<li>Whether a human can intervene in time</li>
+</ul>
+<p>Trust is therefore not a cosmetic feature. It is a core system requirement.</p>
+</section>
+</section>
+<section id="what-is-an-ai-agent" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-an-ai-agent">What Is an AI Agent?</h2>
+<p>A classical definition from artificial intelligence describes an agent as something that:</p>
+<blockquote class="blockquote">
+<p>Perceives its environment and acts upon that environment.</p>
+</blockquote>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/1_agents.png" class="img-fluid figure-img"></p>
+<figcaption>AI Agent</figcaption>
+</figure>
+</div>
+<p>This definition remains useful for modern language-model agents.</p>
+<p>An agent typically consists of: - An environment - Observations - Actions - A policy or decision-maker - A reward or success signal</p>
+<p>A simplified formalization looks like this:</p>
+<p>o_t = observation of the environment at time t</p>
+<p>a_t = policy(o_&lt;=t, a_&lt;t)</p>
+<p>s_(t+1) = Transition(s_t, a_t)</p>
+<p>where:</p>
+<ul>
+<li>s_t is the current environment state</li>
+<li>o_t is the observation received by the agent</li>
+<li>a_t is the action selected by the agent</li>
+<li>policy (or pi) is the agent’s decision rule / strategy</li>
+<li>Transition (or T) is the environment transition function</li>
+<li>o_&lt;=t is the history of all observations up to and including time t</li>
+<li>a_&lt;t is the sequence of all past actions taken before time t</li>
+</ul>
+<p>In a language-model agent, the policy is often implemented by prompting a model with:</p>
+<ul>
+<li>System instructions</li>
+<li>The user’s task</li>
+<li>Available tools</li>
+<li>Previous observations</li>
+<li>Previous actions</li>
+<li>Intermediate reasoning or planning state</li>
+</ul>
+<section id="agent-versus-chatbot" class="level3">
+<h3 class="anchored" data-anchor-id="agent-versus-chatbot">Agent versus chatbot</h3>
+<p>A chatbot generally follows this pattern:</p>
+<pre class="text"><code>user message → language model → assistant response</code></pre>
+<p>An agent follows a longer loop:</p>
+<pre class="text"><code>user task
+    ↓
+language model decides what to do
+    ↓
+tool call or external action
+    ↓
+environment changes
+    ↓
+new observation
+    ↓
+language model decides what to do next</code></pre>
+<p>The model is only one component. The surrounding software determines how actions are executed, validated, recorded, and repeated.</p>
+</section>
+</section>
+<section id="examples-of-current-agent-capabilities" class="level2">
+<h2 class="anchored" data-anchor-id="examples-of-current-agent-capabilities">Examples of Current Agent Capabilities</h2>
+<section id="computer-use-agents" class="level3">
+<h3 class="anchored" data-anchor-id="computer-use-agents">Computer-use agents</h3>
+<p>Computer-use agents interact with applications through:</p>
+<ul>
+<li>Browsers</li>
+<li>Screenshots</li>
+<li>Mouse actions</li>
+<li>Keyboard input</li>
+<li>Application APIs</li>
+<li>Structured user-interface state</li>
+</ul>
+<p>A typical task might be:</p>
+<blockquote class="blockquote">
+<p>Find a Thai restaurant in Pittsburgh with at least 200 reviews and a rating of at least 4.3.</p>
+</blockquote>
+<p>The agent may:</p>
+<ol type="1">
+<li>Open a browser</li>
+<li>Navigate to a restaurant website</li>
+<li>Enter a search query</li>
+<li>Inspect the results</li>
+<li>Filter by rating and review count</li>
+<li>Open a candidate page</li>
+<li>Return the result</li>
+</ol>
+<p>This requires both reasoning and environment understanding. The agent must interpret the interface correctly and select appropriate actions.</p>
+</section>
+<section id="coding-agents" class="level3">
+<h3 class="anchored" data-anchor-id="coding-agents">Coding agents</h3>
+<p>Coding agents operate on repositories. They may:</p>
+<ul>
+<li>Create files</li>
+<li>Read source code</li>
+<li>Search for symbols</li>
+<li>Modify implementation</li>
+<li>Run tests</li>
+<li>Start applications</li>
+<li>Browse the resulting interface</li>
+<li>Diagnose failures</li>
+<li>Commit or push changes</li>
+</ul>
+<p>A typical coding-agent trajectory might look like this:</p>
+<pre class="text"><code>Inspect repository
+    ↓
+Read relevant source files
+    ↓
+Form a hypothesis
+    ↓
+Edit implementation
+    ↓
+Run tests
+    ↓
+Inspect failure
+    ↓
+Revise code
+    ↓
+Run tests again</code></pre>
+<p>One important advantage of agents is that they can interact with the software they build. They do not need to stop after generating code. They can run the application, inspect logs, test user flows, and fix problems.</p>
+</section>
+</section>
+<section id="the-agent-environment" class="level2">
+<h2 class="anchored" data-anchor-id="the-agent-environment">The Agent Environment</h2>
+<p>An environment is the external world in which the agent operates.</p>
+<p>Examples include:</p>
+<ul>
+<li>A source-code repository</li>
+<li>A web browser</li>
+<li>A desktop application</li>
+<li>A database</li>
+<li>A cloud service</li>
+<li>A simulated game</li>
+<li>A scientific environment</li>
+<li>A customer-support platform</li>
+</ul>
+<p>The environment has a current state. The agent receives observations of that state and takes actions that may change it.</p>
+<section id="observations" class="level3">
+<h3 class="anchored" data-anchor-id="observations">Observations</h3>
+<p>Observations can include:</p>
+<ul>
+<li>User messages</li>
+<li>File contents</li>
+<li>Test results</li>
+<li>Shell output</li>
+<li>Screenshots</li>
+<li>Browser pages</li>
+<li>API responses</li>
+<li>Logs</li>
+<li>Database records</li>
+<li>Error messages</li>
+</ul>
+</section>
+<section id="actions" class="level3">
+<h3 class="anchored" data-anchor-id="actions">Actions</h3>
+<p>Actions can include:</p>
+<ul>
+<li>Replying to the user</li>
+<li>Editing a file</li>
+<li>Running a command</li>
+<li>Calling an API</li>
+<li>Clicking a button</li>
+<li>Sending an email</li>
+<li>Updating a database record</li>
+<li>Submitting a form</li>
+</ul>
+</section>
+<section id="rewards-and-success-signals" class="level3">
+<h3 class="anchored" data-anchor-id="rewards-and-success-signals">Rewards and success signals</h3>
+<p>Agents need some way to determine whether they succeeded.</p>
+<p>Possible signals include:</p>
+<ul>
+<li>Unit tests passing</li>
+<li>A program compiling</li>
+<li>A benchmark score</li>
+<li>A successful API response</li>
+<li>A structured validation check</li>
+<li>A human approving the result</li>
+<li>An LLM judge evaluating the output</li>
+<li>User satisfaction</li>
+</ul>
+<p>For software tasks, programmatic rewards are often available:</p>
+<p>R = 1 if all tests pass, 0 otherwise</p>
+<p>For open-ended tasks, success is more difficult to measure. The system may require:</p>
+<ul>
+<li>Human feedback</li>
+<li>An LLM-based evaluator</li>
+<li>Rubrics</li>
+<li>Domain-specific validators</li>
+<li>Multiple independent checks</li>
+</ul>
+</section>
+</section>
+<section id="tools-and-tool-calls" class="level2">
+<h2 class="anchored" data-anchor-id="tools-and-tool-calls">Tools and Tool Calls</h2>
+<p>A tool is an interface that allows the model to interact with its environment.</p>
+<p>A tool specification usually includes:</p>
+<ol type="1">
+<li>Tool name</li>
+<li>Natural-language description</li>
+<li>Parameter schema</li>
+<li>Return-value format</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2_tooldefinition.png" class="img-fluid figure-img"></p>
+<figcaption>Tool defintion</figcaption>
+</figure>
+</div>
+<p>For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"read_file"</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Read the contents of a file"</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"parameters"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"path"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Path to the file"</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"required"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"path"</span><span class="ot">]</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The model receives a representation of this specification in its context. It then generates a tool call.</p>
+<p>A structured tool call might look like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"read_file"</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"arguments"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"path"</span><span class="fu">:</span> <span class="st">"src/app.py"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The harness then:</p>
+<ol type="1">
+<li>Parses the model output</li>
+<li>Validates the tool name</li>
+<li>Validates the arguments</li>
+<li>Executes the tool</li>
+<li>Captures the result</li>
+<li>Adds the result to the conversation history</li>
+<li>Sends the updated context back to the model</li>
+</ol>
+<section id="alternative-tool-interfaces" class="level3">
+<h3 class="anchored" data-anchor-id="alternative-tool-interfaces">Alternative tool interfaces</h3>
+<p>Tools do not have to be represented as JSON. Other options include:</p>
+<ul>
+<li>Python function syntax</li>
+<li>Bash commands</li>
+<li>A domain-specific language</li>
+<li>XML</li>
+<li>Structured tokens</li>
+<li>Grammar-constrained output</li>
+</ul>
+<p>For example, an agent might call a tool using Python-like syntax:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>read_file(<span class="st">"src/app.py"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Or through a shell command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> src/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The best interface depends on the model, the task, and the required level of validation.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -1003,4 +1255,4 @@ Categories
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/edit/main/notes.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/edit/main/notes/2026-09-27-CmuAgents2026_lec1/2026-09-27-CmuAgents2026_lec1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

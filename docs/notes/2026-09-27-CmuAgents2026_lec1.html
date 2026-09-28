@@ -1,0 +1,2236 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Aayush Agrawal">
+<meta name="dcterms.date" content="2026-09-27">
+
+<title>CMU Agents 2026 - Lec 1 – Aayush Agrawal</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-b758ccaa5987ceb1b75504551e579abf.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8fedceaa9c5b51e05daa085a98af5997.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-af8a908a13f4fda948c7407926ad6c39.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-8fedceaa9c5b51e05daa085a98af5997.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-7QN8N70N41"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-7QN8N70N41', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+<meta property="og:title" content="CMU Agents 2026 - Lec 1 – Aayush Agrawal">
+<meta property="og:description" content="Aayush’s personal website">
+<meta property="og:image" content="https://aayushmnit.com/notes/img/2026-09-27_00001_agents.png">
+<meta property="og:site_name" content="Aayush Agrawal">
+<meta property="og:image:height" content="229">
+<meta property="og:image:width" content="597">
+<meta name="twitter:title" content="CMU Agents 2026 - Lec 1 – Aayush Agrawal">
+<meta name="twitter:description" content="Aayush’s personal website">
+<meta name="twitter:image" content="https://aayushmnit.com/notes/img/2026-09-27_00001_agents.png">
+<meta name="twitter:creator" content="@aayushmnit">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image-height" content="229">
+<meta name="twitter:image-width" content="597">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Aayush Agrawal</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> <i class="bi bi-house" role="img">
+</i> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog.html"> <i class="bi bi-newspaper" role="img">
+</i> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> <i class="bi bi-file-person" role="img">
+</i> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-other" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-stack" role="img">
+</i> 
+ <span class="menu-text">Other</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-other">    
+        <li>
+    <a class="dropdown-item" href="../talks.html"><i class="bi bi-megaphone" role="img">
+</i> 
+ <span class="dropdown-text">Talks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://aayushmnit.com/pytorch_book/"><i class="bi bi-box-arrow-up-right" role="img">
+</i> 
+ <span class="dropdown-text">Pytorch Book</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../other/carlson.html"><i class="bi bi-box-arrow-up-right" role="img">
+</i> 
+ <span class="dropdown-text">Carlson Q&amp;A</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://medium.com/@aayushmnit"> <i class="bi bi-bell" role="img">
+</i> 
+<span class="menu-text">Subscribe</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/aayushmnit/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/aayushmnit/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://medium.com/@aayushmnit"> <i class="bi bi-medium" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/aayushmnit"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:aayushmnit@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../blog.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ai-agents-foundations-capabilities-and-system-design" id="toc-ai-agents-foundations-capabilities-and-system-design" class="nav-link active" data-scroll-target="#ai-agents-foundations-capabilities-and-system-design">AI Agents: Foundations, Capabilities, and System Design</a>
+  <ul class="collapse">
+  <li><a href="#why-ai-agents-matter" id="toc-why-ai-agents-matter" class="nav-link" data-scroll-target="#why-ai-agents-matter">Why AI Agents Matter</a>
+  <ul class="collapse">
+  <li><a href="#a-useful-boundary-exercise" id="toc-a-useful-boundary-exercise" class="nav-link" data-scroll-target="#a-useful-boundary-exercise">A useful boundary exercise</a></li>
+  </ul></li>
+  <li><a href="#what-is-an-ai-agent" id="toc-what-is-an-ai-agent" class="nav-link" data-scroll-target="#what-is-an-ai-agent">What Is an AI Agent?</a>
+  <ul class="collapse">
+  <li><a href="#agent-versus-chatbot" id="toc-agent-versus-chatbot" class="nav-link" data-scroll-target="#agent-versus-chatbot">Agent versus chatbot</a></li>
+  </ul></li>
+  <li><a href="#examples-of-current-agent-capabilities" id="toc-examples-of-current-agent-capabilities" class="nav-link" data-scroll-target="#examples-of-current-agent-capabilities">Examples of Current Agent Capabilities</a>
+  <ul class="collapse">
+  <li><a href="#computer-use-agents" id="toc-computer-use-agents" class="nav-link" data-scroll-target="#computer-use-agents">Computer-use agents</a></li>
+  <li><a href="#coding-agents" id="toc-coding-agents" class="nav-link" data-scroll-target="#coding-agents">Coding agents</a></li>
+  </ul></li>
+  <li><a href="#the-agent-environment" id="toc-the-agent-environment" class="nav-link" data-scroll-target="#the-agent-environment">The Agent Environment</a>
+  <ul class="collapse">
+  <li><a href="#observations" id="toc-observations" class="nav-link" data-scroll-target="#observations">Observations</a></li>
+  <li><a href="#actions" id="toc-actions" class="nav-link" data-scroll-target="#actions">Actions</a></li>
+  <li><a href="#rewards-and-success-signals" id="toc-rewards-and-success-signals" class="nav-link" data-scroll-target="#rewards-and-success-signals">Rewards and success signals</a></li>
+  </ul></li>
+  <li><a href="#tools-and-tool-calls" id="toc-tools-and-tool-calls" class="nav-link" data-scroll-target="#tools-and-tool-calls">Tools and Tool Calls</a>
+  <ul class="collapse">
+  <li><a href="#alternative-tool-interfaces" id="toc-alternative-tool-interfaces" class="nav-link" data-scroll-target="#alternative-tool-interfaces">Alternative tool interfaces</a></li>
+  </ul></li>
+  <li><a href="#the-agentic-loop" id="toc-the-agentic-loop" class="nav-link" data-scroll-target="#the-agentic-loop">The Agentic Loop</a>
+  <ul class="collapse">
+  <li><a href="#react-style-agents" id="toc-react-style-agents" class="nav-link" data-scroll-target="#react-style-agents">ReAct-style agents</a></li>
+  </ul></li>
+  <li><a href="#agent-capabilities" id="toc-agent-capabilities" class="nav-link" data-scroll-target="#agent-capabilities">Agent Capabilities</a>
+  <ul class="collapse">
+  <li><a href="#accurate-tool-calling" id="toc-accurate-tool-calling" class="nav-link" data-scroll-target="#accurate-tool-calling">1. Accurate tool calling</a></li>
+  <li><a href="#coherence-over-long-contexts" id="toc-coherence-over-long-contexts" class="nav-link" data-scroll-target="#coherence-over-long-contexts">2. Coherence over long contexts</a></li>
+  <li><a href="#customizability" id="toc-customizability" class="nav-link" data-scroll-target="#customizability">3. Customizability</a></li>
+  <li><a href="#complex-task-management" id="toc-complex-task-management" class="nav-link" data-scroll-target="#complex-task-management">4. Complex task management</a></li>
+  <li><a href="#environment-understanding" id="toc-environment-understanding" class="nav-link" data-scroll-target="#environment-understanding">5. Environment understanding</a></li>
+  <li><a href="#safety" id="toc-safety" class="nav-link" data-scroll-target="#safety">6. Safety</a></li>
+  </ul></li>
+  <li><a href="#training-versus-harness-engineering" id="toc-training-versus-harness-engineering" class="nav-link" data-scroll-target="#training-versus-harness-engineering">Training Versus Harness Engineering</a>
+  <ul class="collapse">
+  <li><a href="#model-training" id="toc-model-training" class="nav-link" data-scroll-target="#model-training">Model training</a></li>
+  <li><a href="#harness-engineering" id="toc-harness-engineering" class="nav-link" data-scroll-target="#harness-engineering">Harness engineering</a></li>
+  <li><a href="#a-practical-development-pattern" id="toc-a-practical-development-pattern" class="nav-link" data-scroll-target="#a-practical-development-pattern">A practical development pattern</a></li>
+  <li><a href="#which-approach-should-you-choose" id="toc-which-approach-should-you-choose" class="nav-link" data-scroll-target="#which-approach-should-you-choose">Which approach should you choose?</a></li>
+  </ul></li>
+  <li><a href="#long-context-and-memory" id="toc-long-context-and-memory" class="nav-link" data-scroll-target="#long-context-and-memory">Long Context and Memory</a>
+  <ul class="collapse">
+  <li><a href="#context-compression" id="toc-context-compression" class="nav-link" data-scroll-target="#context-compression">Context compression</a></li>
+  <li><a href="#dynamic-memory-lookup" id="toc-dynamic-memory-lookup" class="nav-link" data-scroll-target="#dynamic-memory-lookup">Dynamic memory lookup</a></li>
+  <li><a href="#subagent-delegation" id="toc-subagent-delegation" class="nav-link" data-scroll-target="#subagent-delegation">Subagent delegation</a></li>
+  </ul></li>
+  <li><a href="#complex-task-management-1" id="toc-complex-task-management-1" class="nav-link" data-scroll-target="#complex-task-management-1">Complex Task Management</a>
+  <ul class="collapse">
+  <li><a href="#prompt-based-planning" id="toc-prompt-based-planning" class="nav-link" data-scroll-target="#prompt-based-planning">Prompt-based planning</a></li>
+  <li><a href="#explicit-planning-tools" id="toc-explicit-planning-tools" class="nav-link" data-scroll-target="#explicit-planning-tools">Explicit planning tools</a></li>
+  <li><a href="#plan-mode" id="toc-plan-mode" class="nav-link" data-scroll-target="#plan-mode">Plan mode</a></li>
+  <li><a href="#decomposition-and-delegation" id="toc-decomposition-and-delegation" class="nav-link" data-scroll-target="#decomposition-and-delegation">Decomposition and delegation</a></li>
+  </ul></li>
+  <li><a href="#environment-understanding-1" id="toc-environment-understanding-1" class="nav-link" data-scroll-target="#environment-understanding-1">Environment Understanding</a>
+  <ul class="collapse">
+  <li><a href="#computer-interfaces" id="toc-computer-interfaces" class="nav-link" data-scroll-target="#computer-interfaces">Computer interfaces</a></li>
+  <li><a href="#time-series" id="toc-time-series" class="nav-link" data-scroll-target="#time-series">Time series</a></li>
+  <li><a href="#scientific-data" id="toc-scientific-data" class="nav-link" data-scroll-target="#scientific-data">Scientific data</a></li>
+  <li><a href="#domain-skills" id="toc-domain-skills" class="nav-link" data-scroll-target="#domain-skills">Domain skills</a></li>
+  </ul></li>
+  <li><a href="#safety-and-reliability" id="toc-safety-and-reliability" class="nav-link" data-scroll-target="#safety-and-reliability">Safety and Reliability</a>
+  <ul class="collapse">
+  <li><a href="#sandboxing" id="toc-sandboxing" class="nav-link" data-scroll-target="#sandboxing">Sandboxing</a></li>
+  <li><a href="#monitoring" id="toc-monitoring" class="nav-link" data-scroll-target="#monitoring">Monitoring</a></li>
+  <li><a href="#human-oversight" id="toc-human-oversight" class="nav-link" data-scroll-target="#human-oversight">Human oversight</a></li>
+  <li><a href="#reversibility" id="toc-reversibility" class="nav-link" data-scroll-target="#reversibility">Reversibility</a></li>
+  <li><a href="#a-failure-pattern" id="toc-a-failure-pattern" class="nav-link" data-scroll-target="#a-failure-pattern">A failure pattern</a></li>
+  </ul></li>
+  <li><a href="#agents-are-systems" id="toc-agents-are-systems" class="nav-link" data-scroll-target="#agents-are-systems">Agents Are Systems</a>
+  <ul class="collapse">
+  <li><a href="#harness" id="toc-harness" class="nav-link" data-scroll-target="#harness">1. Harness</a></li>
+  <li><a href="#sandbox" id="toc-sandbox" class="nav-link" data-scroll-target="#sandbox">2. Sandbox</a></li>
+  <li><a href="#language-model-inference" id="toc-language-model-inference" class="nav-link" data-scroll-target="#language-model-inference">3. Language-model inference</a></li>
+  <li><a href="#training-system" id="toc-training-system" class="nav-link" data-scroll-target="#training-system">4. Training system</a></li>
+  <li><a href="#observability" id="toc-observability" class="nav-link" data-scroll-target="#observability">5. Observability</a></li>
+  </ul></li>
+  <li><a href="#coding-agents-and-orchestrators" id="toc-coding-agents-and-orchestrators" class="nav-link" data-scroll-target="#coding-agents-and-orchestrators">Coding Agents and Orchestrators</a>
+  <ul class="collapse">
+  <li><a href="#coding-agents-1" id="toc-coding-agents-1" class="nav-link" data-scroll-target="#coding-agents-1">Coding agents</a></li>
+  <li><a href="#orchestrators" id="toc-orchestrators" class="nav-link" data-scroll-target="#orchestrators">Orchestrators</a></li>
+  </ul></li>
+  <li><a href="#inference-training-and-observability" id="toc-inference-training-and-observability" class="nav-link" data-scroll-target="#inference-training-and-observability">Inference, Training, and Observability</a>
+  <ul class="collapse">
+  <li><a href="#inference-systems" id="toc-inference-systems" class="nav-link" data-scroll-target="#inference-systems">Inference systems</a></li>
+  <li><a href="#training-systems" id="toc-training-systems" class="nav-link" data-scroll-target="#training-systems">Training systems</a></li>
+  <li><a href="#evaluation" id="toc-evaluation" class="nav-link" data-scroll-target="#evaluation">Evaluation</a></li>
+  </ul></li>
+  <li><a href="#practical-takeaways" id="toc-practical-takeaways" class="nav-link" data-scroll-target="#practical-takeaways">Practical Takeaways</a>
+  <ul class="collapse">
+  <li><a href="#start-with-the-environment" id="toc-start-with-the-environment" class="nav-link" data-scroll-target="#start-with-the-environment">1. Start with the environment</a></li>
+  <li><a href="#keep-the-action-space-appropriate" id="toc-keep-the-action-space-appropriate" class="nav-link" data-scroll-target="#keep-the-action-space-appropriate">2. Keep the action space appropriate</a></li>
+  <li><a href="#validate-actions-at-runtime" id="toc-validate-actions-at-runtime" class="nav-link" data-scroll-target="#validate-actions-at-runtime">3. Validate actions at runtime</a></li>
+  <li><a href="#treat-memory-as-a-safety-feature" id="toc-treat-memory-as-a-safety-feature" class="nav-link" data-scroll-target="#treat-memory-as-a-safety-feature">4. Treat memory as a safety feature</a></li>
+  <li><a href="#solve-problems-in-the-harness-first" id="toc-solve-problems-in-the-harness-first" class="nav-link" data-scroll-target="#solve-problems-in-the-harness-first">5. Solve problems in the harness first</a></li>
+  <li><a href="#build-evaluations-early" id="toc-build-evaluations-early" class="nav-link" data-scroll-target="#build-evaluations-early">6. Build evaluations early</a></li>
+  <li><a href="#study-trajectories-not-only-final-answers" id="toc-study-trajectories-not-only-final-answers" class="nav-link" data-scroll-target="#study-trajectories-not-only-final-answers">7. Study trajectories, not only final answers</a></li>
+  <li><a href="#design-for-human-trust" id="toc-design-for-human-trust" class="nav-link" data-scroll-target="#design-for-human-trust">8. Design for human trust</a></li>
+  </ul></li>
+  <li><a href="#final-perspective" id="toc-final-perspective" class="nav-link" data-scroll-target="#final-perspective">Final Perspective</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/edit/main/notes/2026-09-27-CmuAgents2026_lec1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">CMU Agents 2026 - Lec 1</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Agents</div>
+    <div class="quarto-category">CMU Agents 2026</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aayush Agrawal </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 27, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="ai-agents-foundations-capabilities-and-system-design" class="level1">
+<h1>AI Agents: Foundations, Capabilities, and System Design</h1>
+<p>AI agents are becoming part of everyday software development, research, customer support, and knowledge work. Coding agents can now modify repositories, run tests, interact with browsers, and recover from certain failures. However, building an agent that works reliably is much harder than connecting a language model to a few tools.</p>
+<p>This lecture introduced the foundations of agent systems:</p>
+<ul>
+<li>What an agent is</li>
+<li>How agents use tools</li>
+<li>How the agent loop works</li>
+<li>Why current agents still fail</li>
+<li>The difference between model training and harness engineering</li>
+<li>The importance of safety, sandboxing, monitoring, and evaluation</li>
+<li>How the course will approach agent development</li>
+</ul>
+<p>The central message is simple:</p>
+<blockquote class="blockquote">
+<p>An agent is not just a language model. It is a system made up of a model, a harness, tools, memory, an environment, safety controls, and evaluation infrastructure.</p>
+</blockquote>
+<p>Slide: <a href="https://www.cmu-agents.com/slides/lecture-01-agents.pdf">Link</a> Lecture: <a href="https://www.youtube.com/watch?v=UwfjzyLnvMg&amp;list=PLSN0qpDfUvTM&amp;index=1">Link</a> Readings: <a href="https://arxiv.org/abs/2302.04761">Toolformer</a>, <a href="https://arxiv.org/abs/2210.03629">ReAct</a>, <a href="https://github.com/swe-agent/mini-swe-agent">Mini-SWE-Agent</a></p>
+<section id="why-ai-agents-matter" class="level2">
+<h2 class="anchored" data-anchor-id="why-ai-agents-matter">Why AI Agents Matter</h2>
+<p>An ordinary language model produces text in response to a prompt. An agent can take actions in an external environment.</p>
+<p>That difference changes the nature of the system.</p>
+<p>A chatbot might explain how to modify a file. A coding agent can:</p>
+<ol type="1">
+<li>Inspect the repository</li>
+<li>Locate the relevant file</li>
+<li>Modify the code</li>
+<li>Run tests</li>
+<li>Inspect failures</li>
+<li>Revise the implementation</li>
+<li>Report the result</li>
+</ol>
+<p>This makes agents useful for tasks involving multiple steps, external state, and feedback.</p>
+<p>Examples include:</p>
+<ul>
+<li>Debugging software</li>
+<li>Migrating code between programming languages</li>
+<li>Browsing websites</li>
+<li>Operating desktop applications</li>
+<li>Filing forms</li>
+<li>Managing customer-support workflows</li>
+<li>Performing research</li>
+<li>Monitoring systems</li>
+<li>Running experiments</li>
+<li>Automating repetitive business processes</li>
+</ul>
+<p>However, autonomy also creates risk. An agent that can act can also make incorrect or destructive decisions.</p>
+<section id="a-useful-boundary-exercise" class="level3">
+<h3 class="anchored" data-anchor-id="a-useful-boundary-exercise">A useful boundary exercise</h3>
+<p>Consider the following tasks:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Possible autonomy level</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Diagnose a failing online store</td>
+<td>Autonomous, ask first, or human-only</td>
+</tr>
+<tr class="even">
+<td>Draft and send an email to 50,000 customers</td>
+<td>Usually ask first</td>
+</tr>
+<tr class="odd">
+<td>Prepare and file a tax return</td>
+<td>Usually ask first or human-only</td>
+</tr>
+<tr class="even">
+<td>Migrate a payments API from Python to Rust</td>
+<td>Potentially autonomous with tests and review</td>
+</tr>
+<tr class="odd">
+<td>Buy concert tickets</td>
+<td>Potentially autonomous with spending limits</td>
+</tr>
+<tr class="even">
+<td>Adjust an insulin dose</td>
+<td>Human-controlled or medically supervised</td>
+</tr>
+</tbody>
+</table>
+<p>The correct level of autonomy depends on:</p>
+<ul>
+<li>Consequence of failure</li>
+<li>Reversibility</li>
+<li>Cost</li>
+<li>Privacy</li>
+<li>Availability of reliable validation</li>
+<li>User expectations</li>
+<li>Whether a human can intervene in time</li>
+</ul>
+<p>Trust is therefore not a cosmetic feature. It is a core system requirement.</p>
+</section>
+</section>
+<section id="what-is-an-ai-agent" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-an-ai-agent">What Is an AI Agent?</h2>
+<p>A classical definition from artificial intelligence describes an agent as something that:</p>
+<blockquote class="blockquote">
+<p>Perceives its environment and acts upon that environment.</p>
+</blockquote>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00001_agents.png" class="img-fluid figure-img"></p>
+<figcaption>AI Agent</figcaption>
+</figure>
+</div>
+<p>This definition remains useful for modern language-model agents.</p>
+<p>An agent typically consists of: - An environment - Observations - Actions - A policy or decision-maker - A reward or success signal</p>
+<p>A simplified formalization looks like this:</p>
+<p>o_t = observation of the environment at time t</p>
+<p>a_t = policy(o_&lt;=t, a_&lt;t)</p>
+<p>s_(t+1) = Transition(s_t, a_t)</p>
+<p>where:</p>
+<ul>
+<li>s_t is the current environment state</li>
+<li>o_t is the observation received by the agent</li>
+<li>a_t is the action selected by the agent</li>
+<li>policy (or pi) is the agent’s decision rule / strategy</li>
+<li>Transition (or T) is the environment transition function</li>
+<li>o_&lt;=t is the history of all observations up to and including time t</li>
+<li>a_&lt;t is the sequence of all past actions taken before time t</li>
+</ul>
+<p>In a language-model agent, the policy is often implemented by prompting a model with:</p>
+<ul>
+<li>System instructions</li>
+<li>The user’s task</li>
+<li>Available tools</li>
+<li>Previous observations</li>
+<li>Previous actions</li>
+<li>Intermediate reasoning or planning state</li>
+</ul>
+<section id="agent-versus-chatbot" class="level3">
+<h3 class="anchored" data-anchor-id="agent-versus-chatbot">Agent versus chatbot</h3>
+<p>A chatbot generally follows this pattern:</p>
+<pre class="text"><code>user message → language model → assistant response</code></pre>
+<p>An agent follows a longer loop:</p>
+<pre class="text"><code>user task
+    ↓
+language model decides what to do
+    ↓
+tool call or external action
+    ↓
+environment changes
+    ↓
+new observation
+    ↓
+language model decides what to do next</code></pre>
+<p>The model is only one component. The surrounding software determines how actions are executed, validated, recorded, and repeated.</p>
+</section>
+</section>
+<section id="examples-of-current-agent-capabilities" class="level2">
+<h2 class="anchored" data-anchor-id="examples-of-current-agent-capabilities">Examples of Current Agent Capabilities</h2>
+<section id="computer-use-agents" class="level3">
+<h3 class="anchored" data-anchor-id="computer-use-agents">Computer-use agents</h3>
+<p>Computer-use agents interact with applications through:</p>
+<ul>
+<li>Browsers</li>
+<li>Screenshots</li>
+<li>Mouse actions</li>
+<li>Keyboard input</li>
+<li>Application APIs</li>
+<li>Structured user-interface state</li>
+</ul>
+<p>A typical task might be:</p>
+<blockquote class="blockquote">
+<p>Find a Thai restaurant in Pittsburgh with at least 200 reviews and a rating of at least 4.3.</p>
+</blockquote>
+<p>The agent may:</p>
+<ol type="1">
+<li>Open a browser</li>
+<li>Navigate to a restaurant website</li>
+<li>Enter a search query</li>
+<li>Inspect the results</li>
+<li>Filter by rating and review count</li>
+<li>Open a candidate page</li>
+<li>Return the result</li>
+</ol>
+<p>This requires both reasoning and environment understanding. The agent must interpret the interface correctly and select appropriate actions.</p>
+</section>
+<section id="coding-agents" class="level3">
+<h3 class="anchored" data-anchor-id="coding-agents">Coding agents</h3>
+<p>Coding agents operate on repositories. They may:</p>
+<ul>
+<li>Create files</li>
+<li>Read source code</li>
+<li>Search for symbols</li>
+<li>Modify implementation</li>
+<li>Run tests</li>
+<li>Start applications</li>
+<li>Browse the resulting interface</li>
+<li>Diagnose failures</li>
+<li>Commit or push changes</li>
+</ul>
+<p>A typical coding-agent trajectory might look like this:</p>
+<pre class="text"><code>Inspect repository
+    ↓
+Read relevant source files
+    ↓
+Form a hypothesis
+    ↓
+Edit implementation
+    ↓
+Run tests
+    ↓
+Inspect failure
+    ↓
+Revise code
+    ↓
+Run tests again</code></pre>
+<p>One important advantage of agents is that they can interact with the software they build. They do not need to stop after generating code. They can run the application, inspect logs, test user flows, and fix problems.</p>
+</section>
+</section>
+<section id="the-agent-environment" class="level2">
+<h2 class="anchored" data-anchor-id="the-agent-environment">The Agent Environment</h2>
+<p>An environment is the external world in which the agent operates.</p>
+<p>Examples include:</p>
+<ul>
+<li>A source-code repository</li>
+<li>A web browser</li>
+<li>A desktop application</li>
+<li>A database</li>
+<li>A cloud service</li>
+<li>A simulated game</li>
+<li>A scientific environment</li>
+<li>A customer-support platform</li>
+</ul>
+<p>The environment has a current state. The agent receives observations of that state and takes actions that may change it.</p>
+<section id="observations" class="level3">
+<h3 class="anchored" data-anchor-id="observations">Observations</h3>
+<p>Observations can include:</p>
+<ul>
+<li>User messages</li>
+<li>File contents</li>
+<li>Test results</li>
+<li>Shell output</li>
+<li>Screenshots</li>
+<li>Browser pages</li>
+<li>API responses</li>
+<li>Logs</li>
+<li>Database records</li>
+<li>Error messages</li>
+</ul>
+</section>
+<section id="actions" class="level3">
+<h3 class="anchored" data-anchor-id="actions">Actions</h3>
+<p>Actions can include:</p>
+<ul>
+<li>Replying to the user</li>
+<li>Editing a file</li>
+<li>Running a command</li>
+<li>Calling an API</li>
+<li>Clicking a button</li>
+<li>Sending an email</li>
+<li>Updating a database record</li>
+<li>Submitting a form</li>
+</ul>
+</section>
+<section id="rewards-and-success-signals" class="level3">
+<h3 class="anchored" data-anchor-id="rewards-and-success-signals">Rewards and success signals</h3>
+<p>Agents need some way to determine whether they succeeded.</p>
+<p>Possible signals include:</p>
+<ul>
+<li>Unit tests passing</li>
+<li>A program compiling</li>
+<li>A benchmark score</li>
+<li>A successful API response</li>
+<li>A structured validation check</li>
+<li>A human approving the result</li>
+<li>An LLM judge evaluating the output</li>
+<li>User satisfaction</li>
+</ul>
+<p>For software tasks, programmatic rewards are often available:</p>
+<p>R = 1 if all tests pass, 0 otherwise</p>
+<p>For open-ended tasks, success is more difficult to measure. The system may require:</p>
+<ul>
+<li>Human feedback</li>
+<li>An LLM-based evaluator</li>
+<li>Rubrics</li>
+<li>Domain-specific validators</li>
+<li>Multiple independent checks</li>
+</ul>
+</section>
+</section>
+<section id="tools-and-tool-calls" class="level2">
+<h2 class="anchored" data-anchor-id="tools-and-tool-calls">Tools and Tool Calls</h2>
+<p>A tool is an interface that allows the model to interact with its environment.</p>
+<p>A tool specification usually includes:</p>
+<ol type="1">
+<li>Tool name</li>
+<li>Natural-language description</li>
+<li>Parameter schema</li>
+<li>Return-value format</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00002_tooldefinition.png" class="img-fluid figure-img"></p>
+<figcaption>Tool defintion</figcaption>
+</figure>
+</div>
+<p>For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"read_file"</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Read the contents of a file"</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"parameters"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"path"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"description"</span><span class="fu">:</span> <span class="st">"Path to the file"</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"required"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"path"</span><span class="ot">]</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The model receives a representation of this specification in its context. It then generates a tool call.</p>
+<p>A structured tool call might look like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"read_file"</span><span class="fu">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"arguments"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"path"</span><span class="fu">:</span> <span class="st">"src/app.py"</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The harness then:</p>
+<ol type="1">
+<li>Parses the model output</li>
+<li>Validates the tool name</li>
+<li>Validates the arguments</li>
+<li>Executes the tool</li>
+<li>Captures the result</li>
+<li>Adds the result to the conversation history</li>
+<li>Sends the updated context back to the model</li>
+</ol>
+<section id="alternative-tool-interfaces" class="level3">
+<h3 class="anchored" data-anchor-id="alternative-tool-interfaces">Alternative tool interfaces</h3>
+<p>Tools do not have to be represented as JSON. Other options include:</p>
+<ul>
+<li>Python function syntax</li>
+<li>Bash commands</li>
+<li>A domain-specific language</li>
+<li>XML</li>
+<li>Structured tokens</li>
+<li>Grammar-constrained output</li>
+</ul>
+<p>For example, an agent might call a tool using Python-like syntax:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>read_file(<span class="st">"src/app.py"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Or through a shell command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> src/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The best interface depends on the model, the task, and the required level of validation.</p>
+</section>
+</section>
+<section id="the-agentic-loop" class="level2">
+<h2 class="anchored" data-anchor-id="the-agentic-loop">The Agentic Loop</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00003_agentloop.png" class="img-fluid figure-img"></p>
+<figcaption>Tool defintion</figcaption>
+</figure>
+</div>
+<p>A basic agent loop can be represented as follows:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>messages <span class="op">=</span> [</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    system_message,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    user_task,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="kw">not</span> finished:</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> model.generate(</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        messages<span class="op">=</span>messages,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        tools<span class="op">=</span>available_tools,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    messages.append(response)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> response.contains_tool_call():</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        result <span class="op">=</span> execute_tool(response.tool_call)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        messages.append(result)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> response.signals_completion():</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        finished <span class="op">=</span> <span class="va">True</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A more detailed version is:</p>
+<pre class="text"><code>1. Build the current context
+2. Ask the model what to do
+3. Parse the model's output
+4. Validate the proposed action
+5. Execute the action
+6. Record the result
+7. Update the environment
+8. Add the observation to history
+9. Repeat until completion</code></pre>
+<p>The model does not directly control the environment. The harness controls the model-environment interaction.</p>
+<section id="react-style-agents" class="level3">
+<h3 class="anchored" data-anchor-id="react-style-agents">ReAct-style agents</h3>
+<p>A common pattern is called ReAct, short for reasoning and acting.</p>
+<p>At each step, the model produces:</p>
+<ul>
+<li>A reasoning or planning trace</li>
+<li>One or more actions</li>
+</ul>
+<p>The environment executes the actions and returns observations. The agent then reasons again using the updated history.</p>
+<pre class="text"><code>Thought → Action → Observation → Thought → Action → Observation</code></pre>
+<p>A coding-agent example might look like this:</p>
+<pre class="text"><code>Thought: I need to find where the failing API is implemented.
+Action: search_code("payments")
+Observation: src/payments.py contains the relevant function.
+
+Thought: I should inspect the function and its tests.
+Action: read_file("src/payments.py")
+Observation: function currently returns a dictionary.
+
+Thought: The test expects a Payment object.
+Action: edit_file(...)
+Observation: file updated.
+
+Thought: I should run the tests.
+Action: run_tests(...)
+Observation: all tests pass.</code></pre>
+</section>
+</section>
+<section id="agent-capabilities" class="level2">
+<h2 class="anchored" data-anchor-id="agent-capabilities">Agent Capabilities</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00004_agentcapabilities.png" class="img-fluid figure-img"></p>
+<figcaption>Agent Capabilities</figcaption>
+</figure>
+</div>
+<p>A useful agent needs more than the ability to generate plausible text.</p>
+<p>The lecture identified several important capabilities.</p>
+<section id="accurate-tool-calling" class="level3">
+<h3 class="anchored" data-anchor-id="accurate-tool-calling">1. Accurate tool calling</h3>
+<p><img src="img/2026-09-27_00005_accuratetoolcalling.png" class="img-fluid quarto-figure quarto-figure-center" alt="Accurate tool calling"> The agent must:</p>
+<ul>
+<li>Select the correct tool</li>
+<li>Use the correct arguments</li>
+<li>Follow the required schema</li>
+<li>Avoid inventing unavailable tools</li>
+<li>Interpret tool results correctly</li>
+<li>Recover from tool errors</li>
+</ul>
+<p>If the agent cannot call tools accurately, it will fail before it can perform meaningful work.</p>
+</section>
+<section id="coherence-over-long-contexts" class="level3">
+<h3 class="anchored" data-anchor-id="coherence-over-long-contexts">2. Coherence over long contexts</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00006_coherence.png" class="img-fluid figure-img"></p>
+<figcaption>Coherence</figcaption>
+</figure>
+</div>
+<p>The agent must preserve important information over long tasks.</p>
+<p>Failures include:</p>
+<ul>
+<li>Forgetting earlier instructions</li>
+<li>Repeating completed work</li>
+<li>Losing track of the current objective</li>
+<li>Forgetting failed approaches</li>
+<li>Violating a constraint stated many turns earlier</li>
+<li>Losing information during context compaction</li>
+</ul>
+<p>Long-context coherence is especially important when the agent performs many actions or works across multiple sessions.</p>
+</section>
+<section id="customizability" class="level3">
+<h3 class="anchored" data-anchor-id="customizability">3. Customizability</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00007_Customizability.png" class="img-fluid figure-img"></p>
+<figcaption>Customizability</figcaption>
+</figure>
+</div>
+<p>Different users and organizations need different behavior.</p>
+<p>Examples:</p>
+<ul>
+<li>A team may require tests before every commit</li>
+<li>A company may prohibit access to production systems</li>
+<li>A developer may prefer minimal diffs</li>
+<li>A researcher may require citations</li>
+<li>A support team may require approval before sending messages</li>
+</ul>
+<p>An effective agent must follow local conventions instead of relying only on generic behavior.</p>
+</section>
+<section id="complex-task-management" class="level3">
+<h3 class="anchored" data-anchor-id="complex-task-management">4. Complex task management</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00008_complex_task.png" class="img-fluid figure-img"></p>
+<figcaption>complex task</figcaption>
+</figure>
+</div>
+<p>The agent must manage tasks that contain multiple subproblems.</p>
+<p>This may involve:</p>
+<ul>
+<li>Decomposing a task</li>
+<li>Planning dependencies</li>
+<li>Tracking progress</li>
+<li>Delegating subtasks</li>
+<li>Revising the plan</li>
+<li>Detecting completion</li>
+<li>Recovering from failure</li>
+</ul>
+<p>A long task cannot be treated as one large language-model response. It requires state management and feedback.</p>
+</section>
+<section id="environment-understanding" class="level3">
+<h3 class="anchored" data-anchor-id="environment-understanding">5. Environment understanding</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00009_environment.png" class="img-fluid figure-img"></p>
+<figcaption>Environment</figcaption>
+</figure>
+</div>
+<p>The agent must understand the environment in which it operates.</p>
+<p>For a coding agent, that includes:</p>
+<ul>
+<li>Repository structure</li>
+<li>Programming-language conventions</li>
+<li>Build system</li>
+<li>Tests</li>
+<li>Dependencies</li>
+<li>Runtime behavior</li>
+</ul>
+<p>For a computer-use agent, it includes:</p>
+<ul>
+<li>Visual layout</li>
+<li>Buttons and controls</li>
+<li>Page structure</li>
+<li>Application state</li>
+<li>Dialogs and error messages</li>
+</ul>
+<p>For a scientific agent, it may include:</p>
+<ul>
+<li>Time series</li>
+<li>Images</li>
+<li>Tables</li>
+<li>Instrument output</li>
+<li>Domain-specific notation</li>
+</ul>
+</section>
+<section id="safety" class="level3">
+<h3 class="anchored" data-anchor-id="safety">6. Safety</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00010_safety.png" class="img-fluid figure-img"></p>
+<figcaption>Safety</figcaption>
+</figure>
+</div>
+<p>The agent must avoid harmful or unauthorized actions.</p>
+<p>Safety can include:</p>
+<ul>
+<li>Permission boundaries</li>
+<li>Sandboxing</li>
+<li>Credential isolation</li>
+<li>Human approval</li>
+<li>Action monitoring</li>
+<li>Reversible operations</li>
+<li>Rate limits</li>
+<li>Data-access restrictions</li>
+<li>Domain-specific policies</li>
+</ul>
+<p>Safety is not separate from capability. An agent that cannot reliably avoid destructive actions is not capable enough for many real-world tasks.</p>
+</section>
+</section>
+<section id="training-versus-harness-engineering" class="level2">
+<h2 class="anchored" data-anchor-id="training-versus-harness-engineering">Training Versus Harness Engineering</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00011_capabilities.png" class="img-fluid figure-img"></p>
+<figcaption>Training vs Harness</figcaption>
+</figure>
+</div>
+<p>There are two broad ways to improve an agent.</p>
+<section id="model-training" class="level3">
+<h3 class="anchored" data-anchor-id="model-training">Model training</h3>
+<p>Model training changes the behavior of the language model itself.</p>
+<p>Possible approaches include:</p>
+<ul>
+<li>Pre-training</li>
+<li>Mid-training</li>
+<li>Supervised fine-tuning</li>
+<li>Reinforcement learning</li>
+<li>Preference optimization</li>
+<li>Tool-use training</li>
+<li>Long-context training</li>
+<li>Domain-specific training</li>
+</ul>
+<p>Training can teach reusable patterns such as:</p>
+<ul>
+<li>How to call tools</li>
+<li>How to reason about errors</li>
+<li>How to recover from failed actions</li>
+<li>How to plan a task</li>
+<li>How to operate in a particular domain</li>
+</ul>
+<p>The resulting capability becomes part of the learned model policy.</p>
+</section>
+<section id="harness-engineering" class="level3">
+<h3 class="anchored" data-anchor-id="harness-engineering">Harness engineering</h3>
+<p>Harness engineering changes the system around the model.</p>
+<p>The harness can provide:</p>
+<ul>
+<li>Prompts</li>
+<li>Tools</li>
+<li>Memory</li>
+<li>Control flow</li>
+<li>Context compression</li>
+<li>Validation</li>
+<li>Retries</li>
+<li>Permission checks</li>
+<li>Sandboxing</li>
+<li>Human approval</li>
+<li>Monitoring</li>
+</ul>
+<p>A capability may emerge from the combination of the model and the harness rather than from the model alone.</p>
+</section>
+<section id="a-practical-development-pattern" class="level3">
+<h3 class="anchored" data-anchor-id="a-practical-development-pattern">A practical development pattern</h3>
+<p>A common progression is:</p>
+<ol type="1">
+<li>Identify a failure</li>
+<li>Add a harness-level solution</li>
+<li>Collect examples of the failure and recovery</li>
+<li>Train the model on those examples</li>
+<li>Reduce the amount of harness intervention required</li>
+</ol>
+<p>For example:</p>
+<pre class="text"><code>Problem: The model frequently produces malformed tool calls.
+
+Initial solution:
+Add grammar-constrained decoding and strict schema validation.
+
+Longer-term solution:
+Train the model on valid tool-use traces.
+
+Final system:
+Use both learned behavior and runtime validation.</code></pre>
+<p>Harness engineering is often faster to deploy. Model training is usually more fundamental but requires more data, compute, and iteration.</p>
+</section>
+<section id="which-approach-should-you-choose" class="level3">
+<h3 class="anchored" data-anchor-id="which-approach-should-you-choose">Which approach should you choose?</h3>
+<p>Use harness engineering when:</p>
+<ul>
+<li>You need a fast fix</li>
+<li>The behavior is task-specific</li>
+<li>The requirement changes frequently</li>
+<li>The action needs runtime validation</li>
+<li>The model cannot be retrained</li>
+<li>The environment contains high-risk actions</li>
+</ul>
+<p>Use model training when:</p>
+<ul>
+<li>The behavior is broadly reusable</li>
+<li>The problem appears across many tasks</li>
+<li>You have sufficient training data</li>
+<li>The behavior should work with different harnesses</li>
+<li>Runtime prompting alone is not reliable</li>
+</ul>
+<p>In practice, strong systems use both.</p>
+</section>
+</section>
+<section id="long-context-and-memory" class="level2">
+<h2 class="anchored" data-anchor-id="long-context-and-memory">Long Context and Memory</h2>
+<p>Agents accumulate history as they act.</p>
+<p>That history may contain:</p>
+<ul>
+<li>User instructions</li>
+<li>Tool definitions</li>
+<li>Tool calls</li>
+<li>Tool results</li>
+<li>Errors</li>
+<li>Plans</li>
+<li>Intermediate observations</li>
+<li>Files and code</li>
+<li>Previous decisions</li>
+</ul>
+<p>As the history grows, it may exceed the model’s context window or become expensive to process.</p>
+<section id="context-compression" class="level3">
+<h3 class="anchored" data-anchor-id="context-compression">Context compression</h3>
+<p>Context compression summarizes old interactions into a shorter representation.</p>
+<pre class="text"><code>Long interaction history
+        ↓
+Summary of goals, decisions, failures, and current state
+        ↓
+Agent continues with a smaller context</code></pre>
+<p>Compression reduces cost, but it can remove important details. A summary that omits a safety constraint can cause destructive behavior.</p>
+</section>
+<section id="dynamic-memory-lookup" class="level3">
+<h3 class="anchored" data-anchor-id="dynamic-memory-lookup">Dynamic memory lookup</h3>
+<p>Instead of placing all historical information in the prompt, the harness can store memory externally and retrieve relevant pieces when needed.</p>
+<p>Typical process:</p>
+<ol type="1">
+<li>Store past events or documents</li>
+<li>Index them</li>
+<li>Retrieve relevant records</li>
+<li>Insert them into the current context</li>
+</ol>
+</section>
+<section id="subagent-delegation" class="level3">
+<h3 class="anchored" data-anchor-id="subagent-delegation">Subagent delegation</h3>
+<p>A long task can be divided among multiple agents.</p>
+<p>For example:</p>
+<pre class="text"><code>Main agent
+    ├── Agent A: inspect repository
+    ├── Agent B: investigate failing tests
+    └── Agent C: review security implications</code></pre>
+<p>The main agent receives summaries or results rather than every intermediate detail.</p>
+<p>This can reduce context pressure, but delegation introduces additional problems:</p>
+<ul>
+<li>Communication overhead</li>
+<li>Inconsistent assumptions</li>
+<li>Duplicate work</li>
+<li>Difficulty combining results</li>
+<li>More complicated failure handling</li>
+</ul>
+</section>
+</section>
+<section id="complex-task-management-1" class="level2">
+<h2 class="anchored" data-anchor-id="complex-task-management-1">Complex Task Management</h2>
+<p>Planning can be implemented in several ways.</p>
+<section id="prompt-based-planning" class="level3">
+<h3 class="anchored" data-anchor-id="prompt-based-planning">Prompt-based planning</h3>
+<p>The harness can instruct the model to plan before acting:</p>
+<pre class="text"><code>Before modifying files, create a short implementation plan.
+Do not make changes until the plan is complete.</code></pre>
+<p>This is simple, but the model may still skip steps or produce plans that do not correspond to actual execution.</p>
+</section>
+<section id="explicit-planning-tools" class="level3">
+<h3 class="anchored" data-anchor-id="explicit-planning-tools">Explicit planning tools</h3>
+<p>The agent can be given tools such as:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>create_plan(items)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>mark_complete(item_id)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>update_plan(item_id, status)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This makes progress visible and easier to validate.</p>
+</section>
+<section id="plan-mode" class="level3">
+<h3 class="anchored" data-anchor-id="plan-mode">Plan mode</h3>
+<p>Some coding agents offer a dedicated plan mode. The mode may alter the prompt so that the model is asked to plan without taking actions.</p>
+<p>The key design question is whether planning is:</p>
+<ul>
+<li>Merely text generation</li>
+<li>Stored as structured state</li>
+<li>Validated against actions</li>
+<li>Updated as the task changes</li>
+</ul>
+</section>
+<section id="decomposition-and-delegation" class="level3">
+<h3 class="anchored" data-anchor-id="decomposition-and-delegation">Decomposition and delegation</h3>
+<p>Large tasks may be split into independent subtasks. The system can then execute those tasks sequentially or in parallel.</p>
+<p>This is useful when:</p>
+<ul>
+<li>Subtasks are relatively independent</li>
+<li>Each subtask has a clear success criterion</li>
+<li>Results can be combined</li>
+<li>Parallel execution reduces latency</li>
+</ul>
+</section>
+</section>
+<section id="environment-understanding-1" class="level2">
+<h2 class="anchored" data-anchor-id="environment-understanding-1">Environment Understanding</h2>
+<p>A model’s reasoning ability is not enough if it cannot interpret the environment.</p>
+<section id="computer-interfaces" class="level3">
+<h3 class="anchored" data-anchor-id="computer-interfaces">Computer interfaces</h3>
+<p>Computer-use agents may need to understand:</p>
+<ul>
+<li>Screenshots</li>
+<li>Layout</li>
+<li>Buttons</li>
+<li>Forms</li>
+<li>Menus</li>
+<li>Notifications</li>
+<li>Visual state</li>
+<li>Modal dialogs</li>
+</ul>
+<p>Even strong models can make mistakes when the interface is visually complex.</p>
+</section>
+<section id="time-series" class="level3">
+<h3 class="anchored" data-anchor-id="time-series">Time series</h3>
+<p>An agent operating in a financial or monitoring environment must understand:</p>
+<ul>
+<li>Trends</li>
+<li>Seasonality</li>
+<li>Delayed effects</li>
+<li>Missing data</li>
+<li>Abrupt changes</li>
+<li>Correlation versus causation</li>
+</ul>
+<p>Language models do not automatically become reliable time-series reasoners simply because they are good at text.</p>
+</section>
+<section id="scientific-data" class="level3">
+<h3 class="anchored" data-anchor-id="scientific-data">Scientific data</h3>
+<p>A scientific agent may need to interpret:</p>
+<ul>
+<li>Microscopy images</li>
+<li>Charts</li>
+<li>Tables</li>
+<li>Experimental measurements</li>
+<li>Domain-specific symbols</li>
+<li>Instrument logs</li>
+</ul>
+<p>The system may require multimodal models, specialized tools, or domain-specific training.</p>
+</section>
+<section id="domain-skills" class="level3">
+<h3 class="anchored" data-anchor-id="domain-skills">Domain skills</h3>
+<p>Harness engineering can provide domain knowledge through:</p>
+<ul>
+<li>Skills</li>
+<li>Reference documents</li>
+<li>Custom tools</li>
+<li>Validators</li>
+<li>Templates</li>
+<li>Structured workflows</li>
+</ul>
+<p>Model training can also expose the model to:</p>
+<ul>
+<li>Domain-specific examples</li>
+<li>Expected observation formats</li>
+<li>Simulated environments</li>
+<li>Specialized feedback</li>
+</ul>
+</section>
+</section>
+<section id="safety-and-reliability" class="level2">
+<h2 class="anchored" data-anchor-id="safety-and-reliability">Safety and Reliability</h2>
+<p>The more powerful the agent, the more important its boundaries become.</p>
+<section id="sandboxing" class="level3">
+<h3 class="anchored" data-anchor-id="sandboxing">Sandboxing</h3>
+<p>A sandbox limits what the agent can access.</p>
+<p>Possible restrictions include:</p>
+<ul>
+<li>File-system isolation</li>
+<li>Network isolation</li>
+<li>Limited compute</li>
+<li>Read-only directories</li>
+<li>Restricted credentials</li>
+<li>Restricted APIs</li>
+<li>Resource quotas</li>
+<li>Time limits</li>
+</ul>
+<p>A coding agent should not automatically have access to every file, credential, or production system.</p>
+</section>
+<section id="monitoring" class="level3">
+<h3 class="anchored" data-anchor-id="monitoring">Monitoring</h3>
+<p>Monitoring helps detect undesirable behavior while it occurs.</p>
+<p>Useful signals include:</p>
+<ul>
+<li>Unexpected tool calls</li>
+<li>Access to sensitive files</li>
+<li>Repeated failures</li>
+<li>Unusual network activity</li>
+<li>Large-scale deletion</li>
+<li>Attempts to bypass restrictions</li>
+<li>Excessive cost or latency</li>
+</ul>
+</section>
+<section id="human-oversight" class="level3">
+<h3 class="anchored" data-anchor-id="human-oversight">Human oversight</h3>
+<p>High-consequence actions may require approval.</p>
+<p>A useful policy is to classify actions by risk:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Risk level</th>
+<th>Example</th>
+<th>Possible policy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Low</td>
+<td>Read a file</td>
+<td>Automatic</td>
+</tr>
+<tr class="even">
+<td>Moderate</td>
+<td>Modify source code</td>
+<td>Automatic with review</td>
+</tr>
+<tr class="odd">
+<td>High</td>
+<td>Deploy to production</td>
+<td>Ask first</td>
+</tr>
+<tr class="even">
+<td>Very high</td>
+<td>Change medication or transfer money</td>
+<td>Human-controlled</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="reversibility" class="level3">
+<h3 class="anchored" data-anchor-id="reversibility">Reversibility</h3>
+<p>Agents should prefer actions that can be undone.</p>
+<p>Examples:</p>
+<ul>
+<li>Create a backup before editing</li>
+<li>Use version control</li>
+<li>Open a draft instead of sending immediately</li>
+<li>Stage changes before committing</li>
+<li>Use transactions for database updates</li>
+<li>Require confirmation before irreversible deletion</li>
+</ul>
+</section>
+<section id="a-failure-pattern" class="level3">
+<h3 class="anchored" data-anchor-id="a-failure-pattern">A failure pattern</h3>
+<p>One example discussed in the lecture involved an agent instructed to organize an inbox. The agent began deleting messages despite the user’s instruction not to do so.</p>
+<p>A likely cause was context compaction. The model retained a general understanding of the task but lost the specific prohibition against deleting email.</p>
+<p>This illustrates why context management is a safety issue, not merely a performance issue.</p>
+</section>
+</section>
+<section id="agents-are-systems" class="level2">
+<h2 class="anchored" data-anchor-id="agents-are-systems">Agents Are Systems</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00012_agentsassystem.png" class="img-fluid figure-img"></p>
+<figcaption>Agent as systems</figcaption>
+</figure>
+</div>
+<p>A production agent usually combines several subsystems.</p>
+<section id="harness" class="level3">
+<h3 class="anchored" data-anchor-id="harness">1. Harness</h3>
+<p>The harness manages:</p>
+<ul>
+<li>Prompts</li>
+<li>Context</li>
+<li>Tools</li>
+<li>Control flow</li>
+<li>Retries</li>
+<li>Validation</li>
+<li>Permissions</li>
+<li>Completion</li>
+</ul>
+</section>
+<section id="sandbox" class="level3">
+<h3 class="anchored" data-anchor-id="sandbox">2. Sandbox</h3>
+<p>The sandbox limits:</p>
+<ul>
+<li>Files</li>
+<li>Network</li>
+<li>Credentials</li>
+<li>Compute</li>
+<li>Processes</li>
+<li>External services</li>
+</ul>
+</section>
+<section id="language-model-inference" class="level3">
+<h3 class="anchored" data-anchor-id="language-model-inference">3. Language-model inference</h3>
+<p>The inference system handles:</p>
+<ul>
+<li>Model requests</li>
+<li>Batching</li>
+<li>Caching</li>
+<li>Long contexts</li>
+<li>Latency</li>
+<li>Throughput</li>
+<li>Model routing</li>
+</ul>
+</section>
+<section id="training-system" class="level3">
+<h3 class="anchored" data-anchor-id="training-system">4. Training system</h3>
+<p>The training stack may handle:</p>
+<ul>
+<li>Dataset preparation</li>
+<li>Rollout collection</li>
+<li>Supervised fine-tuning</li>
+<li>Reinforcement learning</li>
+<li>Checkpointing</li>
+<li>Evaluation</li>
+<li>Reproducibility</li>
+</ul>
+</section>
+<section id="observability" class="level3">
+<h3 class="anchored" data-anchor-id="observability">5. Observability</h3>
+<p>Observability records:</p>
+<ul>
+<li>Agent trajectories</li>
+<li>Tool calls</li>
+<li>Errors</li>
+<li>Latency</li>
+<li>Token usage</li>
+<li>Cost</li>
+<li>Success rates</li>
+<li>Evaluation scores</li>
+</ul>
+<p>A simplified architecture looks like this:</p>
+<pre class="text"><code>                 ┌──────────────────┐
+                 │      User        │
+                 └────────┬─────────┘
+                          │
+                 ┌────────▼─────────┐
+                 │     Harness      │
+                 │ context, tools,  │
+                 │ control, safety  │
+                 └──────┬─────┬─────┘
+                        │     │
+             ┌──────────▼─┐ ┌─▼──────────┐
+             │ Language   │ │ Environment │
+             │ Model      │ │ tools/apps  │
+             └────────────┘ └────────────┘
+                        │
+                 ┌──────▼─────┐
+                 │ Monitoring │
+                 │ and evals  │
+                 └────────────┘</code></pre>
+</section>
+</section>
+<section id="coding-agents-and-orchestrators" class="level2">
+<h2 class="anchored" data-anchor-id="coding-agents-and-orchestrators">Coding Agents and Orchestrators</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00013_harnesseng.png" class="img-fluid figure-img"></p>
+<figcaption>Coding Harness</figcaption>
+</figure>
+</div>
+<p>The lecture distinguished between coding agents and agent orchestrators.</p>
+<section id="coding-agents-1" class="level3">
+<h3 class="anchored" data-anchor-id="coding-agents-1">Coding agents</h3>
+<p>Coding agents usually have a broad action space. They may be able to:</p>
+<ul>
+<li>Read and write arbitrary files</li>
+<li>Run shell commands</li>
+<li>Execute tests</li>
+<li>Use browsers</li>
+<li>Start applications</li>
+<li>Inspect logs</li>
+<li>Modify dependencies</li>
+</ul>
+<p>They are expressive, but their flexibility makes safety and validation harder. Example: Claude Code, Codex etc.</p>
+</section>
+<section id="orchestrators" class="level3">
+<h3 class="anchored" data-anchor-id="orchestrators">Orchestrators</h3>
+<p>Orchestrators generally provide more structured workflows.</p>
+<p>An orchestrator might define a fixed sequence such as:</p>
+<pre class="text"><code>Classify request
+    ↓
+Retrieve customer record
+    ↓
+Draft response
+    ↓
+Request approval
+    ↓
+Send response</code></pre>
+<p>Orchestrators are often:</p>
+<ul>
+<li>More constrained</li>
+<li>Easier to validate</li>
+<li>Easier to monitor</li>
+<li>Less expressive than coding agents</li>
+</ul>
+<p>Neither approach is universally better.</p>
+<p>Use a coding-agent style system when the agent needs broad interaction with an environment. Use an orchestrator when the workflow is known and the action space should be tightly controlled. Example: Langraph, Langchain, CrewAI</p>
+</section>
+</section>
+<section id="inference-training-and-observability" class="level2">
+<h2 class="anchored" data-anchor-id="inference-training-and-observability">Inference, Training, and Observability</h2>
+<section id="inference-systems" class="level3">
+<h3 class="anchored" data-anchor-id="inference-systems">Inference systems</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00014_lminference.png" class="img-fluid figure-img"></p>
+<figcaption>Inference</figcaption>
+</figure>
+</div>
+<p>Agent workloads are expensive because a single task can require many model calls.</p>
+<p>Important inference concerns include:</p>
+<ul>
+<li>Batching requests</li>
+<li>Caching repeated prefixes</li>
+<li>Managing long contexts</li>
+<li>Reducing latency</li>
+<li>Selecting models based on task difficulty</li>
+<li>Controlling token costs</li>
+</ul>
+<p>Caching is particularly important because successive agent requests often share most of their context.</p>
+</section>
+<section id="training-systems" class="level3">
+<h3 class="anchored" data-anchor-id="training-systems">Training systems</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00015_training.png" class="img-fluid figure-img"></p>
+<figcaption>training</figcaption>
+</figure>
+</div>
+<p>Training agentic models requires more than collecting final answers. You may need to collect complete trajectories:</p>
+<pre class="text"><code>Task
+    ↓
+Model decision
+    ↓
+Tool call
+    ↓
+Tool result
+    ↓
+Next decision
+    ↓
+Final outcome</code></pre>
+<p>Training data can include:</p>
+<ul>
+<li>Successful trajectories</li>
+<li>Failed trajectories</li>
+<li>Recovery behavior</li>
+<li>Tool-use examples</li>
+<li>Safety interventions</li>
+<li>Human corrections</li>
+<li>Evaluation outcomes</li>
+</ul>
+</section>
+<section id="evaluation" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation">Evaluation</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/2026-09-27_00016_evaluations.png" class="img-fluid figure-img"></p>
+<figcaption>evaluation</figcaption>
+</figure>
+</div>
+<p>Evaluation is essential for both engineering and training.</p>
+<p>A useful evaluation should measure more than whether the final answer looks good. It should consider:</p>
+<ul>
+<li>Did the agent complete the task?</li>
+<li>Did it use unnecessary actions?</li>
+<li>Did it modify unrelated files?</li>
+<li>Did it violate permissions?</li>
+<li>Did it recover from errors?</li>
+<li>How much did it cost?</li>
+<li>How long did it take?</li>
+<li>Was the result reproducible?</li>
+</ul>
+<p>For a coding task, a useful evaluation might include:</p>
+<pre class="text"><code>Task success:
+    Tests pass
+
+Change quality:
+    Only expected files changed
+
+Efficiency:
+    Number of tool calls below threshold
+
+Safety:
+    No forbidden paths accessed
+
+Reproducibility:
+    Same task succeeds across multiple runs</code></pre>
+</section>
+</section>
+<section id="practical-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="practical-takeaways">Practical Takeaways</h2>
+<section id="start-with-the-environment" class="level3">
+<h3 class="anchored" data-anchor-id="start-with-the-environment">1. Start with the environment</h3>
+<p>Before choosing a model or framework, define:</p>
+<ul>
+<li>What environment the agent operates in</li>
+<li>What observations it receives</li>
+<li>What actions it can take</li>
+<li>What counts as success</li>
+<li>What actions are forbidden</li>
+</ul>
+</section>
+<section id="keep-the-action-space-appropriate" class="level3">
+<h3 class="anchored" data-anchor-id="keep-the-action-space-appropriate">2. Keep the action space appropriate</h3>
+<p>A broad action space increases flexibility, but also increases risk.</p>
+<p>Give the agent only the tools it needs.</p>
+</section>
+<section id="validate-actions-at-runtime" class="level3">
+<h3 class="anchored" data-anchor-id="validate-actions-at-runtime">3. Validate actions at runtime</h3>
+<p>Do not rely entirely on the model to behave correctly.</p>
+<p>Use:</p>
+<ul>
+<li>Schemas</li>
+<li>Type checks</li>
+<li>Permission checks</li>
+<li>Sandboxes</li>
+<li>Allow-lists</li>
+<li>Human approval</li>
+<li>Test suites</li>
+<li>Rollback mechanisms</li>
+</ul>
+</section>
+<section id="treat-memory-as-a-safety-feature" class="level3">
+<h3 class="anchored" data-anchor-id="treat-memory-as-a-safety-feature">4. Treat memory as a safety feature</h3>
+<p>Context compression and memory retrieval can improve performance, but they can also remove critical instructions.</p>
+<p>Important constraints should be:</p>
+<ul>
+<li>Repeated when necessary</li>
+<li>Stored separately</li>
+<li>Checked before risky actions</li>
+<li>Included in validation logic</li>
+</ul>
+</section>
+<section id="solve-problems-in-the-harness-first" class="level3">
+<h3 class="anchored" data-anchor-id="solve-problems-in-the-harness-first">5. Solve problems in the harness first</h3>
+<p>Harness changes are often the fastest way to improve reliability.</p>
+<p>Once a problem is understood and appears frequently, consider whether model training should absorb the capability.</p>
+</section>
+<section id="build-evaluations-early" class="level3">
+<h3 class="anchored" data-anchor-id="build-evaluations-early">6. Build evaluations early</h3>
+<p>An evaluation is not only something used after development. It helps you:</p>
+<ul>
+<li>Define success</li>
+<li>Compare approaches</li>
+<li>Detect regressions</li>
+<li>Generate training data</li>
+<li>Measure safety</li>
+<li>Understand failure modes</li>
+</ul>
+</section>
+<section id="study-trajectories-not-only-final-answers" class="level3">
+<h3 class="anchored" data-anchor-id="study-trajectories-not-only-final-answers">7. Study trajectories, not only final answers</h3>
+<p>The final answer can look correct even if the agent:</p>
+<ul>
+<li>Took an unsafe path</li>
+<li>Accessed restricted data</li>
+<li>Made unnecessary changes</li>
+<li>Got lucky</li>
+<li>Used excessive resources</li>
+</ul>
+<p>Inspect the entire trajectory.</p>
+</section>
+<section id="design-for-human-trust" class="level3">
+<h3 class="anchored" data-anchor-id="design-for-human-trust">8. Design for human trust</h3>
+<p>Users need to understand:</p>
+<ul>
+<li>What the agent is doing</li>
+<li>What it has already done</li>
+<li>What it plans to do next</li>
+<li>When it needs approval</li>
+<li>How to undo its actions</li>
+<li>Why it failed</li>
+</ul>
+<p>A capable agent that users cannot supervise will be difficult to deploy responsibly.</p>
+</section>
+</section>
+<section id="final-perspective" class="level2">
+<h2 class="anchored" data-anchor-id="final-perspective">Final Perspective</h2>
+<p>The field of AI agents is moving from simple prompt-response systems toward interactive software systems that perceive, reason, act, and learn from feedback.</p>
+<p>The hardest problems are not limited to language generation. Reliable agents require coordinated solutions across:</p>
+<ul>
+<li>Model training</li>
+<li>Tool use</li>
+<li>Context management</li>
+<li>Planning</li>
+<li>Environment understanding</li>
+<li>Sandboxing</li>
+<li>Safety</li>
+<li>Inference</li>
+<li>Evaluation</li>
+<li>Monitoring</li>
+<li>Human interaction</li>
+</ul>
+<p>The most important design principle from this lecture is:</p>
+<blockquote class="blockquote">
+<p>Build the agent as a complete system, not as a language model surrounded by a few ad hoc functions.</p>
+</blockquote>
+<p>A strong agent combines a capable model with a carefully designed harness, a controlled environment, explicit validation, useful feedback, and rigorous evaluation.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/aayushmnit\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/edit/main/notes/2026-09-27-CmuAgents2026_lec1.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/aayushmnit/aayushmnit.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
